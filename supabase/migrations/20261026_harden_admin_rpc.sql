@@ -42,7 +42,13 @@ $$;
 revoke all on function public.is_admin() from public;
 grant execute on function public.is_admin() to anon, authenticated, service_role;
 
-alter function public.admin_create_student(text, text, text, text, text, text, text) set schema private;
+do $
+begin
+  if to_regprocedure('private.admin_create_student(text,text,text,text,text,text,text)') is null then
+    alter function public.admin_create_student(text, text, text, text, text, text, text) set schema private;
+  end if;
+end;
+$;
 revoke all on function private.admin_create_student(text, text, text, text, text, text, text) from public, anon;
 grant execute on function private.admin_create_student(text, text, text, text, text, text, text) to authenticated;
 

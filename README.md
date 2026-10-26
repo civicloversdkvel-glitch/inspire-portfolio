@@ -6,7 +6,7 @@ A responsive academy website and student learning portal for **The Inspire Busin
 
 - Public website: home, about, course catalogue, skills, announcements, student showcase, and admissions/contact.
 - Student portal: registration/login, profile, assignments, file uploads, submission history, attendance, and notifications.
-- Admin area: student management, assignment/submission review, and academy administration tools.
+- Admin area: student management, assignment/submission review, academy announcements, and a lead inbox for admission inquiries.
 - AI academic assistant endpoint with optional server-side Gemini configuration.
 - Supabase-backed authentication, database policies, and private assignment storage.
 - Responsive layout, SEO/social metadata, and WhatsApp contact paths.
@@ -33,18 +33,18 @@ A responsive academy website and student learning portal for **The Inspire Busin
 6. Install dependencies and start the app:
 
    ```bash
-   npm install
-   npm run dev
+   bun install
+   bun run dev
    ```
 
-The development server serves the React app and the `/api/*` endpoints together.
+The development server serves the React app and the `/api/*` endpoints together. A GitHub Actions workflow runs type-check, production build, and tests on pushes and pull requests to `main`.
 
 ## Build and checks
 
 ```bash
-npm run build
-npm run lint
-npm test
+bun run build
+bun run lint
+bun run test
 ```
 
 ## Security notes

@@ -14,7 +14,8 @@ import {
   X,
   Loader2,
   Lock,
-  AlertCircle
+  AlertCircle,
+  MessageSquare
 } from 'lucide-react';
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -118,7 +119,8 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
 
   const navLinks = [
     { path: '/admin', label: 'Review & Requests', icon: LayoutDashboard, exact: true },
-    { path: '/admin/students', label: 'Students Directory', icon: Users, exact: false }
+    { path: '/admin/students', label: 'Students Directory', icon: Users, exact: false },
+    { path: '/admin/inquiries', label: 'Admission Inquiries', icon: MessageSquare, exact: false }
   ];
 
   const handleSignOut = async () => {

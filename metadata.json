@@ -1,0 +1,6 @@
+{
+  "name": "The Inspire Business Academy",
+  "description": "Official website, student productivity portal, courses, and admin console for The Inspire Business Academy in Sadiqabad, Pakistan.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

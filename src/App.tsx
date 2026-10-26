@@ -54,6 +54,7 @@ import { AdminLogin } from './admin/AdminLogin';
 import { AdminDashboard } from './admin/AdminDashboard';
 import { AdminStudents } from './admin/AdminStudents';
 import { AdminStudentDetail } from './admin/AdminStudentDetail';
+import { AdminInquiries } from './admin/AdminInquiries';
 
 import {
   GraduationCap,
@@ -554,6 +555,15 @@ function AppContainer() {
         element={
           <AdminLayout>
             <AdminStudentDetail />
+          </AdminLayout>
+        }
+      />
+
+      <Route
+        path="/admin/inquiries"
+        element={
+          <AdminLayout>
+            <AdminInquiries />
           </AdminLayout>
         }
       />

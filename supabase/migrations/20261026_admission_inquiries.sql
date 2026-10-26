@@ -15,6 +15,10 @@ create table if not exists public.admission_inquiries (
 
 alter table public.admission_inquiries enable row level security;
 
+revoke all on table public.admission_inquiries from anon, authenticated;
+grant insert on table public.admission_inquiries to anon, authenticated;
+grant select, update on table public.admission_inquiries to authenticated;
+
 drop policy if exists admission_inquiries_public_insert on public.admission_inquiries;
 create policy admission_inquiries_public_insert
   on public.admission_inquiries

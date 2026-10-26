@@ -22,11 +22,13 @@ export const PublicContact: React.FC = () => {
   const [message, setMessage] = useState('');
   const [submitting, setSubmitting] = useState(false);
   const [responseMsg, setResponseMsg] = useState<string | null>(null);
+  const [responseStatus, setResponseStatus] = useState<'success' | 'error' | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
     setResponseMsg(null);
+    setResponseStatus(null);
 
     try {
       const res = await fetch('/api/inquiry', {
@@ -40,14 +42,17 @@ export const PublicContact: React.FC = () => {
           message,
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) throw new Error(data.error || 'Inquiry could not be submitted.');
+      setResponseStatus('success');
       setResponseMsg(data.message || 'Inquiry submitted successfully! Our director will contact you via WhatsApp.');
       setName('');
       setPhone('');
       setEmail('');
       setMessage('');
     } catch {
-      setResponseMsg('Inquiry submitted! You can also chat directly on WhatsApp at 03093534289.');
+      setResponseStatus('error');
+      setResponseMsg("We couldn't save your inquiry online. Please contact us on WhatsApp at 03093534289.");
     } finally {
       setSubmitting(false);
     }
@@ -157,8 +162,8 @@ export const PublicContact: React.FC = () => {
             </div>
 
             {responseMsg && (
-              <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-start gap-2.5">
-                <CheckCircle2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />
+              <div className={`p-4 rounded-2xl border text-xs font-semibold flex items-start gap-2.5 ${responseStatus === 'error' ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
+                {responseStatus === 'error' ? <Phone size={18} className="text-rose-600 shrink-0 mt-0.5" /> : <CheckCircle2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />}
                 <span>{responseMsg}</span>
               </div>
             )}

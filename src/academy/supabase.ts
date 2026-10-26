@@ -7,10 +7,10 @@ import { ALLOWED_EXTENSIONS, ALLOWED_MIME_TYPES, MAX_FILE_SIZE_BYTES } from './t
 
 const envMeta = (import.meta as unknown as { env?: Record<string, string | undefined> }).env || {};
 
-const rawSupabaseUrl = String(envMeta.VITE_SUPABASE_URL || '').trim();
+const rawSupabaseUrl = String(envMeta.VITE_SUPABASE_URL || 'https://jyfcktszpzeororgdcct.supabase.co').trim();
 
 const rawSupabaseAnonKey = String(
-  envMeta.VITE_SUPABASE_ANON_KEY || envMeta.VITE_SUPABASE_PUBLISHABLE_KEY || ''
+  envMeta.VITE_SUPABASE_ANON_KEY || envMeta.VITE_SUPABASE_PUBLISHABLE_KEY || 'sb_publishable_Pavz_u0msigLIVhMfiBHDg_6HN3-Wd-'
 ).trim();
 
 /**

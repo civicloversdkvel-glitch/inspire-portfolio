@@ -13,16 +13,16 @@ const __dirname = path.dirname(__filename);
 const app = express();
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
-app.use(express.json({ limit: '32kb' }));
+app.use(express.json({ limit: '100kb' }));
 
 // Admission inquiries use the public/publishable key. RLS permits INSERT only;
 // this endpoint never needs a Supabase service-role key.
-const inquirySupabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || '';
+const inquirySupabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://jyfcktszpzeororgdcct.supabase.co';
 const inquirySupabaseKey =
   process.env.SUPABASE_ANON_KEY ||
   process.env.VITE_SUPABASE_ANON_KEY ||
   process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-  '';
+  'sb_publishable_Pavz_u0msigLIVhMfiBHDg_6HN3-Wd-';
 const inquirySupabase =
   inquirySupabaseUrl && inquirySupabaseKey
     ? createClient(inquirySupabaseUrl, inquirySupabaseKey, {

@@ -40,6 +40,7 @@ export const PublicHome: React.FC = () => {
   const [inquiryMessage, setInquiryMessage] = useState('');
   const [inquirySubmitting, setInquirySubmitting] = useState(false);
   const [inquirySuccess, setInquirySuccess] = useState<string | null>(null);
+  const [inquiryStatus, setInquiryStatus] = useState<'success' | 'error' | null>(null);
 
   // Selected course for quick preview modal
   const [previewCourse, setPreviewCourse] = useState<any | null>(null);
@@ -48,6 +49,7 @@ export const PublicHome: React.FC = () => {
     e.preventDefault();
     setInquirySubmitting(true);
     setInquirySuccess(null);
+    setInquiryStatus(null);
 
     try {
       const res = await fetch('/api/inquiry', {
@@ -61,14 +63,17 @@ export const PublicHome: React.FC = () => {
           message: inquiryMessage,
         }),
       });
-      const data = await res.json();
+      const data = await res.json().catch(() => ({}));
+      if (!res.ok || !data.success) throw new Error(data.error || 'Inquiry could not be submitted.');
+      setInquiryStatus('success');
       setInquirySuccess(data.message || 'Admission inquiry submitted successfully! Our director will contact you via WhatsApp.');
       setInquiryName('');
       setInquiryPhone('');
       setInquiryEmail('');
       setInquiryMessage('');
     } catch {
-      setInquirySuccess('Inquiry received! You can also chat directly on WhatsApp at 03093534289.');
+      setInquiryStatus('error');
+      setInquirySuccess("We couldn't save your inquiry online. Please contact us on WhatsApp at 03093534289.");
     } finally {
       setInquirySubmitting(false);
     }
@@ -597,11 +602,11 @@ export const PublicHome: React.FC = () => {
           </div>
 
           {inquirySuccess && (
-            <div className="p-4 rounded-2xl bg-emerald-50 border border-emerald-200 text-emerald-900 text-xs font-semibold flex items-start gap-2.5">
-              <CheckCircle2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />
+            <div className={`p-4 rounded-2xl border text-xs font-semibold flex items-start gap-2.5 ${inquiryStatus === 'error' ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
+              {inquiryStatus === 'error' ? <Phone size={18} className="text-rose-600 shrink-0 mt-0.5" /> : <CheckCircle2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />}
               <div>
                 <p className="font-bold">{inquirySuccess}</p>
-                <p className="mt-1 text-emerald-700">
+                <p className={inquiryStatus === 'error' ? "mt-1 text-rose-700" : "mt-1 text-emerald-700"}>
                   You can also WhatsApp Director Adeel Bhatti at <strong>03093534289</strong> for urgent fee queries.
                 </p>
               </div>

@@ -1,6 +1,8 @@
 -- Keep SECURITY DEFINER implementation details outside the exposed public schema.
 begin;
 
+create schema if not exists private;
+
 create or replace function private.is_admin()
 returns boolean
 language sql

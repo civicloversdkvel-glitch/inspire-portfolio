@@ -556,11 +556,26 @@ RETURNS trigger
 LANGUAGE plpgsql
 SECURITY DEFINER
 SET search_path = public
-AS $$
+AS $
 BEGIN
+  -- The Auth AFTER INSERT trigger runs without an end-user JWT, so auth.uid()
+  -- is NULL. Preserve identity/role only for the exact user being provisioned.
+  IF TG_OP = 'INSERT'
+     AND auth.uid() IS NULL
+     AND EXISTS (
+       SELECT 1
+       FROM auth.users u
+       WHERE u.id = NEW.id
+         AND lower(COALESCE(u.email, '')) = lower(COALESCE(NEW.email, ''))
+     ) THEN
+    NEW.email := lower(COALESCE(NEW.email, ''));
+    NEW.updated_at := now();
+    RETURN NEW;
+  END IF;
+
   IF NOT public.is_admin() THEN
     IF TG_OP = 'INSERT' THEN
-      -- Non-admin users inserting their profile row are restricted to safe student defaults
+      -- Direct client profile inserts remain restricted to the signed-in student.
       NEW.id := auth.uid();
       NEW.email := lower(COALESCE(auth.jwt()->>'email', NEW.email));
       NEW.role := 'student';
@@ -587,7 +602,7 @@ BEGIN
   NEW.updated_at := now();
   RETURN NEW;
 END;
-$$;
+$;
 
 DROP TRIGGER IF EXISTS trg_protect_profile_fields ON public.profiles;
 CREATE TRIGGER trg_protect_profile_fields

@@ -46,7 +46,7 @@ export function AcademyLogin() {
   const [skill, setSkill] = useState<string>(ACADEMY_SKILLS[0]);
   const [submitting, setSubmitting] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
-  const [resetSuccess, setResetSuccess] = useState<string | null>(null);
+  const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
   if (!loading && user && profile) {
     const fromState = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
@@ -69,12 +69,12 @@ export function AcademyLogin() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLocalError(null);
-    setResetSuccess(null);
+    setSuccessMessage(null);
     setSubmitting(true);
     try {
       if (mode === 'reset') {
         await resetPassword(email);
-        setResetSuccess('Password reset instructions have been sent to your email address.');
+        setSuccessMessage('Password reset instructions have been sent to your email address.');
       } else if (mode === 'login') {
         if (!email.trim() || !password) {
           setLocalError('Please enter your email and password.');
@@ -83,7 +83,7 @@ export function AcademyLogin() {
         }
         await signInWithEmail(email, password);
       } else {
-        await registerStudent({
+        const result = await registerStudent({
           fullName,
           phone,
           rollNo,
@@ -91,6 +91,13 @@ export function AcademyLogin() {
           email,
           password
         });
+        if (result.requiresEmailConfirmation) {
+          setSuccessMessage('Your registration request was created. Please check your inbox (and Spam folder) for the Supabase confirmation email, then return here to sign in.');
+          setMode('login');
+          setPassword('');
+        } else {
+          setSuccessMessage('Your account is ready. Welcome to the Inspire Academy student portal.');
+        }
       }
     } catch (err: any) {
       setLocalError(err?.message || 'Authentication failed.');
@@ -101,7 +108,7 @@ export function AcademyLogin() {
 
   const handleGoogleSignIn = async () => {
     setLocalError(null);
-    setResetSuccess(null);
+    setSuccessMessage(null);
     setSubmitting(true);
     try {
       await signInWithGoogle(
@@ -164,7 +171,7 @@ export function AcademyLogin() {
             onClick={() => {
               setMode('login');
               setLocalError(null);
-              setResetSuccess(null);
+              setSuccessMessage(null);
             }}
             className={`py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
               mode === 'login' || mode === 'reset'
@@ -180,7 +187,7 @@ export function AcademyLogin() {
             onClick={() => {
               setMode('register');
               setLocalError(null);
-              setResetSuccess(null);
+              setSuccessMessage(null);
             }}
             className={`py-2.5 rounded-lg text-xs font-bold flex items-center justify-center gap-1.5 transition-all ${
               mode === 'register'
@@ -200,10 +207,10 @@ export function AcademyLogin() {
           </div>
         )}
 
-        {resetSuccess && (
+        {successMessage && (
           <div className="p-3.5 rounded-xl bg-emerald-50 border border-emerald-200 flex items-start gap-2.5 text-emerald-800 text-xs font-medium">
             <CheckCircle2 size={16} className="text-emerald-600 shrink-0 mt-0.5" />
-            <span>{resetSuccess}</span>
+            <span>{successMessage}</span>
           </div>
         )}
 
@@ -315,7 +322,7 @@ export function AcademyLogin() {
                     onClick={() => {
                       setMode('reset');
                       setLocalError(null);
-                      setResetSuccess(null);
+                      setSuccessMessage(null);
                     }}
                     className="text-[11px] font-bold text-blue-600 hover:underline"
                   >
@@ -378,7 +385,7 @@ export function AcademyLogin() {
               onClick={() => {
                 setMode('login');
                 setLocalError(null);
-                setResetSuccess(null);
+                setSuccessMessage(null);
               }}
               className="w-full py-2 text-xs font-bold text-gray-600 hover:text-gray-900"
             >

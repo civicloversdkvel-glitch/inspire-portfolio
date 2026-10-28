@@ -21,8 +21,14 @@ begin
     where schemaname = 'public'
       and (
         cmd = 'ALL'
-        or coalesce(qual, '') like '%auth.uid()%'
-        or coalesce(with_check, '') like '%auth.uid()%'
+        or (
+          coalesce(qual, '') like '%auth.uid()%'
+          and coalesce(qual, '') not ilike '%select auth.uid()%'
+        )
+        or (
+          coalesce(with_check, '') like '%auth.uid()%'
+          and coalesce(with_check, '') not ilike '%select auth.uid()%'
+        )
       )
     order by tablename, policyname
   loop

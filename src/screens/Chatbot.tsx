@@ -36,8 +36,8 @@ export function Chatbot() {
       text: "Assalam-o-Alaikum! I am your AI Academic Advisor for The Inspire Business Academy. I can assist you with your course topics, freelancing client communication pitches, payment safety rules, and software shortcuts. How can I help you excel today?",
       sender: 'bot',
       timestamp: new Date(),
-      modelUsed: 'gemini-4-argon',
-      thinkingMode: true,
+      modelUsed: 'academy-knowledge-base',
+      thinkingMode: false,
     },
   ]);
   const [input, setInput] = useState('');
@@ -133,7 +133,7 @@ export function Chatbot() {
           text: data.reply || "I'm here to help with all Academy matters.",
           sender: 'bot',
           timestamp: new Date(),
-          modelUsed: data.model || 'gemini-4-argon',
+          modelUsed: data.model || 'academy-knowledge-base',
           thinkingMode: Boolean(data.thinkingEnabled),
         };
         setMessages((prev) => [...prev, botMsg]);
@@ -214,11 +214,11 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
               <div className="flex items-center gap-2">
                 <h1 className="text-base sm:text-lg font-extrabold">Academic AI Advisor</h1>
                 <span className="px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-300 text-[10px] font-bold border border-emerald-400/30">
-                  Online
+                  Ready
                 </span>
               </div>
               <p className="text-xs text-blue-200">
-                Powered by <strong className="text-amber-400">gemini-4-argon</strong> with Thinking Mode
+                Academic guidance for courses, assignments & digital skills
               </p>
             </div>
           </div>
@@ -274,7 +274,7 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
                 {msg.thinkingMode && msg.sender === 'bot' && (
                   <div className="mb-2 pb-2 border-b border-slate-100 flex items-center gap-1.5 text-[10px] font-extrabold text-indigo-700 uppercase tracking-wider">
                     <Brain size={12} className="text-indigo-600" />
-                    <span>Deep Thinking Enabled (Gemini 4 Argon • ThinkingLevel.HIGH)</span>
+                    <span>Detailed response mode enabled</span>
                   </div>
                 )}
                 {formatText(msg.text)}
@@ -293,7 +293,7 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
                 <Loader2 size={15} className="animate-spin text-blue-700" />
                 <span>
                   {useThinking
-                    ? 'Analyzing with Gemini 4 Argon High Thinking mode...'
+                    ? 'Preparing a detailed academic answer...'
                     : 'Consulting Inspire Academy knowledge base...'}
                 </span>
               </div>

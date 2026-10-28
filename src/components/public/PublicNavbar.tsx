@@ -3,7 +3,6 @@ import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { InspireLogo } from '../InspireLogo';
 import {
   GraduationCap,
-  ShieldCheck,
   Menu,
   X,
   Phone,
@@ -62,14 +61,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ onOpenApplyModal }) 
             <Phone size={12} />
             <span>03093534289</span>
           </a>
-          <span className="text-slate-600 hidden sm:inline">|</span>
-          <Link
-            to="/admin"
-            className="text-slate-400 hover:text-yellow-400 transition-colors hidden sm:flex items-center gap-1 font-medium"
-          >
-            <ShieldCheck size={12} />
-            <span>Admin Login</span>
-          </Link>
+
         </div>
       </div>
 
@@ -199,15 +191,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ onOpenApplyModal }) 
             ))}
           </div>
 
-          <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <Link
-              to="/admin"
-              onClick={() => setMobileMenuOpen(false)}
-              className="font-bold text-blue-800 flex items-center gap-1"
-            >
-              <ShieldCheck size={14} />
-              <span>Admin Management</span>
-            </Link>
+          <div className="pt-3 mt-3 border-t border-slate-100 flex items-center justify-end text-xs text-slate-500">
             <a href="https://wa.me/923093534289" className="text-emerald-700 font-bold">
               WhatsApp Support
             </a>

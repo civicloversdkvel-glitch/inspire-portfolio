@@ -28,7 +28,7 @@ interface AcademyAuthContextValue {
   loading: boolean;
   authError: string | null;
   signInWithEmail: (email: string, password: string) => Promise<void>;
-  registerStudent: (input: RegisterStudentInput) => Promise<void>;
+  registerStudent: (input: RegisterStudentInput) => Promise<{ requiresEmailConfirmation: boolean }>;
   resetPassword: (email: string) => Promise<void>;
   signInWithGoogle: (registrationDefaults?: {
     fullName?: string;
@@ -529,24 +529,13 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
       throw new Error('Could not create user account.');
     }
 
-    // If Supabase project has email confirmation enabled and didn't return a session yet,
-    // attempt immediate signInWithPassword (if email confirmation is turned off in Supabase)
-    let activeUser = data.user;
+    // With email confirmation enabled, Supabase correctly returns no session.
+    // Do not attempt password sign-in before the user has confirmed their address.
     if (!data.session) {
-      const { data: signInData, error: signInErr } = await supabase.auth.signInWithPassword({
-        email: cleanEmail,
-        password: input.password
-      });
-      if (signInErr) {
-        throw new Error(
-          'Registration submitted successfully! Please check your email inbox to confirm your account before logging in.'
-        );
-      }
-      if (signInData.user) {
-        activeUser = signInData.user;
-      }
+      return { requiresEmailConfirmation: true };
     }
 
+    const activeUser = data.session.user || data.user;
     const hydrated = await loadOrCreateProfile(activeUser, {
       fullName: cleanName,
       phone: cleanPhone,
@@ -556,6 +545,7 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
 
     setUser(activeUser);
     setProfile(hydrated);
+    return { requiresEmailConfirmation: false };
   };
 
   const resetPassword = async (email: string) => {

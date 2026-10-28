@@ -29,7 +29,7 @@ A responsive academy website and student learning portal for **The Inspire Busin
    - `VITE_SUPABASE_PUBLISHABLE_KEY`
    - For the server inquiry route, set `SUPABASE_URL` and `SUPABASE_ANON_KEY` to the same project URL and publishable/anon key, or use the `VITE_*` fallbacks.
 4. Configure `GEMINI_API_KEY` only if the AI assistant should use Gemini.
-5. In the Supabase SQL Editor, run `supabase/admin_setup.sql` for the academy schema, RLS policies, storage buckets, and auth triggers. Then apply each migration once, in order: `supabase/migrations/20261026_academy_foreign_key_indexes.sql`, `supabase/migrations/20261026_admission_inquiries.sql`, `supabase/migrations/20261026_harden_admin_rpc.sql`, and `supabase/migrations/20261028_optimize_rls_policy_overlaps.sql`. For an existing project, check its migration history first and do not manually replay migrations that are already applied.
+5. In the Supabase SQL Editor, run `supabase/admin_setup.sql` for the academy schema, RLS policies, storage buckets, and auth triggers. Then apply each migration once, in order: `supabase/migrations/20261026_academy_foreign_key_indexes.sql`, `supabase/migrations/20261026_admission_inquiries.sql`, `supabase/migrations/20261026_harden_admin_rpc.sql`, and `supabase/migrations/20261028_optimize_rls_policy_overlaps.sql`, and `supabase/migrations/20261028_fix_signup_profile_trigger.sql`. For an existing project, check its migration history first and do not manually replay migrations that are already applied.
 6. Install dependencies and start the app:
 
    ```bash

@@ -519,11 +519,14 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
     if (!cleanEmail || !cleanEmail.includes('@')) {
       throw new Error('Please enter a valid email address.');
     }
-    if (input.password.length < 6) {
+    if (cleanRoll.length < 3) {
+      throw new Error('Enter the student roll number issued by the academy.');
+    }
+    if (input.password.length < 8) {
       throw new Error('Password must be at least 6 characters.');
     }
 
-    // Student registration strictly creates student-role accounts only
+    // Student registration creates a student account; the database keeps new accounts pending until academy staff approve them.
     const { data, error } = await supabase.auth.signUp({
       email: cleanEmail,
       password: input.password,
@@ -549,7 +552,7 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
     }
 
     // With email confirmation enabled, Supabase correctly returns no session.
-    // Do not attempt password sign-in before the user has confirmed their address.
+    // The database trigger creates a pending student profile; portal access starts after academy approval.
     if (!data.session) {
       return { requiresEmailConfirmation: true };
     }

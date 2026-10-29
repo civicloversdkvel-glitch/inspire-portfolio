@@ -4,70 +4,20 @@ import { coursesContent } from '../../data/coursesContent';
 import {
   GraduationCap,
   Sparkles,
-  ArrowRight,
-  CheckCircle2,
-  Phone,
-  MapPin,
-  Flame,
-  Award,
-  BookOpen,
-  DollarSign,
-  TrendingUp,
-  FileCheck,
-  Send,
-  Loader2,
-  ChevronRight,
+  ArrowRight,Phone,Award,TrendingUp,ChevronRight,
   ShieldCheck,
   Star,
-  Users,
-  Briefcase,
-  Monitor,
-  Video,
+  Users,Video,
   Palette,
   Bot,
   ShoppingCart,
-  Share2,
-} from 'lucide-react';
+  Share2 } from 'lucide-react';
 
 export const PublicHome: React.FC = () => {
   const navigate = useNavigate();
 
   // Selected course for quick preview modal
   const [previewCourse, setPreviewCourse] = useState<any | null>(null);
-
-  const handleInquirySubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setInquirySubmitting(true);
-    setInquirySuccess(null);
-    setInquiryStatus(null);
-
-    try {
-      const res = await fetch('/api/inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: inquiryName,
-          phone: inquiryPhone,
-          email: inquiryEmail,
-          course: inquiryCourse,
-          message: inquiryMessage,
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.success) throw new Error(data.error || 'Inquiry could not be submitted.');
-      setInquiryStatus('success');
-      setInquirySuccess(data.message || 'Admission inquiry submitted successfully! Our director will contact you via WhatsApp.');
-      setInquiryName('');
-      setInquiryPhone('');
-      setInquiryEmail('');
-      setInquiryMessage('');
-    } catch {
-      setInquiryStatus('error');
-      setInquirySuccess("We couldn't save your inquiry online. Please contact us on WhatsApp at 03093534289.");
-    } finally {
-      setInquirySubmitting(false);
-    }
-  };
 
   const coreSkills = [
     {

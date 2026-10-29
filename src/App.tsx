@@ -54,7 +54,6 @@ import { AdminLogin } from './admin/AdminLogin';
 import { AdminDashboard } from './admin/AdminDashboard';
 import { AdminStudents } from './admin/AdminStudents';
 import { AdminStudentDetail } from './admin/AdminStudentDetail';
-import { AdminInquiries } from './admin/AdminInquiries';
 
 import {
   GraduationCap,
@@ -292,6 +291,7 @@ function AppContainer() {
       {/* 2. ACADEMY AUTH & STUDENT PORTAL ROUTES */}
       <Route path="/login" element={<Navigate to="/academy/login" replace />} />
       <Route path="/academy/login" element={<AcademyLogin />} />
+      <Route path="/academy/register" element={<AcademyLogin />} />
 
       <Route
         path="/academy"
@@ -559,14 +559,7 @@ function AppContainer() {
         }
       />
 
-      <Route
-        path="/admin/inquiries"
-        element={
-          <AdminLayout>
-            <AdminInquiries />
-          </AdminLayout>
-        }
-      />
+
 
       {/* 404 Fallback */}
       <Route

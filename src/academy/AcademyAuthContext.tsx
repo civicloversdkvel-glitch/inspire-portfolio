@@ -523,7 +523,7 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
       throw new Error('Enter the student roll number issued by the academy.');
     }
     if (input.password.length < 8) {
-      throw new Error('Password must be at least 6 characters.');
+      throw new Error('Password must be at least 8 characters.');
     }
 
     // Student registration creates a student account; the database keeps new accounts pending until academy staff approve them.

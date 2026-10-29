@@ -32,16 +32,6 @@ import {
 export const PublicHome: React.FC = () => {
   const navigate = useNavigate();
 
-  // Inquiry form state
-  const [inquiryName, setInquiryName] = useState('');
-  const [inquiryPhone, setInquiryPhone] = useState('');
-  const [inquiryEmail, setInquiryEmail] = useState('');
-  const [inquiryCourse, setInquiryCourse] = useState('Graphic Design (Photoshop)');
-  const [inquiryMessage, setInquiryMessage] = useState('');
-  const [inquirySubmitting, setInquirySubmitting] = useState(false);
-  const [inquirySuccess, setInquirySuccess] = useState<string | null>(null);
-  const [inquiryStatus, setInquiryStatus] = useState<'success' | 'error' | null>(null);
-
   // Selected course for quick preview modal
   const [previewCourse, setPreviewCourse] = useState<any | null>(null);
 
@@ -586,132 +576,29 @@ export const PublicHome: React.FC = () => {
         </div>
       </section>
 
-      {/* Online Admission & Inquiry Form */}
-      <section id="apply" className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 scroll-mt-24">
-        <div className="bg-white rounded-3xl p-6 sm:p-10 shadow-xl border border-slate-200/90 space-y-6">
-          <div className="text-center max-w-xl mx-auto space-y-2">
-            <span className="px-3 py-1 rounded-full bg-amber-50 text-amber-800 text-[11px] font-extrabold uppercase tracking-widest border border-amber-200">
-              Online Admission Form
-            </span>
-            <h2 className="text-2xl sm:text-3xl font-black text-slate-900">
-              Apply for Current Batch
-            </h2>
-            <p className="text-xs sm:text-sm text-slate-500">
-              Fill out your details below. You will receive an immediate response and WhatsApp confirmation.
-            </p>
-          </div>
-
-          {inquirySuccess && (
-            <div className={`p-4 rounded-2xl border text-xs font-semibold flex items-start gap-2.5 ${inquiryStatus === 'error' ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
-              {inquiryStatus === 'error' ? <Phone size={18} className="text-rose-600 shrink-0 mt-0.5" /> : <CheckCircle2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />}
-              <div>
-                <p className="font-bold">{inquirySuccess}</p>
-                <p className={inquiryStatus === 'error' ? "mt-1 text-rose-700" : "mt-1 text-emerald-700"}>
-                  You can also WhatsApp Director Adeel Bhatti at <strong>03093534289</strong> for urgent fee queries.
-                </p>
-              </div>
-            </div>
-          )}
-
-          <form onSubmit={handleInquirySubmit} className="space-y-4">
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                  Full Name *
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={inquiryName}
-                  onChange={(e) => setInquiryName(e.target.value)}
-                  placeholder="e.g. Muhammad Hamza"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-700 focus:ring-1 focus:ring-blue-700"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                  WhatsApp / Phone Number *
-                </label>
-                <input
-                  type="tel"
-                  required
-                  value={inquiryPhone}
-                  onChange={(e) => setInquiryPhone(e.target.value)}
-                  placeholder="0300-1234567"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-700 focus:ring-1 focus:ring-blue-700"
-                />
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                  Email Address (Optional)
-                </label>
-                <input
-                  type="email"
-                  value={inquiryEmail}
-                  onChange={(e) => setInquiryEmail(e.target.value)}
-                  placeholder="name@email.com"
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-700 focus:ring-1 focus:ring-blue-700"
-                />
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                  Preferred Course Track *
-                </label>
-                <select
-                  value={inquiryCourse}
-                  onChange={(e) => setInquiryCourse(e.target.value)}
-                  className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm bg-white focus:outline-none focus:border-blue-700 focus:ring-1 focus:ring-blue-700"
-                >
-                  {coursesContent.map((c) => (
-                    <option key={c.id} value={c.title}>
-                      {c.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-            </div>
-
-            <div>
-              <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                Your Goals / Message
-              </label>
-              <textarea
-                rows={3}
-                value={inquiryMessage}
-                onChange={(e) => setInquiryMessage(e.target.value)}
-                placeholder="Tell us about your background or any questions you have..."
-                className="w-full px-4 py-3 rounded-xl border border-slate-200 text-sm focus:outline-none focus:border-blue-700 focus:ring-1 focus:ring-blue-700 resize-none"
-              />
-            </div>
-
-            <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-2">
-              <p className="text-[11px] text-slate-400">
-                🔒 Your contact details are kept strictly private for academy admission communication.
+      {/* Student registration CTA — this portal is for current academy students */}
+      <section className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-950 p-7 sm:p-12 text-white shadow-2xl">
+          <div className="absolute -right-12 -top-12 h-56 w-56 rounded-full bg-amber-400/10 blur-2xl" />
+          <div className="relative grid gap-8 md:grid-cols-[minmax(0,1fr)_auto] md:items-center">
+            <div className="max-w-2xl space-y-4">
+              <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-200">
+                <ShieldCheck size={14} /> For enrolled academy students
+              </span>
+              <h2 className="text-2xl font-black tracking-tight sm:text-4xl">Your learning workspace starts here.</h2>
+              <p className="text-sm leading-relaxed text-blue-100 sm:text-base">
+                Create your student account or sign in to upload assignments, submit projects, track feedback and build your portfolio.
               </p>
-              <button
-                type="submit"
-                disabled={inquirySubmitting}
-                className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-extrabold text-sm shadow-md transition-all active:scale-95 flex items-center justify-center gap-2 disabled:opacity-50"
-              >
-                {inquirySubmitting ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    <span>Submitting Application...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send size={16} />
-                    <span>Submit Admission Application</span>
-                  </>
-                )}
-              </button>
             </div>
-          </form>
+            <div className="flex flex-col gap-3 sm:flex-row md:flex-col">
+              <Link to="/academy/register" className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-6 py-3.5 text-sm font-extrabold text-blue-950 shadow-lg transition hover:bg-amber-300">
+                <Users size={17} /> Student Registration <ArrowRight size={16} />
+              </Link>
+              <Link to="/academy/login" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-6 py-3.5 text-sm font-bold text-white transition hover:bg-white/15">
+                <GraduationCap size={17} /> Student Login
+              </Link>
+            </div>
+          </div>
         </div>
       </section>
 

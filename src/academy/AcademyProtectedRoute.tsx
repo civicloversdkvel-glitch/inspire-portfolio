@@ -30,7 +30,7 @@ export function AcademyProtectedRoute({ children, allowedRoles }: AcademyProtect
   }
 
   if (profile.is_active === false || profile.is_approved === false) {
-    const isPending = profile.is_active !== false && profile.is_approved === false;
+    const isPending = profile.is_approved === false;
     return (
       <ScreenWrapper className="bg-slate-50 flex items-center justify-center p-5">
         <div className="w-full max-w-lg rounded-3xl border border-slate-200 bg-white p-7 text-center shadow-xl sm:p-10">

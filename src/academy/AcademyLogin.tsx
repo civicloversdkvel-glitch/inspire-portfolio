@@ -92,11 +92,11 @@ export function AcademyLogin() {
           password
         });
         if (result.requiresEmailConfirmation) {
-          setSuccessMessage('Your student account has been created. Please check your inbox (and Spam folder) for the Supabase confirmation email, then return here to sign in.');
+          setSuccessMessage('Your student account has been created. Confirm your email, then wait for academy staff to verify your roll number before portal access is enabled.');
           setMode('login');
           setPassword('');
         } else {
-          setSuccessMessage('Your account is ready. Welcome to the Inspire Academy student portal.');
+          setSuccessMessage('Registration complete. Your account is waiting for academy verification; portal access will unlock after staff approval.');
         }
       }
     } catch (err: any) {
@@ -240,15 +240,16 @@ export function AcademyLogin() {
               <div className="grid grid-cols-2 gap-3">
                 <div>
                   <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                    Roll No / ID
+                    Academy Roll No *
                   </label>
                   <div className="relative">
                     <Hash size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
                     <input
                       type="text"
+                      required
                       value={rollNo}
                       onChange={e => setRollNo(e.target.value)}
-                      placeholder="IBA-101"
+                      placeholder="Your academy roll number"
                       className="w-full pl-8 pr-2.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-blue-600"
                     />
                   </div>
@@ -335,10 +336,10 @@ export function AcademyLogin() {
                 <input
                   type="password"
                   required
-                  minLength={6}
+                  minLength={8}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
-                  placeholder="••••••••"
+                  placeholder="At least 8 characters"
                   className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-600"
                 />
               </div>

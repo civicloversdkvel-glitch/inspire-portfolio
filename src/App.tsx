@@ -271,14 +271,7 @@ function AppContainer() {
           </PublicSiteLayout>
         }
       />
-      <Route
-        path="/apply"
-        element={
-          <PublicSiteLayout>
-            <PublicContact />
-          </PublicSiteLayout>
-        }
-      />
+      <Route path="/apply" element={<Navigate to="/academy/register" replace />} />
       <Route
         path="/public-portfolio"
         element={

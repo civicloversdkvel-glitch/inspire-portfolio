@@ -14,14 +14,14 @@ export const PublicAnnouncements: React.FC = () => {
   const officialNotices = [
     {
       id: 'ann-1',
-      title: 'New Batch Admissions Open for Graphic Design & Video Editing',
+      title: 'Student Portal Registration & Project Uploads',
       date: '24 October 2026',
-      badge: 'Admissions',
+      badge: 'Student Portal',
       badgeColor: 'bg-emerald-100 text-emerald-800',
       message:
-        'Registration is now active for the upcoming 2-month professional diploma batch. Physical classes take place at the Sadiqabad campus with practical lab sessions. Limited seats available per shift to ensure 1-on-1 mentorship.',
-      actionLink: '/contact#apply',
-      actionText: 'Apply for this Batch',
+        'Student portal registration is available for currently enrolled academy students. Use your academy roll number to register, then wait for staff verification before uploading projects. the upcoming 2-month professional diploma batch. Physical classes take place at the Sadiqabad campus with practical lab sessions. Limited seats available per shift to ensure 1-on-1 mentorship.',
+      actionLink: '/academy/register',
+      actionText: 'Student Registration',
     },
     {
       id: 'ann-2',

@@ -107,6 +107,10 @@ export function AcademyLogin() {
   };
 
   const handleGoogleSignIn = async () => {
+    if (mode === 'register' && (fullName.trim().length < 2 || rollNo.trim().length < 3)) {
+      setLocalError('Enter your full name and the roll number issued by the academy before registering.');
+      return;
+    }
     setLocalError(null);
     setSuccessMessage(null);
     setSubmitting(true);

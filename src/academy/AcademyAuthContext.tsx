@@ -356,14 +356,68 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
     }
 
     let mounted = true;
+    let unsubscribe: (() => void) | null = null;
+    let hydrationVersion = 0;
+
+    const hydrateProfile = async (sessionUser: User) => {
+      const version = ++hydrationVersion;
+      try {
+        const hydrated = await loadOrCreateProfile(sessionUser);
+        if (!mounted || version !== hydrationVersion) return;
+
+        if (!hydrated.is_active) {
+          setUser(null);
+          setProfile(null);
+          setAuthError('Your student account is currently disabled. Please contact the Academy Admin.');
+          void supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+        } else {
+          setUser(sessionUser);
+          setProfile(hydrated);
+          setAuthError(null);
+        }
+      } catch (err: any) {
+        if (mounted && version === hydrationVersion) {
+          console.error('Failed to load Supabase student profile:', err);
+          setAuthError(err?.message || 'Could not load student profile.');
+        }
+      } finally {
+        if (mounted && version === hydrationVersion) setLoading(false);
+      }
+    };
 
     const initSession = async () => {
       try {
+        // Wait for Supabase to finish session initialization before registering
+        // listeners; this avoids the initialization/refresh lock race.
         const { data, error } = await supabase.auth.getSession();
         if (error) throw error;
-        const sessionUser = data.session?.user ?? null;
         if (!mounted) return;
 
+        const { data: authListener } = supabase.auth.onAuthStateChange((event, session) => {
+          // Keep this callback synchronous. Supabase auth callbacks run under an
+          // internal lock; database requests are deferred until after it returns.
+          if (!mounted || event === 'INITIAL_SESSION') return;
+
+          const sessionUser = session?.user ?? null;
+          if (!sessionUser || event === 'SIGNED_OUT') {
+            hydrationVersion++;
+            setUser(null);
+            setProfile(null);
+            setLoading(false);
+            return;
+          }
+
+          setUser(sessionUser);
+          if (event === 'TOKEN_REFRESHED') return;
+
+          setLoading(true);
+          window.setTimeout(() => {
+            if (mounted) void hydrateProfile(sessionUser);
+          }, 0);
+        });
+        unsubscribe = () => authListener.subscription.unsubscribe();
+
+        const sessionUser = data.session?.user ?? null;
         if (!sessionUser) {
           setUser(null);
           setProfile(null);
@@ -372,68 +426,33 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
         }
 
         setUser(sessionUser);
-        const hydrated = await loadOrCreateProfile(sessionUser);
-        if (!mounted) return;
-
-        if (!hydrated.is_active) {
-          await supabase.auth.signOut();
-          setUser(null);
-          setProfile(null);
-          setAuthError('Your student account is currently disabled. Please contact the Academy Admin.');
-        } else {
-          setProfile(hydrated);
-        }
+        await hydrateProfile(sessionUser);
       } catch (err: any) {
         if (mounted) {
           console.error('Failed to initialize Supabase session:', err);
-          setAuthError(err?.message || 'Could not load student profile.');
-        }
-      } finally {
-        if (mounted) {
+          const rawMessage = err?.message || 'Could not load student profile.';
+          const isSessionError = /jwt|session|refresh token/i.test(rawMessage);
+          setUser(null);
+          setProfile(null);
+          setAuthError(
+            isSessionError
+              ? 'Your session has expired or is no longer valid. Please sign in again.'
+              : rawMessage
+          );
+          if (isSessionError) {
+            void supabase.auth.signOut({ scope: 'local' }).catch(() => undefined);
+          }
           setLoading(false);
         }
       }
     };
 
-    initSession();
-
-    const {
-      data: { subscription }
-    } = supabase.auth.onAuthStateChange(async (event, session) => {
-      if (!mounted) return;
-      const sessionUser = session?.user ?? null;
-
-      if (!sessionUser || event === 'SIGNED_OUT') {
-        setUser(null);
-        setProfile(null);
-        setLoading(false);
-        return;
-      }
-
-      setUser(sessionUser);
-      try {
-        const hydrated = await loadOrCreateProfile(sessionUser);
-        if (!mounted) return;
-        if (!hydrated.is_active) {
-          await supabase.auth.signOut();
-          setUser(null);
-          setProfile(null);
-          setAuthError('Your student account is currently disabled. Please contact the Academy Admin.');
-        } else {
-          setProfile(hydrated);
-        }
-      } catch (err: any) {
-        console.error('Auth state change profile hydration error:', err);
-      } finally {
-        if (mounted) {
-          setLoading(false);
-        }
-      }
-    });
+    void initSession();
 
     return () => {
       mounted = false;
-      subscription.unsubscribe();
+      hydrationVersion++;
+      unsubscribe?.();
     };
   }, [loadOrCreateProfile]);
 

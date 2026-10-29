@@ -71,7 +71,121 @@ const effectiveSupabaseAnonKey = isSupabaseConfigured
   ? rawSupabaseAnonKey
   : 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InBsYWNlaG9sZGVyIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDAwMDAwMDAsImV4cCI6MjAwMDAwMDAwMH0.placeholder';
 
-export const supabase: SupabaseClient = createClient(
+let primarySupabaseClient: SupabaseClient | null = null;
+let pendingSessionRefresh: Promise<string | null> | null = null;
+
+function readJwtSubject(token: string): string | null {
+  const payload = token.split('.')[1];
+  if (!payload) return null;
+  try {
+    const base64 = payload.replace(/-/g, '+').replace(/_/g, '/');
+    const padded = base64.padEnd(Math.ceil(base64.length / 4) * 4, '=');
+    const decoded = JSON.parse(atob(padded)) as { sub?: unknown };
+    return typeof decoded.sub === 'string' ? decoded.sub : null;
+  } catch {
+    return null;
+  }
+}
+
+function isJwtAuthorizationFailure(body: unknown): boolean {
+  if (!body || typeof body !== 'object') return false;
+  const errorBody = body as { code?: unknown; message?: unknown; details?: unknown; hint?: unknown };
+  const code = String(errorBody.code || '');
+  const message = [errorBody.message, errorBody.details, errorBody.hint].map(value => String(value || '')).join(' ');
+  return ['PGRST301', 'PGRST303'].includes(code) ||
+    /\b(jwt|token)\b.{0,40}\b(expired|invalid|malformed)\b/i.test(message);
+}
+
+/**
+ * Recover once from a stale Supabase access token. A failed request is retried
+ * only with a refreshed token belonging to the same signed-in user.
+ */
+async function fetchWithSessionRecovery(input: RequestInfo | URL, init?: RequestInit): Promise<Response> {
+  const request = new Request(input, init);
+  const response = await fetch(request.clone());
+
+  if (response.status !== 401 || !primarySupabaseClient) return response;
+
+  let requestUrl: URL;
+  try {
+    requestUrl = new URL(request.url);
+  } catch {
+    return response;
+  }
+
+  if (
+    requestUrl.origin !== new URL(effectiveSupabaseUrl).origin ||
+    !requestUrl.pathname.startsWith('/rest/v1/')
+  ) {
+    return response;
+  }
+
+  const errorBody = await response.clone().json().catch(() => null);
+  if (!isJwtAuthorizationFailure(errorBody)) return response;
+
+  const authorization = request.headers.get('Authorization') || '';
+  const originalToken = authorization.replace(/^Bearer\s+/i, '');
+  const originalSubject = readJwtSubject(originalToken);
+  if (!originalToken || !originalSubject) return response;
+
+  let refreshedToken: string | null = null;
+  try {
+    const { data, error } = await primarySupabaseClient.auth.getSession();
+    const currentSession = data.session;
+    if (error || !currentSession || currentSession.user.id !== originalSubject) {
+      return response;
+    }
+
+    refreshedToken = currentSession.access_token === originalToken
+      ? null
+      : currentSession.access_token;
+
+    if (!refreshedToken) {
+      if (!pendingSessionRefresh) {
+        pendingSessionRefresh = primarySupabaseClient.auth.refreshSession()
+          .then(({ data: refreshed, error: refreshError }) =>
+            !refreshError && refreshed.session ? refreshed.session.access_token : null
+          )
+          .catch(() => null)
+          .finally(() => {
+            pendingSessionRefresh = null;
+          });
+      }
+      refreshedToken = await pendingSessionRefresh;
+    }
+  } catch {
+    refreshedToken = null;
+  }
+
+  const expiredSessionResponse = () => new Response(
+    JSON.stringify({
+      code: 'AUTH_SESSION_EXPIRED',
+      message: 'Your session has expired or is no longer valid. Please sign in again.'
+    }),
+    { status: 401, headers: { 'Content-Type': 'application/json; charset=utf-8' } }
+  );
+
+  if (!refreshedToken || refreshedToken === originalToken) {
+    void primarySupabaseClient.auth.signOut({ scope: 'local' }).catch(() => undefined);
+    return expiredSessionResponse();
+  }
+
+  const retryHeaders = new Headers(request.headers);
+  retryHeaders.set('Authorization', `Bearer ${refreshedToken}`);
+  const retryResponse = await fetch(new Request(request, { headers: retryHeaders }));
+
+  if (retryResponse.status === 401) {
+    const retryError = await retryResponse.clone().json().catch(() => null);
+    if (isJwtAuthorizationFailure(retryError)) {
+      void primarySupabaseClient.auth.signOut({ scope: 'local' }).catch(() => undefined);
+      return expiredSessionResponse();
+    }
+  }
+
+  return retryResponse;
+}
+
+primarySupabaseClient = createClient(
   effectiveSupabaseUrl,
   effectiveSupabaseAnonKey,
   {
@@ -80,9 +194,14 @@ export const supabase: SupabaseClient = createClient(
       autoRefreshToken: true,
       detectSessionInUrl: true,
       storageKey: 'inspire_academy_supabase_auth'
+    },
+    global: {
+      fetch: fetchWithSessionRecovery
     }
   }
 );
+
+export const supabase: SupabaseClient = primarySupabaseClient;
 
 /**
  * Creates a non-persisted Supabase client for Admin account provisioning

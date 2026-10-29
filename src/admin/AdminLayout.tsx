@@ -15,7 +15,6 @@ import {
   Loader2,
   Lock,
   AlertCircle,
-  MessageSquare
 } from 'lucide-react';
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {

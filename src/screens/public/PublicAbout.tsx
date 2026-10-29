@@ -122,10 +122,10 @@ export const PublicAbout: React.FC = () => {
               <span>WhatsApp Director</span>
             </a>
             <Link
-              to="/contact#apply"
+              to="/academy/register"
               className="flex-1 py-3 px-4 rounded-xl bg-blue-900 hover:bg-blue-800 text-white font-bold text-xs text-center flex items-center justify-center gap-1.5 transition-colors"
             >
-              <span>Apply for Admission</span>
+              <span>Student Register</span>
             </Link>
           </div>
         </div>

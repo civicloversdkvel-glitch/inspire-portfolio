@@ -4,7 +4,7 @@ A responsive academy website and student learning portal for **The Inspire Busin
 
 ## What’s included
 
-- Public website: home, about, course catalogue, skills, announcements, student showcase, and admissions/contact.
+- Public website: home, about, course catalogue, skills, announcements, student showcase, and student support.
 - Student portal: registration/login, profile, assignments, file uploads, submission history, attendance, and notifications.
 - Admin area: student management, assignment/submission review, academy announcements, and a lead inbox for admission inquiries.
 - AI academic assistant endpoint with optional server-side Gemini configuration.
@@ -37,7 +37,7 @@ A responsive academy website and student learning portal for **The Inspire Busin
    bun run dev
    ```
 
-The development server serves the React app and the `/api/*` endpoints together. A GitHub Actions workflow runs type-check, production build, and tests on pushes and pull requests to `main`.
+The development server serves the React app and the remaining `/api/*` endpoints together. A GitHub Actions workflow runs type-check, production build, and tests on pushes and pull requests to `main`.
 
 ## Build and checks
 
@@ -50,7 +50,7 @@ bun run test
 ## Security notes
 
 - Never put a Supabase service-role key or `sb_secret_*` key in a `VITE_*` variable or browser bundle.
-- The admission form uses the public/anon key with a database policy that permits insert-only access to the inquiry table; public visitors cannot read or update inquiries.
+- The public admission inquiry form and API have been retired. Legacy inquiry records are retained, but new public submissions are disabled. Student registrations are pending until academy staff approve the student's roll number.
 - Keep secrets in your deployment platform’s environment/secrets settings, not in Git.
 - Create/approve academy administrator accounts only through the configured server-side admin allowlist and Supabase admin workflow.
 

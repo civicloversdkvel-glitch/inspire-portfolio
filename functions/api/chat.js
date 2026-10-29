@@ -30,14 +30,15 @@ const SYSTEM_INSTRUCTION = `You are the academic assistant for The Inspire Busin
 
 function localAnswer(query, offlineContext = '') {
   const q = query.toLowerCase();
-  if (q.includes('fee') || q.includes('admission') || q.includes('timing') || q.includes('dakhla')) {
-    return `### Admissions & Academy Information
+  if (q.includes('fee') || q.includes('admission') || q.includes('timing') || q.includes('dakhla') || q.includes('register')) {
+    return `### Student Portal & Academy Support
 
-**The Inspire Business Academy — Sadiqabad**
-- **Location:** Near Shimla Point, beside NGS School Mehrabad, Sadiqabad, Punjab, Pakistan
-- **Contact:** [WhatsApp 0309 3534289](https://wa.me/923093534289)
+This website is a workspace for currently enrolled Inspire Business Academy students. To create an account, use the student registration page with the roll number issued by your academy. New accounts remain locked until academy staff verify and approve the student record.
 
-For current fees, batch timings, and admission availability, please contact the academy directly or submit the website inquiry form so the team can confirm the latest information.`;
+- **Campus:** Near Shimla Point, beside NGS School Mehrabad, Sadiqabad, Punjab, Pakistan
+- **Student support:** [WhatsApp 0309 3534289](https://wa.me/923093534289)
+
+There is no online admission inquiry form on this website. Contact the academy directly if you need help with your existing student account.`;
   }
   if (q.includes('payment') || q.includes('advance') || q.includes('easypaisa') || q.includes('jazzcash')) {
     return `### Safe Freelancing Payments

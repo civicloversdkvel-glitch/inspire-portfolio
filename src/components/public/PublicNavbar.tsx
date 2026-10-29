@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 import { InspireLogo } from '../InspireLogo';
 import {
   GraduationCap,
@@ -12,13 +12,8 @@ import {
 } from 'lucide-react';
 import { useTasksViewModel } from '../../store/useTasksViewModel';
 
-interface PublicNavbarProps {
-  onOpenApplyModal?: () => void;
-}
-
-export const PublicNavbar: React.FC<PublicNavbarProps> = ({ onOpenApplyModal }) => {
+export const PublicNavbar: React.FC = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const { streak } = useTasksViewModel();
 
@@ -29,7 +24,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ onOpenApplyModal }) 
     { label: 'Student Showcase', path: '/public-portfolio' },
     { label: 'Skills Track', path: '/skills-info' },
     { label: 'Announcements', path: '/announcements' },
-    { label: 'Contact & Admissions', path: '/contact' },
+    { label: 'Student Support', path: '/contact' },
   ];
 
   const isActive = (path: string) => {
@@ -44,7 +39,7 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ onOpenApplyModal }) 
         <div className="flex items-center gap-3 sm:gap-6 truncate">
           <span className="flex items-center gap-1.5 font-medium text-yellow-400">
             <Sparkles size={13} className="shrink-0" />
-            <span className="truncate">Admissions Open • Batch 2026/2027</span>
+            <span className="truncate">Student Portal • Assignments & Projects</span>
           </span>
           <span className="hidden md:inline-block text-slate-400">|</span>
           <span className="hidden md:inline-block truncate text-slate-300">
@@ -118,15 +113,13 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ onOpenApplyModal }) 
             )}
           </Link>
 
-          {/* Apply Now Primary CTA */}
-          <button
-            type="button"
-            onClick={onOpenApplyModal ? onOpenApplyModal : () => navigate('/contact#apply')}
-            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-blue-950 text-xs font-extrabold shadow-sm hover:shadow-md transition-all active:scale-95 flex items-center gap-1.5 cursor-pointer"
+          <Link
+            to="/academy/register"
+            className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-blue-950 text-xs font-extrabold shadow-sm hover:shadow-md transition-all active:scale-95 flex items-center gap-1.5"
           >
-            <span>Apply Now</span>
+            <span>Student Register</span>
             <ArrowRight size={14} />
-          </button>
+          </Link>
         </div>
 
         {/* Mobile Hamburger Toggle */}
@@ -161,17 +154,13 @@ export const PublicNavbar: React.FC<PublicNavbarProps> = ({ onOpenApplyModal }) 
               <GraduationCap size={15} />
               <span>Student Portal</span>
             </Link>
-            <button
-              type="button"
-              onClick={() => {
-                setMobileMenuOpen(false);
-                if (onOpenApplyModal) onOpenApplyModal();
-                else navigate('/contact#apply');
-              }}
+            <Link
+              to="/academy/register"
+              onClick={() => setMobileMenuOpen(false)}
               className="py-2.5 px-3 rounded-xl bg-amber-400 text-blue-950 text-xs font-extrabold flex items-center justify-center gap-1.5 text-center"
             >
-              <span>Apply for Admission</span>
-            </button>
+              <span>Student Register</span>
+            </Link>
           </div>
 
           <div className="flex flex-col space-y-1">

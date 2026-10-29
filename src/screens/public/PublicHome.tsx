@@ -109,13 +109,13 @@ export const PublicHome: React.FC = () => {
 
             {/* CTAs */}
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
-              <a
-                href="/#/academy/register"
+              <Link
+                to="/academy/register"
                 className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-blue-950 font-extrabold text-sm shadow-lg shadow-amber-400/20 flex items-center justify-center gap-2 transition-all active:scale-95"
               >
                 <span>Student Register</span>
                 <ArrowRight size={16} />
-              </a>
+              </Link>
 
               <Link
                 to="/academy"

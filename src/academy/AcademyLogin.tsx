@@ -336,7 +336,7 @@ export function AcademyLogin() {
                 <input
                   type="password"
                   required
-                  minLength={8}
+                  minLength={mode === 'register' ? 8 : 6}
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="At least 8 characters"

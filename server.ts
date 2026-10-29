@@ -14,8 +14,6 @@ const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 3000;
 
 app.use(express.json({ limit: '100kb' }));
 
-// Admission inquiries use the public/publishable key. RLS permits INSERT only;
-// this endpoint never needs a Supabase service-role key.
 // Initialize Google GenAI on the server if key is available
 const apiKey = process.env.GEMINI_API_KEY;
 let aiClient: GoogleGenAI | null = null;
@@ -66,13 +64,13 @@ Always be polite, encouraging, structured, and action-oriented.`;
 function generateLocalAcademyAnswer(query: string, offlineContext?: string): string {
   const q = query.toLowerCase();
   
-  if (q.includes('fee') || q.includes('admission') || q.includes('admission date') || q.includes('timing') || q.includes('dakhla')) {
-    return `### Admission & Enrollment Information
-**The Inspire Business Academy (Sadiqabad)** welcomes new students for practical batch training!
-- **Location:** Near Shimla Point, Beside NGS School Mehrabad, Sadiqabad
-- **Director:** Adeel Bhatti
-- **Direct WhatsApp:** [03093534289](https://wa.me/923093534289)
-- **How to Enroll:** You can submit the online application directly through the **Apply Now** page or contact us on WhatsApp for fee concession and current batch schedule.`;
+  if (q.includes('fee') || q.includes('admission') || q.includes('admission date') || q.includes('timing') || q.includes('dakhla') || q.includes('register')) {
+    return `### Student Portal & Academy Support
+This website is a workspace for currently enrolled students of The Inspire Business Academy.
+- **Student registration:** Use the roll number issued by the academy. New accounts remain locked until staff verify and approve the student record.
+- **Campus:** Near Shimla Point, beside NGS School Mehrabad, Sadiqabad
+- **Student support:** [WhatsApp 03093534289](https://wa.me/923093534289)
+There is no online admission inquiry form on this website. Contact the academy directly for help with an existing student account.`;
   }
 
   if (q.includes('shortcut') || q.includes('key')) {

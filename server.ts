@@ -1,5 +1,4 @@
 import express from 'express';
-import { createClient } from '@supabase/supabase-js';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import dotenv from 'dotenv';
@@ -17,21 +16,6 @@ app.use(express.json({ limit: '100kb' }));
 
 // Admission inquiries use the public/publishable key. RLS permits INSERT only;
 // this endpoint never needs a Supabase service-role key.
-const inquirySupabaseUrl = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || 'https://jyfcktszpzeororgdcct.supabase.co';
-const inquirySupabaseKey =
-  process.env.SUPABASE_ANON_KEY ||
-  process.env.VITE_SUPABASE_ANON_KEY ||
-  process.env.VITE_SUPABASE_PUBLISHABLE_KEY ||
-  'sb_publishable_Pavz_u0msigLIVhMfiBHDg_6HN3-Wd-';
-const inquirySupabase =
-  inquirySupabaseUrl && inquirySupabaseKey
-    ? createClient(inquirySupabaseUrl, inquirySupabaseKey, {
-        auth: { persistSession: false, autoRefreshToken: false },
-      })
-    : null;
-
-const inquiryRateLimit = new Map<string, { count: number; resetAt: number }>();
-
 // Initialize Google GenAI on the server if key is available
 const apiKey = process.env.GEMINI_API_KEY;
 let aiClient: GoogleGenAI | null = null;
@@ -188,70 +172,6 @@ app.post('/api/chat', async (req, res) => {
     model: 'inspire-academy-kb',
     thinkingEnabled: false,
     note: 'Server-side knowledge base response active.',
-  });
-});
-
-// API: Contact & Admission Inquiry submission
-app.post('/api/inquiry', async (req, res) => {
-  const name = String(req.body?.name ?? '').trim().slice(0, 120);
-  const phone = String(req.body?.phone ?? '').trim().slice(0, 30);
-  const email = String(req.body?.email ?? '').trim().slice(0, 254);
-  const course = String(req.body?.course ?? 'General Inquiry').trim().slice(0, 160) || 'General Inquiry';
-  const message = String(req.body?.message ?? '').trim().slice(0, 2000);
-
-  if (name.length < 2 || phone.length < 7) {
-    res.status(400).json({ success: false, error: 'Please enter your name and a valid phone number.' });
-    return;
-  }
-  if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-    res.status(400).json({ success: false, error: 'Please enter a valid email address.' });
-    return;
-  }
-
-  const clientIp = req.ip || req.socket.remoteAddress || 'unknown';
-  const now = Date.now();
-  const limit = inquiryRateLimit.get(clientIp);
-  if (limit && limit.resetAt > now && limit.count >= 5) {
-    res.status(429).json({ success: false, error: 'Too many requests. Please try again in a few minutes.' });
-    return;
-  }
-  if (!limit || limit.resetAt <= now) {
-    inquiryRateLimit.set(clientIp, { count: 1, resetAt: now + 15 * 60 * 1000 });
-  } else {
-    limit.count += 1;
-  }
-
-  if (!inquirySupabase) {
-    res.status(503).json({
-      success: false,
-      error: 'Online admissions are temporarily unavailable. Please contact the academy on WhatsApp.',
-    });
-    return;
-  }
-
-  const { error } = await inquirySupabase.from('admission_inquiries').insert({
-    name,
-    phone,
-    email: email || null,
-    course,
-    message,
-    status: 'new',
-    source: 'website',
-  });
-
-  if (error) {
-    console.error('[Admission Inquiry] Database insert failed:', error.code || 'unknown_error');
-    res.status(503).json({
-      success: false,
-      error: 'We could not save your inquiry right now. Please contact the academy on WhatsApp.',
-    });
-    return;
-  }
-
-  res.status(201).json({
-    success: true,
-    message: 'Thank you! Your admission inquiry has been saved. Our team will contact you shortly.',
-    contactWhatsApp: 'https://wa.me/923093534289',
   });
 });
 

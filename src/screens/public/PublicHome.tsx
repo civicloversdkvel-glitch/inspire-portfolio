@@ -113,7 +113,7 @@ export const PublicHome: React.FC = () => {
                 href="#apply"
                 className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-blue-950 font-extrabold text-sm shadow-lg shadow-amber-400/20 flex items-center justify-center gap-2 transition-all active:scale-95"
               >
-                <span>Apply for Admission</span>
+                <span>Student Register</span>
                 <ArrowRight size={16} />
               </a>
 
@@ -467,7 +467,7 @@ export const PublicHome: React.FC = () => {
         </div>
       </section>
 
-      {/* How Admission Works Roadmap */}
+      {/* How Student Portal Works */}
       <section className="bg-blue-950 text-white py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-7xl mx-auto space-y-12">
           <div className="text-center max-w-2xl mx-auto space-y-2">
@@ -475,7 +475,7 @@ export const PublicHome: React.FC = () => {
               Straightforward Process
             </span>
             <h2 className="text-2xl sm:text-3xl font-extrabold text-white">
-              How Admission & Learning Works
+              How the Student Portal Works
             </h2>
             <p className="text-xs sm:text-sm text-blue-200">
               Join hundreds of successful graduates through our structured four-step path.
@@ -497,9 +497,9 @@ export const PublicHome: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-amber-400 text-blue-950 font-black flex items-center justify-center text-lg">
                 2
               </div>
-              <h3 className="text-base font-bold text-white">Submit Application</h3>
+              <h3 className="text-base font-bold text-white">Register Your Account</h3>
               <p className="text-xs text-blue-200 leading-relaxed">
-                Fill the simple online admission form below or visit our physical academy near Shimla Point, Sadiqabad.
+                Enter your academy roll number and student details. Academy staff will verify your account before portal access is enabled.
               </p>
             </div>
 
@@ -507,9 +507,9 @@ export const PublicHome: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-amber-400 text-blue-950 font-black flex items-center justify-center text-lg">
                 3
               </div>
-              <h3 className="text-base font-bold text-white">Receive Roll Number</h3>
+              <h3 className="text-base font-bold text-white">Verify Student ID</h3>
               <p className="text-xs text-blue-200 leading-relaxed">
-                Once reviewed by Director Adeel Bhatti, you receive your permanent roll number (e.g. IBA-2026-0042).
+                Use the roll number already issued by your academy; staff will confirm your student record before activating your account.
               </p>
             </div>
 

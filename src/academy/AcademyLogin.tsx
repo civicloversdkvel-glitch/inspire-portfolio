@@ -37,7 +37,7 @@ export function AcademyLogin() {
   const navigate = useNavigate();
   const goBack = useSafeBack('/home');
 
-  const [mode, setMode] = useState<'login' | 'register' | 'reset'>('login');
+  const [mode, setMode] = useState<'login' | 'register' | 'reset'>(() => new URLSearchParams(location.search).get('mode') === 'register' || location.pathname === '/academy/register' ? 'register' : 'login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -92,7 +92,7 @@ export function AcademyLogin() {
           password
         });
         if (result.requiresEmailConfirmation) {
-          setSuccessMessage('Your registration request was created. Please check your inbox (and Spam folder) for the Supabase confirmation email, then return here to sign in.');
+          setSuccessMessage('Your student account has been created. Please check your inbox (and Spam folder) for the Supabase confirmation email, then return here to sign in.');
           setMode('login');
           setPassword('');
         } else {
@@ -156,7 +156,7 @@ export function AcademyLogin() {
           </div>
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-400">
-              Online Student Portal
+              Academy Student Workspace
             </p>
             <h1 className="text-xl font-bold leading-tight">Inspire Academy Cloud</h1>
           </div>
@@ -196,7 +196,7 @@ export function AcademyLogin() {
             }`}
           >
             <UserPlus size={15} />
-            <span>Student Register</span>
+            <span>Student Registration</span>
           </button>
         </div>
 

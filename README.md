@@ -31,7 +31,7 @@ A responsive public website and private student workspace for **The Inspire Busi
 2. Copy `.env.example` to `.env`.
 3. Set `VITE_SUPABASE_URL` and `VITE_SUPABASE_PUBLISHABLE_KEY` for the Supabase project.
 4. Set `GEMINI_API_KEY` only if the AI assistant should use Gemini.
-5. Ensure the Supabase schema and policies are installed from `supabase/admin_setup.sql` and the repository's ordered migrations. For an existing project, check migration history first and do not replay already-applied migrations.
+5. Ensure the Supabase schema and policies are installed from `supabase/admin_setup.sql`, then apply the repository migrations in filename order. The latest migrations retire public admission intake, keep new student accounts pending until staff approval, prevent self-approval, and restrict assignment/submission access to approved students. For an existing project, check migration history first and do not replay already-applied migrations.
 6. Install dependencies and start the app:
 
    ```bash

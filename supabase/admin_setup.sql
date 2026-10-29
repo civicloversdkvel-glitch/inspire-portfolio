@@ -580,8 +580,8 @@ BEGIN
       NEW.email := lower(COALESCE(auth.jwt()->>'email', NEW.email));
       NEW.role := 'student';
       NEW.is_active := true;
-      NEW.is_approved := true;
-      NEW.approval_status := 'approved';
+      NEW.is_approved := false;
+      NEW.approval_status := 'pending';
       NEW.admission_date := COALESCE(
         NULLIF(trim(NEW.admission_date), ''),
         to_char((now() AT TIME ZONE 'Asia/Karachi'), 'YYYY-MM-DD')

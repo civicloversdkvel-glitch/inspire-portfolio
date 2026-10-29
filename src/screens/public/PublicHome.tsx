@@ -110,7 +110,7 @@ export const PublicHome: React.FC = () => {
             {/* CTAs */}
             <div className="pt-2 flex flex-col sm:flex-row items-center justify-center gap-3 sm:gap-4">
               <a
-                href="#apply"
+                href="/#/academy/register"
                 className="w-full sm:w-auto px-7 py-3.5 rounded-2xl bg-gradient-to-r from-amber-400 to-yellow-400 hover:from-amber-300 hover:to-yellow-300 text-blue-950 font-extrabold text-sm shadow-lg shadow-amber-400/20 flex items-center justify-center gap-2 transition-all active:scale-95"
               >
                 <span>Student Register</span>
@@ -478,7 +478,7 @@ export const PublicHome: React.FC = () => {
               How the Student Portal Works
             </h2>
             <p className="text-xs sm:text-sm text-blue-200">
-              Join hundreds of successful graduates through our structured four-step path.
+              Use your academy-issued roll number, verify your account, then submit work and track feedback in one place.
             </p>
           </div>
 
@@ -487,9 +487,9 @@ export const PublicHome: React.FC = () => {
               <div className="w-10 h-10 rounded-xl bg-amber-400 text-blue-950 font-black flex items-center justify-center text-lg">
                 1
               </div>
-              <h3 className="text-base font-bold text-white">Choose Your Track</h3>
+              <h3 className="text-base font-bold text-white">Use Your Student Account</h3>
               <p className="text-xs text-blue-200 leading-relaxed">
-                Select from our 10 courses and 6 career tracks based on your interests and monetization goals.
+                Register with your academy-issued roll number and details so staff can confirm your student record.
               </p>
             </div>
 
@@ -499,7 +499,7 @@ export const PublicHome: React.FC = () => {
               </div>
               <h3 className="text-base font-bold text-white">Register Your Account</h3>
               <p className="text-xs text-blue-200 leading-relaxed">
-                Enter your academy roll number and student details. Academy staff will verify your account before portal access is enabled.
+                Confirm your email and wait for academy staff to verify your roll number before portal access is enabled.
               </p>
             </div>
 
@@ -509,7 +509,7 @@ export const PublicHome: React.FC = () => {
               </div>
               <h3 className="text-base font-bold text-white">Verify Student ID</h3>
               <p className="text-xs text-blue-200 leading-relaxed">
-                Use the roll number already issued by your academy; staff will confirm your student record before activating your account.
+                After staff approve your student account, sign in to open the learning workspace.
               </p>
             </div>
 

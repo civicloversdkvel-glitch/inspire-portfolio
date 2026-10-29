@@ -18,7 +18,9 @@ begin
   );
   v_initial_status := case when v_is_admin then 'approved' else 'pending' end;
   v_initial_approved := v_is_admin;
-  v_initial_active := v_is_admin;
+  -- Pending accounts can be approved using the existing admin approval toggle.
+  -- is_approved=false and approval_status='pending' still block portal access.
+  v_initial_active := true;
 
   insert into public.profiles (
     id, email, full_name, phone, roll_no, batch, skill,

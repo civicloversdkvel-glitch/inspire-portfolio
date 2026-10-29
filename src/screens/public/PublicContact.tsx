@@ -1,283 +1,77 @@
-import React, { useState } from 'react';
-import { coursesContent } from '../../data/coursesContent';
-import {
-  MapPin,
-  Phone,
-  Mail,
-  Send,
-  Loader2,
-  CheckCircle2,
-  Sparkles,
-  MessageSquare,
-  Clock,
-  ShieldCheck,
-} from 'lucide-react';
+import React from 'react';
+import { Link } from 'react-router-dom';
+import { MapPin, Phone, Mail, Clock, GraduationCap, UserPlus, ArrowRight, MessageCircle, ShieldCheck } from 'lucide-react';
 
 export const PublicContact: React.FC = () => {
-  const [name, setName] = useState('');
-  const [phone, setPhone] = useState('');
-  const [email, setEmail] = useState('');
-  const [course, setCourse] = useState('Graphic Design (Photoshop)');
-  const [city, setCity] = useState('Sadiqabad');
-  const [message, setMessage] = useState('');
-  const [submitting, setSubmitting] = useState(false);
-  const [responseMsg, setResponseMsg] = useState<string | null>(null);
-  const [responseStatus, setResponseStatus] = useState<'success' | 'error' | null>(null);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitting(true);
-    setResponseMsg(null);
-    setResponseStatus(null);
-
-    try {
-      const res = await fetch('/api/inquiry', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name,
-          phone,
-          email,
-          course: `${course} (${city})`,
-          message,
-        }),
-      });
-      const data = await res.json().catch(() => ({}));
-      if (!res.ok || !data.success) throw new Error(data.error || 'Inquiry could not be submitted.');
-      setResponseStatus('success');
-      setResponseMsg(data.message || 'Inquiry submitted successfully! Our director will contact you via WhatsApp.');
-      setName('');
-      setPhone('');
-      setEmail('');
-      setMessage('');
-    } catch {
-      setResponseStatus('error');
-      setResponseMsg("We couldn't save your inquiry online. Please contact us on WhatsApp at 03093534289.");
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
-      <div className="bg-gradient-to-r from-blue-950 via-blue-900 to-indigo-950 text-white rounded-3xl p-8 sm:p-12 shadow-xl border border-blue-800/60 relative overflow-hidden">
-        <div className="max-w-3xl space-y-4 relative z-10">
-          <span className="px-3 py-1 rounded-full bg-white/10 text-yellow-300 text-xs font-bold uppercase tracking-widest border border-white/20">
-            Admissions & Campus Visits
+    <div className="mx-auto max-w-7xl space-y-10 px-4 py-12 sm:px-6 lg:px-8">
+      <section className="relative overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-950 via-blue-900 to-indigo-950 p-8 text-white shadow-xl sm:p-12">
+        <div className="absolute -right-16 -top-16 h-64 w-64 rounded-full bg-amber-400/10 blur-3xl" />
+        <div className="relative max-w-3xl space-y-4">
+          <span className="inline-flex items-center gap-2 rounded-full border border-emerald-300/25 bg-emerald-300/10 px-3 py-1.5 text-[10px] font-extrabold uppercase tracking-[0.18em] text-emerald-200">
+            <ShieldCheck size={14} /> Current students
           </span>
-          <h1 className="text-3xl sm:text-5xl font-black tracking-tight leading-tight">
-            Contact Directorate & Apply for Admission
-          </h1>
-          <p className="text-sm sm:text-base text-blue-100 leading-relaxed font-normal">
-            Visit our physical campus in Sadiqabad or connect directly with Founder Adeel Bhatti via WhatsApp.
+          <h1 className="text-3xl font-black tracking-tight sm:text-5xl">Student support & academy contact</h1>
+          <p className="text-sm leading-relaxed text-blue-100 sm:text-base">
+            This website is the learning workspace for students of The Inspire Business Academy. Register or sign in to upload projects, submit assignments and review your feedback.
           </p>
+          <div className="flex flex-col gap-3 pt-2 sm:flex-row">
+            <Link to="/academy/register" className="inline-flex items-center justify-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-sm font-extrabold text-blue-950 hover:bg-amber-300">
+              <UserPlus size={17} /> Student Registration <ArrowRight size={15} />
+            </Link>
+            <Link to="/academy/login" className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-sm font-bold text-white hover:bg-white/15">
+              <GraduationCap size={17} /> Student Login
+            </Link>
+          </div>
         </div>
-      </div>
+      </section>
 
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-10">
-        {/* Contact Information & Physical Campus */}
-        <div className="lg:col-span-2 space-y-6">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
-            <h2 className="text-lg font-black text-slate-900">Campus Contact Details</h2>
-
-            <div className="space-y-5 text-xs sm:text-sm text-slate-600">
-              <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center shrink-0 border border-amber-100">
-                  <MapPin size={20} />
-                </div>
-                <div>
-                  <p className="font-extrabold text-slate-900">Physical Address</p>
-                  <p className="mt-0.5 leading-relaxed text-slate-600">
-                    Near Shimla Point, Beside NGS School Mehrabad, Sadiqabad, Punjab, Pakistan
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center shrink-0 border border-emerald-100">
-                  <Phone size={20} />
-                </div>
-                <div>
-                  <p className="font-extrabold text-slate-900">Call & WhatsApp Hotline</p>
-                  <a
-                    href="https://wa.me/923093534289"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="mt-0.5 inline-block text-emerald-700 font-bold hover:underline"
-                  >
-                    03093534289 (Adeel Bhatti)
-                  </a>
-                  <p className="text-[11px] text-slate-400 mt-0.5">Available for WhatsApp admission inquiries</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center shrink-0 border border-blue-100">
-                  <Mail size={20} />
-                </div>
-                <div>
-                  <p className="font-extrabold text-slate-900">Email Address</p>
-                  <p className="mt-0.5 text-slate-600">theinspirebusinessacademy@gmail.com</p>
-                </div>
-              </div>
-
-              <div className="flex items-start gap-3.5">
-                <div className="w-10 h-10 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center shrink-0 border border-purple-100">
-                  <Clock size={20} />
-                </div>
-                <div>
-                  <p className="font-extrabold text-slate-900">Campus Hours</p>
-                  <p className="mt-0.5 text-slate-600">Monday - Saturday: 9:00 AM - 7:00 PM PKT</p>
-                </div>
-              </div>
+      <section className="grid gap-6 lg:grid-cols-[1fr_1.2fr]">
+        <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm sm:p-8">
+          <h2 className="text-xl font-black text-slate-950">Academy contact details</h2>
+          <p className="mt-2 text-sm leading-relaxed text-slate-500">For account access or student portal support, contact the academy directly.</p>
+          <div className="mt-7 space-y-6">
+            <div className="flex items-start gap-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-blue-100 bg-blue-50 text-blue-700"><MapPin size={20} /></span>
+              <div><p className="font-extrabold text-slate-900">Campus address</p><p className="mt-1 text-sm leading-relaxed text-slate-600">Near Shimla Point, beside NGS School Mehrabad, Sadiqabad, Punjab, Pakistan</p></div>
             </div>
+            <div className="flex items-start gap-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-emerald-100 bg-emerald-50 text-emerald-700"><Phone size={20} /></span>
+              <div><p className="font-extrabold text-slate-900">WhatsApp support</p><a className="mt-1 inline-block text-sm font-bold text-emerald-700 hover:underline" href="https://wa.me/923093534289" target="_blank" rel="noopener noreferrer">0309 3534289</a></div>
+            </div>
+            <div className="flex items-start gap-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-violet-100 bg-violet-50 text-violet-700"><Mail size={20} /></span>
+              <div><p className="font-extrabold text-slate-900">Email address</p><a className="mt-1 inline-block break-all text-sm text-slate-600 hover:text-blue-700" href="mailto:theinspirebusinessacademy@gmail.com">theinspirebusinessacademy@gmail.com</a></div>
+            </div>
+            <div className="flex items-start gap-3.5">
+              <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl border border-amber-100 bg-amber-50 text-amber-700"><Clock size={20} /></span>
+              <div><p className="font-extrabold text-slate-900">Support hours</p><p className="mt-1 text-sm text-slate-600">Contact the academy during campus working hours.</p></div>
+            </div>
+          </div>
+          <a href="https://wa.me/923093534289?text=Assalam-o-Alaikum%2C%20I%20need%20help%20with%20my%20student%20portal%20account." target="_blank" rel="noopener noreferrer" className="mt-8 inline-flex w-full items-center justify-center gap-2 rounded-xl bg-emerald-600 px-5 py-3.5 text-sm font-extrabold text-white transition hover:bg-emerald-700">
+            <MessageCircle size={17} /> Contact student support
+          </a>
+        </div>
 
-            <div className="pt-2">
-              <a
-                href="https://wa.me/923093534289?text=Hello%20Adeel%20Bhatti%2C%20I%20want%20to%20visit%20the%20academy%20in%20Sadiqabad"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="w-full py-3.5 px-4 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs text-center flex items-center justify-center gap-2 shadow-sm transition-colors"
-              >
-                <Phone size={16} />
-                <span>Chat Instantly on WhatsApp</span>
-              </a>
+        <div className="rounded-3xl border border-slate-200 bg-slate-50 p-6 sm:p-8">
+          <h2 className="text-xl font-black text-slate-950">Use your student portal</h2>
+          <p className="mt-2 text-sm leading-relaxed text-slate-500">No public admission application is needed here. This portal is intended for students who study at our academy.</p>
+          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+            <div className="rounded-2xl border border-slate-200 bg-white p-5">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-blue-50 text-blue-700"><UserPlus size={21} /></div>
+              <h3 className="mt-4 font-extrabold text-slate-900">Create an account</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-500">Register with your name, phone, skill, email and a secure password.</p>
+              <Link to="/academy/register" className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-blue-800 hover:underline">Student registration <ArrowRight size={15} /></Link>
+            </div>
+            <div className="rounded-2xl border border-slate-200 bg-white p-5">
+              <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700"><GraduationCap size={21} /></div>
+              <h3 className="mt-4 font-extrabold text-slate-900">Upload your work</h3>
+              <p className="mt-2 text-sm leading-relaxed text-slate-500">Sign in to submit assignments, upload projects and check teacher feedback.</p>
+              <Link to="/academy/login" className="mt-4 inline-flex items-center gap-2 text-sm font-extrabold text-blue-800 hover:underline">Open student login <ArrowRight size={15} /></Link>
             </div>
           </div>
         </div>
-
-        {/* Admission Form */}
-        <div id="apply" className="lg:col-span-3">
-          <div className="bg-white rounded-3xl p-6 sm:p-8 border border-slate-200/90 shadow-sm space-y-6">
-            <div>
-              <span className="text-[10px] font-extrabold uppercase tracking-widest text-blue-700 bg-blue-50 px-2.5 py-1 rounded-md">
-                Fast-Track Admission Form
-              </span>
-              <h2 className="text-xl sm:text-2xl font-black text-slate-900 mt-2">
-                Apply for Admission / Request Course Info
-              </h2>
-              <p className="text-xs text-slate-500 mt-1">
-                Fill in your details below. Our team reviews submissions daily and responds with batch timetables and fee details.
-              </p>
-            </div>
-
-            {responseMsg && (
-              <div className={`p-4 rounded-2xl border text-xs font-semibold flex items-start gap-2.5 ${responseStatus === 'error' ? 'bg-rose-50 border-rose-200 text-rose-900' : 'bg-emerald-50 border-emerald-200 text-emerald-900'}`}>
-                {responseStatus === 'error' ? <Phone size={18} className="text-rose-600 shrink-0 mt-0.5" /> : <CheckCircle2 size={18} className="text-emerald-600 shrink-0 mt-0.5" />}
-                <span>{responseMsg}</span>
-              </div>
-            )}
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                    Your Full Name *
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    placeholder="e.g. Ali Raza"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-700"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                    WhatsApp Number *
-                  </label>
-                  <input
-                    type="tel"
-                    required
-                    value={phone}
-                    onChange={(e) => setPhone(e.target.value)}
-                    placeholder="0300-1234567"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-700"
-                  />
-                </div>
-              </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                    Email Address
-                  </label>
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="student@example.com"
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-700"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                    City / Town
-                  </label>
-                  <input
-                    type="text"
-                    value={city}
-                    onChange={(e) => setCity(e.target.value)}
-                    placeholder="Sadiqabad, Rahim Yar Khan, etc."
-                    className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-700"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                  Selected Course Track *
-                </label>
-                <select
-                  value={course}
-                  onChange={(e) => setCourse(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl border border-slate-200 text-xs bg-white focus:outline-none focus:border-blue-700"
-                >
-                  {coursesContent.map((c) => (
-                    <option key={c.id} value={c.title}>
-                      {c.title}
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label className="block text-xs font-bold text-slate-600 uppercase mb-1">
-                  Questions or Notes
-                </label>
-                <textarea
-                  rows={3}
-                  value={message}
-                  onChange={(e) => setMessage(e.target.value)}
-                  placeholder="Ask about shift timings, class start dates, or fee concessions..."
-                  className="w-full p-3 rounded-xl border border-slate-200 text-xs focus:outline-none focus:border-blue-700 resize-none"
-                />
-              </div>
-
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full py-3 bg-blue-900 hover:bg-blue-800 text-white font-extrabold text-xs rounded-xl flex items-center justify-center gap-2 shadow-sm transition-colors disabled:opacity-50"
-              >
-                {submitting ? (
-                  <>
-                    <Loader2 size={16} className="animate-spin" />
-                    <span>Submitting Application...</span>
-                  </>
-                ) : (
-                  <>
-                    <Send size={16} />
-                    <span>Submit Online Application</span>
-                  </>
-                )}
-              </button>
-            </form>
-          </div>
-        </div>
-      </div>
+      </section>
     </div>
   );
 };

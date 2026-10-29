@@ -22,28 +22,18 @@ export const PublicFooter: React.FC = () => {
         <div className="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="space-y-1 text-center md:text-left">
             <h3 className="text-xl sm:text-2xl font-extrabold text-white">
-              Ready to learn high-income skills & start earning?
+              Already a student? Your workspace is ready.
             </h3>
             <p className="text-xs sm:text-sm text-blue-200">
-              Join The Inspire Business Academy in Sadiqabad or access our remote student learning portal.
+              Register or sign in to upload your assignments, submit projects and review feedback.
             </p>
           </div>
           <div className="flex flex-wrap items-center justify-center gap-3 shrink-0">
-            <a
-              href="https://wa.me/923093534289?text=Hello%20Inspire%20Business%20Academy%2C%20I%20want%20to%20inquire%20about%20admissions"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="px-5 py-3 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold text-xs flex items-center gap-2 shadow-md transition-all active:scale-95"
-            >
-              <Phone size={15} />
-              <span>Chat on WhatsApp</span>
-            </a>
-            <Link
-              to="/contact#apply"
-              className="px-5 py-3 rounded-xl bg-amber-400 hover:bg-amber-300 text-blue-950 font-extrabold text-xs flex items-center gap-2 shadow-md transition-all active:scale-95"
-            >
-              <Sparkles size={15} />
-              <span>Online Admission</span>
+            <Link to="/academy/login" className="inline-flex items-center gap-2 rounded-xl border border-white/20 bg-white/10 px-5 py-3 text-xs font-extrabold text-white transition hover:bg-white/15">
+              <GraduationCap size={15} /> Student Login
+            </Link>
+            <Link to="/academy/register" className="inline-flex items-center gap-2 rounded-xl bg-amber-400 px-5 py-3 text-xs font-extrabold text-blue-950 shadow-md transition hover:bg-amber-300">
+              <ShieldCheck size={15} /> Student Registration
             </Link>
           </div>
         </div>

@@ -470,8 +470,8 @@ BEGIN
       ELSE COALESCE(NULLIF(NEW.raw_user_meta_data->>'skill', ''), 'Graphic Designing')
     END,
     CASE WHEN v_is_admin THEN 'admin' ELSE 'student' END,
-    'approved',
-    true,
+    CASE WHEN v_is_admin THEN 'approved' ELSE 'pending' END,
+    v_is_admin,
     true,
     COALESCE(
       NULLIF(NEW.raw_user_meta_data->>'admission_date', ''),

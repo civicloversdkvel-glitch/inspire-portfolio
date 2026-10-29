@@ -19,7 +19,7 @@ export const PublicAnnouncements: React.FC = () => {
       badge: 'Student Portal',
       badgeColor: 'bg-emerald-100 text-emerald-800',
       message:
-        'Student portal registration is available for currently enrolled academy students. Use your academy roll number to register, then wait for staff verification before uploading projects. the upcoming 2-month professional diploma batch. Physical classes take place at the Sadiqabad campus with practical lab sessions. Limited seats available per shift to ensure 1-on-1 mentorship.',
+        'Student portal registration is available for currently enrolled academy students. Enter your academy-issued roll number and account details, then wait for staff verification before uploading assignments and projects.',
       actionLink: '/academy/register',
       actionText: 'Student Registration',
     },

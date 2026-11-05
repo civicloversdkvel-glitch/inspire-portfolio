@@ -12,7 +12,6 @@ import {
   Mail,
   User,
   Phone,
-  Hash,
   Award,
   AlertCircle,
   CheckCircle2,
@@ -42,7 +41,6 @@ export function AcademyLogin() {
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [phone, setPhone] = useState('');
-  const [rollNo, setRollNo] = useState('');
   const [skill, setSkill] = useState<string>(ACADEMY_SKILLS[0]);
   const [submitting, setSubmitting] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
@@ -86,17 +84,16 @@ export function AcademyLogin() {
         const result = await registerStudent({
           fullName,
           phone,
-          rollNo,
           skill,
           email,
           password
         });
         if (result.requiresEmailConfirmation) {
-          setSuccessMessage('Your student account has been created. Confirm your email, then wait for academy staff to verify your roll number before portal access is enabled.');
+          setSuccessMessage('Your student account has been created. Confirm your email, then wait for academy staff to review and approve your account.');
           setMode('login');
           setPassword('');
         } else {
-          setSuccessMessage('Registration complete. Your account is waiting for academy verification; portal access will unlock after staff approval.');
+          setSuccessMessage('Registration complete. Your account is waiting for academy staff approval. The academy will assign your roll number.');
         }
       }
     } catch (err: any) {
@@ -107,8 +104,8 @@ export function AcademyLogin() {
   };
 
   const handleGoogleSignIn = async () => {
-    if (mode === 'register' && (fullName.trim().length < 2 || rollNo.trim().length < 3)) {
-      setLocalError('Enter your full name and the roll number issued by the academy before registering.');
+    if (mode === 'register' && fullName.trim().length < 2) {
+      setLocalError('Enter your full name before registering.');
       return;
     }
     setLocalError(null);
@@ -117,7 +114,7 @@ export function AcademyLogin() {
     try {
       await signInWithGoogle(
         mode === 'register'
-          ? { fullName, phone, rollNo, skill }
+          ? { fullName, phone, skill }
           : undefined
       );
     } catch (err: any) {
@@ -241,38 +238,19 @@ export function AcademyLogin() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                    Academy Roll No *
-                  </label>
-                  <div className="relative">
-                    <Hash size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="text"
-                      required
-                      value={rollNo}
-                      onChange={e => setRollNo(e.target.value)}
-                      placeholder="Your academy roll number"
-                      className="w-full pl-8 pr-2.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-blue-600"
-                    />
-                  </div>
-                </div>
-
-                <div>
-                  <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">
-                    WhatsApp / Phone
-                  </label>
-                  <div className="relative">
-                    <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
-                    <input
-                      type="tel"
-                      value={phone}
-                      onChange={e => setPhone(e.target.value)}
-                      placeholder="03001234567"
-                      className="w-full pl-8 pr-2.5 py-2.5 rounded-xl border border-gray-200 text-xs focus:outline-none focus:border-blue-600"
-                    />
-                  </div>
+              <div>
+                <label className="block text-[11px] font-bold text-gray-500 uppercase tracking-wider mb-1">
+                  WhatsApp / Phone
+                </label>
+                <div className="relative">
+                  <Phone size={15} className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+                  <input
+                    type="tel"
+                    value={phone}
+                    onChange={e => setPhone(e.target.value)}
+                    placeholder="03001234567"
+                    className="w-full pl-10 pr-3 py-2.5 rounded-xl border border-gray-200 text-sm focus:outline-none focus:border-blue-600"
+                  />
                 </div>
               </div>
 

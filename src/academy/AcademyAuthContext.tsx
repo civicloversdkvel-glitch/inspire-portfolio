@@ -16,7 +16,6 @@ import { AcademyProfile, UserRole, VALIDATION_LIMITS } from './types';
 interface RegisterStudentInput {
   fullName: string;
   phone: string;
-  rollNo?: string;
   skill: string;
   email: string;
   password: string;
@@ -511,16 +510,12 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
     const cleanName = input.fullName.trim();
     const cleanPhone = input.phone.trim();
     const cleanEmail = input.email.trim().toLowerCase();
-    const cleanRoll = (input.rollNo || '').trim();
 
     if (cleanName.length < VALIDATION_LIMITS.FULL_NAME_MIN) {
       throw new Error('Please enter your full name (at least 2 characters).');
     }
     if (!cleanEmail || !cleanEmail.includes('@')) {
       throw new Error('Please enter a valid email address.');
-    }
-    if (cleanRoll.length < 3) {
-      throw new Error('Enter the student roll number issued by the academy.');
     }
     if (input.password.length < 8) {
       throw new Error('Password must be at least 8 characters.');
@@ -534,7 +529,6 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
         data: {
           full_name: cleanName,
           phone: cleanPhone,
-          roll_no: cleanRoll,
           skill: input.skill,
           admission_date: getTodayPKT(),
           role: 'student'
@@ -561,7 +555,6 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
     const hydrated = await loadOrCreateProfile(activeUser, {
       fullName: cleanName,
       phone: cleanPhone,
-      rollNo: cleanRoll,
       skill: input.skill
     });
 

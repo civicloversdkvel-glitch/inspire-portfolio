@@ -1268,8 +1268,18 @@ export async function adminUpdateStudentProfile(
       payload.roll_no = cleanRollNo;
     }
 
-    const { error } = await supabase.from('profiles').update(payload).eq('id', studentId);
+    const { data: updatedProfile, error } = await supabase
+      .from('profiles')
+      .update(payload)
+      .eq('id', studentId)
+      .select('id')
+      .maybeSingle();
     if (error) throw error;
+    if (!updatedProfile) {
+      throw new Error(
+        'Student approval save nahi hui: student record nahi mila ya database ne admin update allow nahi ki. Admin account se dobara sign in karke try karein.'
+      );
+    }
   } catch (err) {
     handleSupabaseError(err, OperationType.UPDATE, `profiles/${studentId}`);
   }

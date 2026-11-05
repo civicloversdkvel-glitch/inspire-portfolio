@@ -314,7 +314,7 @@ export function handleSupabaseError(
     errObj?.code === '42501'
   ) {
     throw new Error(
-      `Permission denied by Supabase Row Level Security (RLS) on ${resourcePath}. Please ensure you are signed in with an authorized account and have run supabase/admin_setup.sql in your Supabase SQL Editor.`
+      `Supabase ne ${resourcePath} par permission deny kar di. Confirm karein ke aap authorized Admin account se signed in hain. Agar aap Admin hain to sign out karke dobara sign in karein; database setup dobara chalane ki zaroorat tabhi hogi jab actual schema/migration missing ho. (Code: ${errObj?.code || '42501'})`
     );
   }
 
@@ -323,7 +323,7 @@ export function handleSupabaseError(
     rawMessage.toLowerCase().includes('does not exist')
   ) {
     throw new Error(
-      `Database table (${resourcePath}) does not exist yet. Please open your Supabase SQL Editor and run supabase/admin_setup.sql.`
+      `Database table (${resourcePath}) nahi mili. Yeh schema/migration issue hai; admin approval ke baad routine SQL chalane ki zaroorat nahi hoti. Missing table: ${resourcePath}.`
     );
   }
 

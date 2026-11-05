@@ -15,6 +15,7 @@ import {
   Loader2,
   Lock,
   AlertCircle,
+  ArrowLeft,
 } from 'lucide-react';
 
 export function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -285,7 +286,17 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           <div className="flex items-center gap-3">
             <button
               type="button"
+              onClick={() => navigate('/')}
+              title="Back to Main Website"
+              aria-label="Back to Main Website"
+              className="p-2 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 transition-colors shrink-0"
+            >
+              <ArrowLeft size={19} />
+            </button>
+            <button
+              type="button"
               onClick={() => setDrawerOpen(true)}
+              aria-label="Open admin navigation"
               className="lg:hidden p-2 rounded-xl bg-slate-100 text-slate-700"
             >
               <Menu size={18} />

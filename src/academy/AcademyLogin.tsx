@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { InspireLogo } from '../components/InspireLogo';
+import { AnimatedLogo } from '../components/AnimatedLogo';
 import { useAcademyAuth } from './AcademyAuthContext';
 import { ACADEMY_SKILLS } from './types';
 import { getSupabaseConfigError, isSupabaseConfigured } from './supabase';
@@ -125,13 +125,8 @@ export function AcademyLogin() {
           </button>
         </div>
 
-        <div className="flex items-center gap-3.5">
-          <div className="w-14 h-14 bg-white rounded-2xl p-1 shadow-lg border-2 border-yellow-400/80 shrink-0 flex items-center justify-center overflow-hidden">
-            <InspireLogo
-              alt="The Inspire Business Academy Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
+        <div className="flex flex-col sm:flex-row items-center gap-3.5 text-center sm:text-left">
+          <AnimatedLogo size="hero" className="shrink-0" />
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-400">
               Academy Student Workspace

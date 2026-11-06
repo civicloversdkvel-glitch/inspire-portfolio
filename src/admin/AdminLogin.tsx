@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
-import { InspireLogo } from '../components/InspireLogo';
+import { AnimatedLogo } from '../components/AnimatedLogo';
 import { useAcademyAuth } from '../academy/AcademyAuthContext';
 import {
   getSupabaseConfigError,
@@ -187,13 +187,8 @@ export function AdminLogin() {
             </button>
           </div>
 
-          <div className="flex items-center gap-4">
-            <div className="w-16 h-16 bg-white rounded-2xl p-1.5 shadow-lg border-2 border-yellow-400 shrink-0 flex items-center justify-center overflow-hidden">
-              <InspireLogo
-                alt="The Inspire Business Academy Logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
+          <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
+            <AnimatedLogo size="hero" className="shrink-0" />
             <div>
               <h1 className="text-lg sm:text-xl font-extrabold text-white leading-tight">
                 THE INSPIRE BUSINESS ACADEMY

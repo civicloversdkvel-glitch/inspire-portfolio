@@ -92,3 +92,346 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+
+/* Lightweight interaction motion layer: compositor-friendly transforms and opacity only. */
+:root {
+  --motion-fast: 180ms;
+  --motion-base: 300ms;
+  --motion-slow: 500ms;
+  --motion-ease: cubic-bezier(.22, 1, .36, 1);
+}
+button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"], [class*="cursor-pointer"] {
+  position: relative;
+  transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled):not([aria-disabled="true"]):active, a[href]:not([aria-disabled="true"]):active, [role="button"]:not([aria-disabled="true"]):active, [data-clickable="true"]:not([aria-disabled="true"]):active, [class*="cursor-pointer"]:not([aria-disabled="true"]):active {
+  transform: scale(.975);
+}
+button:disabled, button[aria-disabled="true"], a[aria-disabled="true"], [aria-disabled="true"] { animation: none !important; transition: none !important; transform: none !important; }
+button:focus-visible, a[href]:focus-visible, [role="button"]:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+button:not(:disabled):hover, a[href]:hover, [role="button"]:not([aria-disabled="true"]):hover, [data-clickable="true"]:hover, [class*="cursor-pointer"]:hover {
+  filter: brightness(1.025);
+}
+button:not(:disabled):hover svg, a[href]:hover svg, [role="button"]:not([aria-disabled="true"]):hover svg {
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+button:not(:disabled):hover svg, a[href]:hover svg { transform: translateY(-1px); }
+button.motion-ripple-active::after, a.motion-ripple-active::after, [role="button"].motion-ripple-active::after, [data-clickable="true"].motion-ripple-active::after, [class*="cursor-pointer"].motion-ripple-active::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  left: var(--ripple-x, 50%);
+  top: var(--ripple-y, 50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: .16;
+  transform: translate(-50%, -50%) scale(0);
+  animation: motion-ripple 480ms ease-out forwards;
+}
+@keyframes motion-ripple { to { transform: translate(-50%, -50%) scale(18); opacity: 0; } }
+
+/* Variant cues inferred from existing utility classes; no component API changes. */
+button[class*="bg-blue-"]:not(:disabled):hover, a[class*="bg-blue-"]:hover {
+  box-shadow: 0 8px 22px rgb(30 64 175 / .18);
+}
+button[class*="bg-yellow-"]:not(:disabled):hover, a[class*="from-amber-"]:hover {
+  box-shadow: 0 8px 24px rgb(245 158 11 / .22);
+}
+button[class*="bg-red-"]:not(:disabled):hover { box-shadow: 0 7px 20px rgb(220 38 38 / .16); }
+button[class*="bg-transparent"]:not(:disabled):hover, button[class*="text-slate-"]:not(:disabled):hover {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+button[class*="rounded-full"]:not(:disabled):hover { transform: translateY(-1px) scale(1.035); }
+[role="tab"] { transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease; }
+[role="switch"] > span, [role="switch"]::before { transition: transform var(--motion-fast) var(--motion-ease); }
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+  transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;
+}
+input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgb(59 130 246 / .13);
+}
+input[type="checkbox"], input[type="radio"] { accent-color: #1d4ed8; transition: transform var(--motion-fast) var(--motion-ease); }
+input[type="checkbox"]:active, input[type="radio"]:active { transform: scale(.9); }
+.motion-tilt-3d { transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); transition: transform 240ms var(--motion-ease); transform-style: preserve-3d; }
+.motion-glow-card { transition: transform var(--motion-base) var(--motion-ease); }
+.motion-glow-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgb(15 23 42 / .10); }
+.motion-flip-card { perspective: 900px; width: 100%; background: transparent; border: 0; padding: 0; }
+.motion-flip-inner { display: grid; transform-style: preserve-3d; transition: transform var(--motion-slow) var(--motion-ease); }
+.motion-flip-card.is-flipped .motion-flip-inner { transform: rotateY(180deg); }
+.motion-flip-face { grid-area: 1 / 1; backface-visibility: hidden; }
+.motion-flip-back { transform: rotateY(180deg); }
+.motion-toast { animation: motion-toast-in var(--motion-base) var(--motion-ease) both; }
+@keyframes motion-toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.motion-countdown { transform-origin: left; animation: motion-countdown linear forwards; }
+@keyframes motion-countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.motion-game-correct { animation: motion-correct 480ms ease-out; }
+.motion-game-wrong { animation: motion-wrong 280ms ease-in-out; }
+@keyframes motion-correct { 0% { transform: scale(1); } 35% { transform: scale(1.035); } 100% { transform: scale(1); } }
+@keyframes motion-wrong { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.motion-tilt-3d, .motion-glow-card { will-change: transform; }
+html[data-motion-reduce="true"] *, html[data-motion-reduce="true"] *::before, html[data-motion-reduce="true"] *::after {
+  animation-duration: 150ms !important;
+  animation-iteration-count: 1 !important;
+  transition-property: transform, opacity !important;
+  transition-duration: 150ms !important;
+  scroll-behavior: auto !important;
+}
+html[data-motion-reduce="true"] .motion-tilt-3d { transform: none !important; }
+html[data-motion-reduce="true"] .motion-glow-card:hover { transform: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 150ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  .motion-tilt-3d, .motion-card-tilt { transform: none !important; }
+  .motion-button-fab, .motion-particle { animation: none !important; }
+  .motion-particle { display: none !important; }
+}
+@media (hover: none) {
+  .motion-tilt-3d { transform: none !important; }
+}
+
+html[data-perf-mode="true"] .motion-tilt-3d { transform: none !important; }
+html[data-perf-mode="true"] .motion-particle { display: none !important; }
+[role="tab"][aria-selected="true"] { box-shadow: inset 0 -2px 0 currentColor; }
+[role="switch"] { cursor: pointer; }
+
+
+/* Shared semantic variants for the reusable Button component. */
+.motion-button-primary:hover:not(:disabled) { box-shadow: 0 8px 24px rgb(37 99 235 / .22); }
+.motion-button-accent { overflow: hidden; isolation: isolate; }
+.motion-button-accent::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 28%, rgb(255 255 255 / .38) 48%, transparent 68%);
+  transform: translateX(-120%);
+}
+.motion-button-accent:hover::before { transform: translateX(120%); transition: transform 650ms cubic-bezier(.22,1,.36,1); }
+.motion-button-accent:hover:not(:disabled) { box-shadow: 0 8px 24px rgb(245 158 11 / .28); }
+.motion-button-ghost::before {
+  content: ""; position: absolute; left: 10%; right: 10%; bottom: 4px; height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: left;
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+.motion-button-ghost:hover::before { transform: scaleX(1); }
+.motion-button-danger:hover:not(:disabled) { box-shadow: 0 8px 22px rgb(220 38 38 / .2); }
+.motion-button-fab { animation: motion-fab-bob 3.2s ease-in-out infinite; }
+@keyframes motion-fab-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+[role="tab"]::after {
+  content: ""; display: block; height: 2px; width: 100%; background: currentColor;
+  transform: scaleX(0); transform-origin: center; transition: transform var(--motion-base) var(--motion-ease);
+}
+[role="tab"][aria-selected="true"]::after { transform: scaleX(1); }
+[role="switch"][aria-checked="true"]::before { transform: translateX(100%); }
+input:invalid:not(:placeholder-shown) { animation: motion-input-nudge 220ms ease-in-out; }
+@keyframes motion-input-nudge { 0%,100% { transform: translateX(0); } 30% { transform: translateX(-2px); } 70% { transform: translateX(2px); } }
+select:focus { transform: scale(1.005); }
+[role="progressbar"] > span, .motion-progress-fill { transform-origin: left; transition: transform var(--motion-slow) var(--motion-ease); }
+.motion-complete { animation: motion-complete 520ms ease-out; }
+@keyframes motion-complete { 0% { opacity: .75; transform: scale(.985); } 55% { opacity: 1; transform: scale(1.015); } 100% { opacity: 1; transform: scale(1); } }
+html[data-motion-reduce="true"] .motion-button-fab { animation: none !important; }
+html[data-motion-reduce="true"] .motion-button-accent::before { display: none; }
+
+.motion-card-tilt { transform: perspective(900px) rotateX(var(--card-tilt-x, 0deg)) rotateY(var(--card-tilt-y, 0deg)); transform-style: preserve-3d; transition: transform 220ms var(--motion-ease); }
+html[data-perf-mode="true"] .motion-card-tilt { transform: none !important; }
+html[data-motion-reduce="true"] .motion-card-tilt { transform: none !important; }
+
+/* Native switch used in preferences gets a spring-like sliding thumb. */
+input[role="switch"] {
+  appearance: none; -webkit-appearance: none; position: relative; width: 42px; height: 24px;
+  border-radius: 999px; background: #cbd5e1; border: 0; cursor: pointer; flex: 0 0 auto;
+  transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;
+}
+input[role="switch"]::before {
+  content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+  border-radius: 50%; background: white; transform: translateX(0);
+  transition: transform var(--motion-base) cubic-bezier(.2,1.4,.4,1);
+}
+input[role="switch"]:checked { background: #2563eb; }
+input[role="switch"]:checked::before { transform: translateX(18px); }
+input[role="switch"]:focus-visible { outline: 3px solid #f59e0b; outline-offset: 3px; }
+a[aria-current="page"]::after {
+  content: ""; position: absolute; left: 12%; right: 12%; bottom: 2px; height: 2px;
+  background: currentColor; transform: scaleX(1); transform-origin: center;
+}
+a[aria-current="page"] svg, a:hover svg { transition: transform var(--motion-fast) var(--motion-ease); }
+a[aria-current="page"]:hover svg { transform: translateY(-2px) scale(1.05); }
+
+/* Form validation cues are static; error feedback nudges only the field transform. */
+input[required]:valid:not([type="file"]):not([type="checkbox"]):not([type="radio"]),
+textarea[required]:valid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='m4 10 4 4 8-8' stroke='%2316a34a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; background-size: 15px;
+  padding-right: 2rem;
+}
+.motion-drawer { animation: motion-drawer-in var(--motion-base) var(--motion-ease) both; }
+.motion-sheet { animation: motion-sheet-in var(--motion-base) var(--motion-ease) both; }
+@keyframes motion-drawer-in { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes motion-sheet-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+html[data-motion-reduce="true"] .motion-button-fab,
+html[data-motion-reduce="true"] .motion-particle { animation: none !important; }
+html[data-motion-reduce="true"] .motion-particle { display: none !important; }
+
+
+/* Route-level signature motion. All page transitions use compositor-friendly properties. */
+.motion-route-frame { width: 100%; min-width: 0; transform-origin: 50% 50%; }
+.motion-route-frame [data-motion-stagger] > * { animation: route-item-in 420ms cubic-bezier(.22,1,.36,1) both; }
+.motion-route-frame [data-motion-stagger] > *:nth-child(2) { animation-delay: 55ms; }
+.motion-route-frame [data-motion-stagger] > *:nth-child(3) { animation-delay: 110ms; }
+.motion-route-frame [data-motion-stagger] > *:nth-child(4) { animation-delay: 165ms; }
+.motion-route-frame [data-motion-stagger] > *:nth-child(5) { animation-delay: 220ms; }
+@keyframes route-item-in { from { opacity: 0; transform: translate3d(0, 14px, 0) scale(.985); } to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } }
+[data-page-route="/"] .motion-hero-word, [data-page-route="/home"] .motion-hero-word { animation: route-hero-rise 560ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/"] .motion-hero-word:nth-child(2), [data-page-route="/home"] .motion-hero-word:nth-child(2) { animation-delay: 90ms; }
+[data-page-route="/"] .motion-hero-word:nth-child(3), [data-page-route="/home"] .motion-hero-word:nth-child(3) { animation-delay: 180ms; }
+@keyframes route-hero-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+.motion-route-reveal { opacity: 0; transform: translateY(16px); transition: opacity 420ms ease, transform 420ms cubic-bezier(.22,1,.36,1); }
+.motion-route-reveal.is-visible { opacity: 1; transform: translateY(0); }
+.motion-route-reveal.is-visible { opacity: 1; transform: translateY(0); }
+.motion-auth-mesh { background-size: 180% 180%; }
+.motion-game-memory { perspective: 900px; transform-style: preserve-3d; transition: transform 500ms cubic-bezier(.2,.8,.2,1); }
+.motion-game-memory.is-flipped { transform: rotateY(180deg); }
+.motion-game-projectile { will-change: transform, opacity; animation: projectile-travel 360ms linear both; }
+@keyframes projectile-travel { from { opacity: 0; transform: translate3d(0,0,0) scale(.6); } to { opacity: 1; transform: translate3d(var(--projectile-x, 40px), var(--projectile-y, -40px), 0) scale(1); } }
+.motion-admin-page, [data-admin-motion="true"] * { transition-duration: 180ms !important; }
+.motion-admin-page { transform: none !important; }
+.motion-route-error { animation: route-glitch 380ms steps(2,end) both; }
+@keyframes route-glitch { 0% { opacity: 0; transform: translateX(-3px); } 35% { opacity: 1; transform: translateX(3px); } 70% { transform: translateX(-1px); } 100% { opacity: 1; transform: translateX(0); } }
+.motion-route-float { animation: route-float 4s ease-in-out infinite; }
+@keyframes route-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+@media (prefers-reduced-motion: reduce) {
+  .motion-route-frame *, .motion-route-frame *::before, .motion-route-frame *::after {
+    animation-duration: 150ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+  .motion-route-float { animation: none !important; }
+  .motion-route-frame { transform: none !important; }
+}
+html[data-perf-mode="true"] .motion-route-float,
+html[data-perf-mode="true"] .motion-auth-mesh { animation: none !important; }
+@media (max-width: 640px) {
+  .motion-route-frame { transform-origin: top center; }
+}
+
+/* Additional route-group signatures and game micro-interactions. */
+[data-page-route^="/games"] .motion-game-memory { transform-style: preserve-3d; }
+[data-page-route^="/games"] button:active { transform: scale(.96); }
+[data-page-route^="/games"] [data-game-card] { transition: transform 300ms cubic-bezier(.22,1,.36,1), opacity 300ms ease; }
+[data-page-route^="/games"] [data-game-card]:hover { transform: translateY(-3px) rotateX(2deg); }
+[data-page-route^="/games"] .motion-xp-fill { transform-origin: left; animation: xp-fill-in 900ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes xp-fill-in { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+[data-page-route^="/admin"] { --route-admin-duration: 180ms; }
+[data-page-route^="/admin"] *, [data-page-route^="/admin"] *::before, [data-page-route^="/admin"] *::after { animation-duration: 180ms !important; }
+[data-page-route="/academy/login"], [data-page-route="/academy/register"] { isolation: isolate; }
+[data-page-route="/academy/login"] .bg-gradient-to-br, [data-page-route="/academy/register"] .bg-gradient-to-br { background-size: 180% 180%; }
+[data-page-route="/search"] [role="dialog"], [data-page-route="/search"] [cmdk-dialog] { animation: search-palette-in 220ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes search-palette-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
+[data-page-route="/chatbot"] [data-ai-orb] { animation: route-float 3.6s ease-in-out infinite; }
+[data-page-route="/academy/notifications"] svg[data-bell] { transform-origin: top center; animation: bell-swing 2.8s ease-in-out infinite; }
+@keyframes bell-swing { 0%,80%,100% { transform: rotate(0); } 84% { transform: rotate(12deg); } 90% { transform: rotate(-9deg); } 96% { transform: rotate(4deg); } }
+
+/* Public page signature details. */
+[data-page-route="/"] main h1, [data-page-route="/home"] main h1 { animation: route-hero-rise 520ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/"] main h1 span, [data-page-route="/home"] main h1 span { display: inline-block; animation: route-hero-rise 600ms 100ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/about"] main .grid > :first-child { animation: route-about-left 380ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/about"] main .grid > :last-child { animation: route-about-right 420ms 70ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes route-about-left { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes route-about-right { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+[data-page-route="/courses"] main .grid > * { transform-origin: center bottom; }
+[data-page-route="/courses"] main .grid > *:hover { transform: perspective(800px) rotateX(2deg) translateY(-4px); }
+[data-page-route="/contact"] main form > *, [data-page-route="/contact"] main section > * { animation: route-item-in 360ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/contact"] main form > *:nth-child(2) { animation-delay: 55ms; }
+[data-page-route="/contact"] main form > *:nth-child(3) { animation-delay: 110ms; }
+[data-page-route="/contact"] main form > *:nth-child(4) { animation-delay: 165ms; }
+[data-page-route^="/academy"] main .grid > * { transform-origin: center; }
+[data-page-route="/learning"] main details > summary { transition: transform 220ms cubic-bezier(.2,1.4,.4,1); }
+[data-page-route="/learning"] main details[open] > summary { transform: translateX(3px); }
+[data-page-route="/portfolio"] main .grid > * { animation: route-item-in 360ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/shortcuts"] main kbd { transition: transform 140ms cubic-bezier(.2,1.4,.4,1); }
+[data-page-route="/shortcuts"] main button:active kbd { transform: translateY(2px) rotateX(16deg); }
+[data-page-route="/games/memory"] main .grid > * { transform-style: preserve-3d; }
+[data-page-route="/games/quiz"] main [role="progressbar"] { transition: transform 300ms ease; }
+[data-page-route="/games/shooter"] main .animate-ping { will-change: transform, opacity; }
+[data-page-route="/games/bubble"] main button.rounded-full { transition: transform 240ms cubic-bezier(.22,1,.36,1), opacity 240ms ease; }
+[data-page-route="/games/bubble"] main button.rounded-full:active { transform: scale(.72); opacity: .4; }
+[data-page-route^="/admin"] .motion-route-reveal { opacity: 1; transform: none; }
+
+.motion-hero-parallax { transform: translate3d(var(--hero-x, 0px), var(--hero-y, 0px), 0); transition: transform 260ms cubic-bezier(.22,1,.36,1); }
+.motion-hero-parallax-near { transform: translate3d(var(--hero-x, 0px), var(--hero-y, 0px), 0) rotateX(calc(var(--hero-y, 0px) * -.12)) rotateY(calc(var(--hero-x, 0px) * .12)); }
+@media (prefers-reduced-motion: reduce) { .motion-hero-parallax, .motion-hero-parallax-near { transform: none !important; } }
+html[data-motion-reduce="true"] .motion-hero-parallax, html[data-motion-reduce="true"] .motion-hero-parallax-near,
+html[data-perf-mode="true"] .motion-hero-parallax, html[data-perf-mode="true"] .motion-hero-parallax-near { transform: none !important; }
+
+/* Student route signatures: dashboard, tasks, analytics, targets and workspace. */
+[data-page-route="/academy"] main .grid > *,
+[data-page-route="/tasks"] main .grid > *,
+[data-page-route="/reports"] main .grid > *,
+[data-page-route="/targets"] main .grid > *,
+[data-page-route="/portfolio"] main .grid > * {
+  transform-origin: center bottom;
+}
+[data-page-route="/academy"] main .grid > *:hover,
+[data-page-route="/reports"] main .grid > *:hover,
+[data-page-route="/targets"] main .grid > *:hover { transform: translateY(-3px) scale(1.01); }
+[data-page-route="/tasks"] main li,
+[data-page-route="/tasks"] main tbody tr { animation: route-item-in 320ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/tasks"] main li:nth-child(2),
+[data-page-route="/tasks"] main tbody tr:nth-child(2) { animation-delay: 45ms; }
+[data-page-route="/tasks"] main li:nth-child(3),
+[data-page-route="/tasks"] main tbody tr:nth-child(3) { animation-delay: 90ms; }
+[data-page-route="/reports"] main svg circle,
+[data-page-route="/targets"] main svg circle { transition: transform 500ms cubic-bezier(.22,1,.36,1); transform-origin: center; }
+[data-page-route="/reports"] main .recharts-bar-rectangle,
+[data-page-route="/reports"] main [data-chart-bar] { transform-origin: bottom; animation: route-chart-grow 520ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes route-chart-grow { from { opacity: .3; transform: scaleY(.04); } to { opacity: 1; transform: scaleY(1); } }
+[data-page-route="/targets"] main svg.lucide-trophy,
+[data-page-route="/targets"] main svg[class*="trophy"] { animation: route-trophy-pop 480ms cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes route-trophy-pop { from { opacity: 0; transform: scale(.65) rotate(-12deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+[data-page-route="/learning"] main details { transition: transform 260ms cubic-bezier(.2,1.4,.4,1), opacity 260ms ease; }
+[data-page-route^="/courses/"] main article,
+[data-page-route^="/courses/"] main section { animation: route-item-in 360ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/portfolio"] main [type="file"] { transition: transform 180ms ease, opacity 180ms ease; }
+[data-page-route="/portfolio"] main [role="progressbar"] > span { transform-origin: left; transition: transform 500ms cubic-bezier(.22,1,.36,1); }
+[data-page-route="/academy/submissions"] main li,
+[data-page-route="/academy/submissions"] main [data-status-node] { animation: route-item-in 320ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/academy/submissions"] main li:nth-child(2) { animation-delay: 70ms; }
+[data-page-route="/academy/submissions"] main li:nth-child(3) { animation-delay: 140ms; }
+[data-page-route="/shortcuts"] main kbd { box-shadow: 0 2px 0 rgb(15 23 42 / .16); transition: transform 140ms cubic-bezier(.2,1.4,.4,1), box-shadow 140ms ease; }
+[data-page-route="/shortcuts"] main button:active kbd { transform: translateY(2px) rotateX(16deg); box-shadow: none; }
+[data-page-route="/search"] main [role="dialog"],
+[data-page-route="/search"] main [cmdk-dialog] { animation: search-palette-in 220ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/chatbot"] main [data-ai-orb],
+[data-page-route="/chatbot"] main .ai-orb { animation: route-orb-breathe 3.2s ease-in-out infinite; }
+@keyframes route-orb-breathe { 0%,100% { opacity: .82; transform: scale(1); } 50% { opacity: 1; transform: scale(1.045); } }
+[data-page-route="/profile"] main .grid > *,
+[data-page-route="/settings"] main > * { animation: route-item-in 340ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/academy/notifications"] main svg.lucide-bell { transform-origin: top center; animation: bell-swing 3s ease-in-out infinite; }
+
+/* Game route feedback stays lightweight and compositor-only. */
+[data-page-route="/games"] main [class*="w-24"] > div { transform-origin: left; animation: xp-fill-in 700ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/games/quiz"] main [data-hp],
+[data-page-route="/games/quiz"] main [aria-label*="health"] { transition: transform 260ms ease, opacity 260ms ease; }
+[data-page-route="/games/puzzle"] main button,
+[data-page-route="/games/puzzle"] main [draggable="true"] { transition: transform 240ms cubic-bezier(.2,1.4,.4,1), opacity 180ms ease; }
+[data-page-route="/games/puzzle"] main button:active,
+[data-page-route="/games/puzzle"] main [draggable="true"]:active { transform: scale(.97) translateY(-2px); }
+[data-page-route="/games/shooter"] main .animate-ping { will-change: transform, opacity; }
+[data-page-route="/games/shooter"] main button:active { transform: scale(.94); }
+[data-page-route^="/games/"] main [data-result-score],
+[data-page-route^="/games/"] main .text-5xl.font-black { animation: route-trophy-pop 480ms cubic-bezier(.2,1.4,.4,1) both; }
+
+/* Admin console deliberately avoids 3D, parallax and long transitions. */
+[data-page-route^="/admin"] .motion-route-frame,
+[data-page-route^="/admin"] main,
+[data-page-route^="/admin"] section,
+[data-page-route^="/admin"] article { transform: none !important; }
+[data-page-route^="/admin"] button,
+[data-page-route^="/admin"] a { transition-duration: 180ms !important; }
+
+/* Not-found and forbidden fallbacks. */
+[data-page-route]:not([data-page-route="/"]):not([data-page-route="/home"]):not([data-page-route="/about"]):not([data-page-route="/courses"]):not([data-page-route="/contact"]) .motion-route-error { animation: route-glitch 380ms steps(2,end) both; }

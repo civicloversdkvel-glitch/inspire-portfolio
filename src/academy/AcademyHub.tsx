@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ScreenWrapper } from '../components/ScreenWrapper';
-import { InspireLogo } from '../components/InspireLogo';
+import { AnimatedLogo } from '../components/AnimatedLogo';
 import { useAcademyAuth } from './AcademyAuthContext';
 import {
   fetchPublishedAnnouncements,
@@ -124,12 +124,7 @@ export function AcademyHub() {
 
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <div className="w-12 h-12 bg-white rounded-2xl p-1 shadow-md border-2 border-yellow-400/80 shrink-0 flex items-center justify-center overflow-hidden">
-              <InspireLogo
-                alt="The Inspire Business Academy Logo"
-                className="w-full h-full object-contain"
-              />
-            </div>
+            <AnimatedLogo size="md" className="shrink-0" />
             <div className="min-w-0">
               <span className="inline-block px-2.5 py-0.5 rounded-full bg-blue-800 text-yellow-300 text-[10px] font-bold uppercase tracking-wider truncate max-w-full">
                 {profile.skill} {profile.roll_no ? `• ${profile.roll_no}` : ''}

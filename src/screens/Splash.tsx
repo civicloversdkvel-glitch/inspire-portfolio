@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'motion/react';
-import { InspireLogo } from '../components/InspireLogo';
+import { AnimatedLogo } from '../components/AnimatedLogo';
 import { useSkillsViewModel } from '../store/useSkillsViewModel';
 
 export function Splash() {
@@ -41,17 +41,7 @@ export function Splash() {
         transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] }}
         className="z-10 flex flex-col items-center"
       >
-        <motion.div
-          initial={{ rotate: -10 }}
-          animate={{ rotate: 0 }}
-          transition={{ duration: 1, ease: 'easeOut' }}
-          className="w-32 h-32 bg-white rounded-3xl p-2 shadow-2xl mb-8 flex items-center justify-center overflow-hidden border-4 border-yellow-400/80"
-        >
-          <InspireLogo
-            alt="The Inspire Business Academy Logo"
-            className="w-full h-full object-contain"
-          />
-        </motion.div>
+        <AnimatedLogo size="hero" className="z-10" />
 
         <motion.h1
           initial={{ y: 20, opacity: 0 }}
@@ -63,15 +53,6 @@ export function Splash() {
           <br />
           <span className="text-yellow-400">BUSINESS ACADEMY</span>
         </motion.h1>
-
-        <motion.p
-          initial={{ y: 20, opacity: 0 }}
-          animate={{ y: 0, opacity: 1 }}
-          transition={{ delay: 0.8, duration: 0.8 }}
-          className="mt-4 text-blue-200 text-sm tracking-[0.3em] uppercase font-medium"
-        >
-          Learn &bull; Earn &bull; Grow
-        </motion.p>
       </motion.div>
 
       <motion.div

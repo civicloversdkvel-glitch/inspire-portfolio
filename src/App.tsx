@@ -1,4 +1,7 @@
 import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { pageVariantsForPath } from './motion/pageVariants';
+import { AnimatedLogo } from './components/AnimatedLogo';
 import { HashRouter, Routes, Route, Navigate, useLocation, useNavigate, Link } from 'react-router-dom';
 
 // Public Website Screens
@@ -103,6 +106,7 @@ function StudentPortalShell({ children, title, subtitle }: { children: React.Rea
             <ArrowLeft size={16} />
             <span className="hidden sm:inline">Student Portal</span>
           </button>
+          <AnimatedLogo size="sm" className="shrink-0" />
           <div>
             <h1 className="text-sm sm:text-base font-extrabold leading-tight">
               {title || 'Inspire Business Academy Student Workspace'}
@@ -212,8 +216,75 @@ function AppContainer() {
     (typeof window !== 'undefined' &&
       (window.location.hash === '#/admin' || window.location.hash.startsWith('#/admin/')));
 
+  useEffect(() => {
+    if (isAdminRoute || document.documentElement.dataset.motionReduce === 'true' ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        !('IntersectionObserver' in window)) return;
+    const root = document.querySelector('.motion-route-frame');
+    if (!root) return;
+    let removeParallax = () => {};
+    if ((location.pathname === '/' || location.pathname === '/home') &&
+        document.documentElement.dataset.perfMode !== 'true' &&
+        window.matchMedia('(pointer: fine)').matches) {
+      const hero = root.querySelector<HTMLElement>('main section');
+      if (hero) {
+        const layers = Array.from(hero.querySelectorAll<HTMLElement>(':scope > div.absolute'));
+        layers.forEach((layer, index) => layer.classList.add('motion-hero-parallax', index === 0 ? 'motion-hero-parallax-near' : 'motion-hero-parallax-far'));
+        const onPointerMove = (event: PointerEvent) => {
+          const rect = hero.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5;
+          const y = (event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5;
+          layers.forEach((layer, index) => {
+            const depth = index === 0 ? 7 : 3;
+            layer.style.setProperty('--hero-x', `${x * depth}px`);
+            layer.style.setProperty('--hero-y', `${y * depth}px`);
+          });
+        };
+        const onPointerLeave = () => layers.forEach((layer) => {
+          layer.style.setProperty('--hero-x', '0px');
+          layer.style.setProperty('--hero-y', '0px');
+        });
+        hero.addEventListener('pointermove', onPointerMove);
+        hero.addEventListener('pointerleave', onPointerLeave);
+        removeParallax = () => {
+          hero.removeEventListener('pointermove', onPointerMove);
+          hero.removeEventListener('pointerleave', onPointerLeave);
+        };
+      }
+    }
+    const grids = Array.from(root.querySelectorAll<HTMLElement>('main .grid'));
+    grids.forEach((grid) => grid.setAttribute('data-motion-stagger', 'true'));
+    const targets = Array.from(root.querySelectorAll<HTMLElement>(
+      'main > section, main > div > section, main .grid > *, [data-motion-reveal]'
+    ));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+    targets.forEach((target) => {
+      target.classList.add('motion-route-reveal');
+      observer.observe(target);
+    });
+    return () => { observer.disconnect(); removeParallax(); };
+  }, [location.pathname, isAdminRoute]);
+
   return (
-    <Routes>
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        custom={location.pathname}
+        variants={pageVariantsForPath(location.pathname)}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        data-page-route={location.pathname}
+        className="motion-route-frame"
+      >
+    <Routes location={location}>
       {/* 1. PUBLIC WEBSITE ROUTES */}
       <Route
         path="/"
@@ -564,6 +635,8 @@ function AppContainer() {
         }
       />
     </Routes>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 

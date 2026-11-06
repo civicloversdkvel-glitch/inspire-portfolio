@@ -35,7 +35,7 @@ export const ConfirmModal: React.FC<ConfirmModalProps> = ({
             initial={{ opacity: 0, scale: 0.95, y: 10 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 10 }}
-            transition={{ duration: 0.16 }}
+            transition={{ type: 'spring', stiffness: 420, damping: 32, mass: 0.8 }}
             className="w-full max-w-[360px] bg-white rounded-3xl p-5 shadow-2xl border border-slate-100"
           >
             <div className="flex items-start justify-between gap-3">

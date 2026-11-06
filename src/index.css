@@ -293,8 +293,7 @@ html[data-motion-reduce="true"] .motion-particle { display: none !important; }
 .motion-route-reveal { opacity: 0; transform: translateY(16px); transition: opacity 420ms ease, transform 420ms cubic-bezier(.22,1,.36,1); }
 .motion-route-reveal.is-visible { opacity: 1; transform: translateY(0); }
 .motion-route-reveal.is-visible { opacity: 1; transform: translateY(0); }
-.motion-auth-mesh { background-size: 180% 180%; animation: auth-mesh-drift 12s ease-in-out infinite alternate; }
-@keyframes auth-mesh-drift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+.motion-auth-mesh { background-size: 180% 180%; }
 .motion-game-memory { perspective: 900px; transform-style: preserve-3d; transition: transform 500ms cubic-bezier(.2,.8,.2,1); }
 .motion-game-memory.is-flipped { transform: rotateY(180deg); }
 .motion-game-projectile { will-change: transform, opacity; animation: projectile-travel 360ms linear both; }
@@ -310,7 +309,7 @@ html[data-motion-reduce="true"] .motion-particle { display: none !important; }
     animation-duration: 150ms !important; animation-iteration-count: 1 !important;
     transition-duration: 150ms !important;
   }
-  .motion-auth-mesh, .motion-route-float { animation: none !important; }
+  .motion-route-float { animation: none !important; }
   .motion-route-frame { transform: none !important; }
 }
 html[data-perf-mode="true"] .motion-route-float,
@@ -331,7 +330,7 @@ html[data-perf-mode="true"] .motion-auth-mesh { animation: none !important; }
 [data-page-route="/academy/login"], [data-page-route="/academy/register"] { isolation: isolate; }
 [data-page-route="/academy/login"] .bg-gradient-to-br, [data-page-route="/academy/register"] .bg-gradient-to-br { background-size: 180% 180%; }
 [data-page-route="/search"] [role="dialog"], [data-page-route="/search"] [cmdk-dialog] { animation: search-palette-in 220ms cubic-bezier(.22,1,.36,1) both; }
-@keyframes search-palette-in { from { opacity: 0; transform: scale(.97); filter: blur(4px); } to { opacity: 1; transform: scale(1); filter: blur(0); } }
+@keyframes search-palette-in { from { opacity: 0; transform: scale(.97); } to { opacity: 1; transform: scale(1); } }
 [data-page-route="/chatbot"] [data-ai-orb] { animation: route-float 3.6s ease-in-out infinite; }
 [data-page-route="/academy/notifications"] svg[data-bell] { transform-origin: top center; animation: bell-swing 2.8s ease-in-out infinite; }
 @keyframes bell-swing { 0%,80%,100% { transform: rotate(0); } 84% { transform: rotate(12deg); } 90% { transform: rotate(-9deg); } 96% { transform: rotate(4deg); } }

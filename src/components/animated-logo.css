@@ -144,6 +144,7 @@
 .animated-logo--md .animated-logo__orbit, .animated-logo--sm .animated-logo__orbit,
 .animated-logo--md .animated-logo__beam, .animated-logo--sm .animated-logo__beam { display: none; }
 .animated-logo--md .animated-logo__reflection, .animated-logo--sm .animated-logo__reflection { animation-duration: 7.4s; }
+.animated-logo[data-reduced="true"] { animation: animated-logo-fade-in 180ms ease-out both; scale: 1; }
 .animated-logo[data-reduced="true"] .animated-logo__ring,
 .animated-logo[data-reduced="true"] .animated-logo__glow,
 .animated-logo[data-reduced="true"] .animated-logo__orbit,
@@ -155,7 +156,7 @@
 .animated-logo[data-reduced="true"] .animated-logo__surface,
 .animated-logo[data-reduced="true"]:hover .animated-logo__surface { transform: none; box-shadow: 0 4px 12px rgb(15 23 42 / .12); }
 @keyframes animated-logo-fade-in { from { opacity: 0; } to { opacity: 1; } }
-@keyframes animated-logo-hero-in { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
+@keyframes animated-logo-hero-in { from { opacity: 0; scale: .72; } to { opacity: 1; scale: 1; } }
 @keyframes animated-logo-spin { to { transform: rotate(360deg); } }
 @keyframes animated-logo-orbit { to { transform: rotate(360deg); } }
 @keyframes animated-logo-pulse { 0%,100% { opacity: .42; transform: scale(.96); } 50% { opacity: .82; transform: scale(1.04); } }

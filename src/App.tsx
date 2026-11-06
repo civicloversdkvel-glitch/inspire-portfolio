@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { pageVariantsForPath } from './motion/pageVariants';
+import { AnimatedLogo } from './components/AnimatedLogo';
 import { HashRouter, Routes, Route, Navigate, useLocation, useNavigate, Link } from 'react-router-dom';
 
 // Public Website Screens
@@ -105,6 +106,7 @@ function StudentPortalShell({ children, title, subtitle }: { children: React.Rea
             <ArrowLeft size={16} />
             <span className="hidden sm:inline">Student Portal</span>
           </button>
+          <AnimatedLogo size="sm" className="w-9 h-9 shrink-0" />
           <div>
             <h1 className="text-sm sm:text-base font-extrabold leading-tight">
               {title || 'Inspire Business Academy Student Workspace'}

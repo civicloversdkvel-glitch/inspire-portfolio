@@ -189,7 +189,9 @@ html[data-motion-reduce="true"] .motion-tilt-3d { transform: none !important; }
 html[data-motion-reduce="true"] .motion-glow-card:hover { transform: none !important; }
 @media (prefers-reduced-motion: reduce) {
   *, *::before, *::after { animation-duration: 150ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
-  .motion-tilt-3d { transform: none !important; }
+  .motion-tilt-3d, .motion-card-tilt { transform: none !important; }
+  .motion-button-fab, .motion-particle { animation: none !important; }
+  .motion-particle { display: none !important; }
 }
 @media (hover: none) {
   .motion-tilt-3d { transform: none !important; }
@@ -259,3 +261,18 @@ a[aria-current="page"]::after {
 }
 a[aria-current="page"] svg, a:hover svg { transition: transform var(--motion-fast) var(--motion-ease); }
 a[aria-current="page"]:hover svg { transform: translateY(-2px) scale(1.05); }
+
+/* Form validation cues are static; error feedback nudges only the field transform. */
+input[required]:valid:not([type="file"]):not([type="checkbox"]):not([type="radio"]),
+textarea[required]:valid {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 20 20' fill='none'%3E%3Cpath d='m4 10 4 4 8-8' stroke='%2316a34a' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat: no-repeat; background-position: right 10px center; background-size: 15px;
+  padding-right: 2rem;
+}
+.motion-drawer { animation: motion-drawer-in var(--motion-base) var(--motion-ease) both; }
+.motion-sheet { animation: motion-sheet-in var(--motion-base) var(--motion-ease) both; }
+@keyframes motion-drawer-in { from { opacity: 0; transform: translateX(16px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes motion-sheet-in { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+html[data-motion-reduce="true"] .motion-button-fab,
+html[data-motion-reduce="true"] .motion-particle { animation: none !important; }
+html[data-motion-reduce="true"] .motion-particle { display: none !important; }

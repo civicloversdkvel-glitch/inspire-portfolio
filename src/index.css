@@ -238,3 +238,24 @@ html[data-motion-reduce="true"] .motion-button-accent::before { display: none; }
 .motion-card-tilt { transform: perspective(900px) rotateX(var(--card-tilt-x, 0deg)) rotateY(var(--card-tilt-y, 0deg)); transform-style: preserve-3d; transition: transform 220ms var(--motion-ease); }
 html[data-perf-mode="true"] .motion-card-tilt { transform: none !important; }
 html[data-motion-reduce="true"] .motion-card-tilt { transform: none !important; }
+
+/* Native switch used in preferences gets a spring-like sliding thumb. */
+input[role="switch"] {
+  appearance: none; -webkit-appearance: none; position: relative; width: 42px; height: 24px;
+  border-radius: 999px; background: #cbd5e1; border: 0; cursor: pointer; flex: 0 0 auto;
+  transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;
+}
+input[role="switch"]::before {
+  content: ""; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px;
+  border-radius: 50%; background: white; transform: translateX(0);
+  transition: transform var(--motion-base) cubic-bezier(.2,1.4,.4,1);
+}
+input[role="switch"]:checked { background: #2563eb; }
+input[role="switch"]:checked::before { transform: translateX(18px); }
+input[role="switch"]:focus-visible { outline: 3px solid #f59e0b; outline-offset: 3px; }
+a[aria-current="page"]::after {
+  content: ""; position: absolute; left: 12%; right: 12%; bottom: 2px; height: 2px;
+  background: currentColor; transform: scaleX(1); transform-origin: center;
+}
+a[aria-current="page"] svg, a:hover svg { transition: transform var(--motion-fast) var(--motion-ease); }
+a[aria-current="page"]:hover svg { transform: translateY(-2px) scale(1.05); }

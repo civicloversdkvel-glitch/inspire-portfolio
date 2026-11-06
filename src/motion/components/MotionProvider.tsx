@@ -36,7 +36,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     };
     const onPointerLeave = (event: PointerEvent) => {
       const target = event.target instanceof Element ? event.target.closest<HTMLElement>('.motion-card-tilt') : null;
-      if (!target) return;
+      if (!target || (event.relatedTarget instanceof Node && target.contains(event.relatedTarget))) return;
       target.style.setProperty('--card-tilt-x', '0deg');
       target.style.setProperty('--card-tilt-y', '0deg');
       target.classList.remove('motion-card-tilt');

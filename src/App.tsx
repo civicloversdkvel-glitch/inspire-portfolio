@@ -220,7 +220,8 @@ function AppContainer() {
     if (isAdminRoute || document.documentElement.dataset.motionReduce === 'true' ||
         window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
         !('IntersectionObserver' in window)) return;
-    const root = document.querySelector('.motion-route-frame');
+    const root = Array.from(document.querySelectorAll<HTMLElement>('.motion-route-frame'))
+      .find((frame) => frame.dataset.pageRoute === location.pathname);
     if (!root) return;
     let removeParallax = () => {};
     if ((location.pathname === '/' || location.pathname === '/home') &&

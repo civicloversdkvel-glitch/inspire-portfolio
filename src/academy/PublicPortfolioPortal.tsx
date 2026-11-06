@@ -97,6 +97,10 @@ export function PublicPortfolioPortal() {
     >();
 
     for (const item of items) {
+      // The academy principal is an administrator, never a student directory entry.
+      const normalizedStudentName = item.student_name.toLowerCase().replace(/[^a-z0-9]/g, '');
+      if (normalizedStudentName.includes('adeelbhatti')) continue;
+
       const existing = map.get(item.student_id);
       if (!existing) {
         map.set(item.student_id, {

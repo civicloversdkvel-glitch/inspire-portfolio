@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react';
+import { useCallback, useRef, type PointerEvent as ReactPointerEvent } from 'react';
 import { useReducedMotion } from './useReducedMotion';
 import { usePerfMode } from './usePerfMode';
 
@@ -6,7 +6,7 @@ export function useTilt(maxDegrees = 5) {
   const ref = useRef<HTMLElement | null>(null);
   const reduced = useReducedMotion();
   const lowPerf = usePerfMode();
-  const onPointerMove = useCallback((event: React.PointerEvent<HTMLElement>) => {
+  const onPointerMove = useCallback((event: ReactPointerEvent<HTMLElement>) => {
     if (reduced || lowPerf || event.pointerType === 'touch' || !ref.current) return;
     const rect = ref.current.getBoundingClientRect();
     const x = (event.clientX - rect.left) / rect.width - 0.5;

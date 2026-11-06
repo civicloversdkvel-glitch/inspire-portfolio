@@ -101,12 +101,12 @@
   --motion-slow: 500ms;
   --motion-ease: cubic-bezier(.22, 1, .36, 1);
 }
-button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"] {
+button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"], [class*="cursor-pointer"] {
   position: relative;
   transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;
   -webkit-tap-highlight-color: transparent;
 }
-button:not(:disabled):active, a[href]:active, [role="button"]:not([aria-disabled="true"]):active, [data-clickable="true"]:active {
+button:not(:disabled):active, a[href]:active, [role="button"]:not([aria-disabled="true"]):active, [data-clickable="true"]:active, [class*="cursor-pointer"]:active {
   transform: scale(.975);
 }
 button:disabled, [aria-disabled="true"] { animation: none !important; transition: none !important; }
@@ -114,14 +114,14 @@ button:focus-visible, a[href]:focus-visible, [role="button"]:focus-visible, inpu
   outline: 3px solid #f59e0b;
   outline-offset: 3px;
 }
-button:not(:disabled):hover, a[href]:hover, [role="button"]:not([aria-disabled="true"]):hover, [data-clickable="true"]:hover {
+button:not(:disabled):hover, a[href]:hover, [role="button"]:not([aria-disabled="true"]):hover, [data-clickable="true"]:hover, [class*="cursor-pointer"]:hover {
   filter: brightness(1.025);
 }
 button:not(:disabled):hover svg, a[href]:hover svg, [role="button"]:not([aria-disabled="true"]):hover svg {
   transition: transform var(--motion-fast) var(--motion-ease);
 }
 button:not(:disabled):hover svg, a[href]:hover svg { transform: translateY(-1px); }
-button.motion-ripple-active::after, a.motion-ripple-active::after, [role="button"].motion-ripple-active::after, [data-clickable="true"].motion-ripple-active::after {
+button.motion-ripple-active::after, a.motion-ripple-active::after, [role="button"].motion-ripple-active::after, [data-clickable="true"].motion-ripple-active::after, [class*="cursor-pointer"].motion-ripple-active::after {
   content: "";
   position: absolute;
   pointer-events: none;
@@ -181,7 +181,8 @@ input[type="checkbox"]:active, input[type="radio"]:active { transform: scale(.9)
 html[data-motion-reduce="true"] *, html[data-motion-reduce="true"] *::before, html[data-motion-reduce="true"] *::after {
   animation-duration: 150ms !important;
   animation-iteration-count: 1 !important;
-  transition-property: transform, opacity !important;\n  transition-duration: 150ms !important;
+  transition-property: transform, opacity !important;
+  transition-duration: 150ms !important;
   scroll-behavior: auto !important;
 }
 html[data-motion-reduce="true"] .motion-tilt-3d { transform: none !important; }

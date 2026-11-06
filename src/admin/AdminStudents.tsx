@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import {
   adminCreateStudentAccount,
+  deleteStudentAccountAsAdmin,
   fetchAllStudentsWithProgress
 } from '../academy/academyApi';
 import { ACADEMY_SKILLS, StudentProgressSummary } from '../academy/types';
@@ -16,6 +17,7 @@ import {
   Loader2,
   AlertCircle,
   CheckCircle2,
+  Trash2,
   X
 } from 'lucide-react';
 
@@ -38,6 +40,9 @@ export function AdminStudents() {
   const [admissionDate, setAdmissionDate] = useState(getTodayPKT());
   const [creating, setCreating] = useState(false);
   const [banner, setBanner] = useState<string | null>(null);
+  const [deleteTarget, setDeleteTarget] = useState<StudentProgressSummary | null>(null);
+  const [deleteConfirmText, setDeleteConfirmText] = useState('');
+  const [deletingStudentId, setDeletingStudentId] = useState<string | null>(null);
 
   const loadStudents = async () => {
     setLoading(true);
@@ -98,6 +103,24 @@ export function AdminStudents() {
       setError(err?.message || 'Could not create student.');
     } finally {
       setCreating(false);
+    }
+  };
+
+  const handleDeleteStudent = async () => {
+    if (!deleteTarget || deleteConfirmText.trim().toUpperCase() !== 'DELETE') return;
+    setDeletingStudentId(deleteTarget.student_id);
+    setError(null);
+    setBanner(null);
+    try {
+      const result = await deleteStudentAccountAsAdmin(deleteTarget.student_id);
+      setBanner(`Permanently deleted ${result.studentName}'s account and academy records.`);
+      setDeleteTarget(null);
+      setDeleteConfirmText('');
+      await loadStudents();
+    } catch (err: any) {
+      setError(err?.message || 'Could not delete student account.');
+    } finally {
+      setDeletingStudentId(null);
     }
   };
 
@@ -216,9 +239,93 @@ export function AdminStudents() {
                   Last upload: {st.last_submission_date ? formatPKTDate(st.last_submission_date) : 'Never'}
                 </p>
               </div>
-              <ChevronRight size={20} className="text-slate-400 shrink-0" />
+              <div className="flex items-center gap-2 shrink-0">
+                <button
+                  type="button"
+                  title={`Delete ${st.full_name}`}
+                  aria-label={`Delete ${st.full_name}`}
+                  onClick={e => {
+                    e.stopPropagation();
+                    setDeleteTarget(st);
+                    setDeleteConfirmText('');
+                  }}
+                  className="p-2 rounded-xl text-red-600 hover:bg-red-50 border border-transparent hover:border-red-200 transition-colors"
+                >
+                  <Trash2 size={17} />
+                </button>
+                <ChevronRight size={20} className="text-slate-400" />
+              </div>
             </div>
           ))}
+        </div>
+      )}
+
+      {/* Permanent Student Deletion Confirmation */}
+      {deleteTarget && (
+        <div className="fixed inset-0 z-[60] bg-slate-950/70 flex items-center justify-center p-4">
+          <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="delete-student-title"
+            className="bg-white rounded-2xl w-full max-w-md p-6 shadow-2xl space-y-4"
+          >
+            <div className="flex items-start gap-3">
+              <div className="w-10 h-10 rounded-xl bg-red-100 text-red-700 flex items-center justify-center shrink-0">
+                <Trash2 size={20} />
+              </div>
+              <div className="min-w-0">
+                <h3 id="delete-student-title" className="text-base font-extrabold text-slate-900">
+                  Permanently Delete Student?
+                </h3>
+                <p className="text-xs text-slate-500 mt-1">
+                  {deleteTarget.full_name} · {deleteTarget.email}
+                </p>
+              </div>
+            </div>
+            <div className="rounded-xl bg-red-50 border border-red-200 p-3 text-xs text-red-900 space-y-1">
+              <p className="font-bold">This action cannot be undone.</p>
+              <p>
+                The student's login account, profile, submissions, uploaded work, attendance,
+                certificates, notifications, and public portfolio entries will be permanently removed.
+              </p>
+              <p>Admin accounts are protected and cannot be deleted here.</p>
+            </div>
+            <div>
+              <label className="block text-[11px] font-bold text-slate-600 mb-1">
+                Type DELETE to confirm
+              </label>
+              <input
+                type="text"
+                autoComplete="off"
+                value={deleteConfirmText}
+                onChange={e => setDeleteConfirmText(e.target.value)}
+                placeholder="DELETE"
+                className="w-full px-3 py-2.5 rounded-xl border border-slate-200 text-sm"
+              />
+            </div>
+            <div className="flex justify-end gap-2 pt-1">
+              <button
+                type="button"
+                disabled={Boolean(deletingStudentId)}
+                onClick={() => {
+                  setDeleteTarget(null);
+                  setDeleteConfirmText('');
+                }}
+                className="px-4 py-2.5 rounded-xl bg-slate-100 text-slate-700 text-xs font-bold disabled:opacity-50"
+              >
+                Cancel
+              </button>
+              <button
+                type="button"
+                disabled={deleteConfirmText.trim().toUpperCase() !== 'DELETE' || Boolean(deletingStudentId)}
+                onClick={handleDeleteStudent}
+                className="px-4 py-2.5 rounded-xl bg-red-600 hover:bg-red-700 text-white text-xs font-bold disabled:opacity-40 flex items-center gap-2"
+              >
+                {deletingStudentId ? <Loader2 size={14} className="animate-spin" /> : <Trash2 size={14} />}
+                {deletingStudentId ? 'Deleting...' : 'Permanently Delete'}
+              </button>
+            </div>
+          </div>
         </div>
       )}
 

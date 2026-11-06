@@ -469,7 +469,7 @@ export function AcademyAuthProvider({ children }: { children: React.ReactNode })
       const msg = error.message || 'Invalid login credentials.';
       if (msg.toLowerCase().includes('email not confirmed')) {
         const friendly =
-          'Email is not confirmed in Supabase yet. Please run supabase/admin_setup.sql in your Supabase SQL Editor to auto-confirm accounts.';
+          'This email address has not been confirmed yet. Please contact the Academy Admin to verify your student account before logging in.';
         setAuthError(friendly);
         throw new Error(friendly);
       }

@@ -361,7 +361,7 @@ function AppContainer() {
       <Route
         path="/academy"
         element={
-          <AcademyProtectedRoute allowedRoles={['student', 'admin']}>
+          <AcademyProtectedRoute allowedRoles={['student']}>
             <StudentPortalShell title="Student Hub & Assignment Dashboard">
               <AcademyHub />
             </StudentPortalShell>
@@ -371,7 +371,7 @@ function AppContainer() {
       <Route
         path="/academy/submit"
         element={
-          <AcademyProtectedRoute allowedRoles={['student', 'admin']}>
+          <AcademyProtectedRoute allowedRoles={['student']}>
             <StudentPortalShell title="Upload Daily Assignment / Portfolio">
               <SubmitWork />
             </StudentPortalShell>
@@ -381,7 +381,7 @@ function AppContainer() {
       <Route
         path="/academy/submissions"
         element={
-          <AcademyProtectedRoute allowedRoles={['student', 'admin']}>
+          <AcademyProtectedRoute allowedRoles={['student']}>
             <StudentPortalShell title="My Submissions & Admin Feedback">
               <MySubmissions />
             </StudentPortalShell>
@@ -391,7 +391,7 @@ function AppContainer() {
       <Route
         path="/academy/profile"
         element={
-          <AcademyProtectedRoute allowedRoles={['student', 'admin']}>
+          <AcademyProtectedRoute allowedRoles={['student']}>
             <StudentPortalShell title="Student Identity & Verified Credentials">
               <AcademyProfile />
             </StudentPortalShell>
@@ -401,7 +401,7 @@ function AppContainer() {
       <Route
         path="/academy/attendance"
         element={
-          <AcademyProtectedRoute allowedRoles={['student', 'admin']}>
+          <AcademyProtectedRoute allowedRoles={['student']}>
             <StudentPortalShell title="Attendance Register (PKT)">
               <StudentAttendance />
             </StudentPortalShell>
@@ -411,7 +411,7 @@ function AppContainer() {
       <Route
         path="/academy/notifications"
         element={
-          <AcademyProtectedRoute allowedRoles={['student', 'admin']}>
+          <AcademyProtectedRoute allowedRoles={['student']}>
             <StudentPortalShell title="Announcements & Notification Feed">
               <StudentNotifications />
             </StudentPortalShell>

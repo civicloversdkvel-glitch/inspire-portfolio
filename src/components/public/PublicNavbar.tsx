@@ -63,20 +63,20 @@ export const PublicNavbar: React.FC = () => {
       {/* Main Navigation Bar */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
         {/* Brand Logo & Title */}
-        <Link to="/" className="flex items-center gap-3 shrink-0 group">
-          <div className="w-13 h-13 sm:w-14 sm:h-14 bg-white rounded-2xl p-1.5 shadow-md border-2 border-yellow-400 group-hover:scale-105 transition-transform flex items-center justify-center overflow-hidden">
+        <Link to="/" className="flex min-w-0 flex-1 sm:flex-initial items-center gap-2 sm:gap-3 group">
+          <div className="w-11 h-11 sm:w-14 sm:h-14 shrink-0 bg-white rounded-2xl p-1.5 shadow-md border-2 border-yellow-400 group-hover:scale-105 transition-transform flex items-center justify-center overflow-hidden">
             <InspireLogo alt="The Inspire Business Academy Logo" className="w-full h-full object-contain" />
           </div>
-          <div>
-            <div className="flex items-center gap-1.5">
+          <div className="min-w-0">
+            <div className="hidden sm:flex items-center gap-1.5">
               <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-blue-900 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">
                 Sadiqabad Campus
               </span>
             </div>
-            <h1 className="text-base sm:text-lg font-extrabold text-blue-950 tracking-tight leading-tight mt-0.5">
+            <h1 className="text-[11px] min-[380px]:text-xs sm:text-lg font-extrabold text-blue-950 tracking-tight leading-tight mt-0.5 whitespace-normal break-words">
               THE INSPIRE <span className="text-amber-500">BUSINESS ACADEMY</span>
             </h1>
-            <p className="text-[11px] text-slate-500 font-medium">Learn • Earn • Grow</p>
+            <p className="hidden sm:block text-[11px] text-slate-500 font-medium">Learn • Earn • Grow</p>
           </div>
         </Link>
 
@@ -123,7 +123,7 @@ export const PublicNavbar: React.FC = () => {
         </div>
 
         {/* Mobile Hamburger Toggle */}
-        <div className="flex xl:hidden items-center gap-2">
+        <div className="flex xl:hidden items-center gap-2 shrink-0">
           <Link
             to="/academy"
             className="sm:hidden p-2 rounded-xl bg-blue-50 text-blue-900 border border-blue-200"
@@ -144,7 +144,7 @@ export const PublicNavbar: React.FC = () => {
 
       {/* Mobile Slide-down Drawer */}
       {mobileMenuOpen && (
-        <div className="xl:hidden bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-3">
+        <div className="xl:hidden w-full max-w-full bg-white border-b border-slate-200 px-4 pt-3 pb-6 space-y-2 shadow-xl animate-in slide-in-from-top-3">
           <div className="grid grid-cols-2 gap-2 pb-2 mb-2 border-b border-slate-100">
             <Link
               to="/academy"

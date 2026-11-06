@@ -15,7 +15,7 @@
   vertical-align: middle;
   animation: animated-logo-fade-in 420ms ease-out both;
 }
-.animated-logo--hero { width: 8rem; height: 8rem; margin-bottom: 1.65rem; }
+.animated-logo--hero { width: 8rem; height: 8rem; margin-bottom: 1.65rem; animation: animated-logo-hero-in 680ms cubic-bezier(.22,1,.36,1) both; }
 .animated-logo--md { width: 3.5rem; height: 3.5rem; }
 .animated-logo--sm { width: 2rem; height: 2rem; }
 .animated-logo__surface {
@@ -155,6 +155,7 @@
 .animated-logo[data-reduced="true"] .animated-logo__surface,
 .animated-logo[data-reduced="true"]:hover .animated-logo__surface { transform: none; box-shadow: 0 4px 12px rgb(15 23 42 / .12); }
 @keyframes animated-logo-fade-in { from { opacity: 0; } to { opacity: 1; } }
+@keyframes animated-logo-hero-in { from { opacity: 0; transform: scale(.72); } to { opacity: 1; transform: scale(1); } }
 @keyframes animated-logo-spin { to { transform: rotate(360deg); } }
 @keyframes animated-logo-orbit { to { transform: rotate(360deg); } }
 @keyframes animated-logo-pulse { 0%,100% { opacity: .42; transform: scale(.96); } 50% { opacity: .82; transform: scale(1.04); } }

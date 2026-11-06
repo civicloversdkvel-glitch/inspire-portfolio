@@ -334,3 +334,29 @@ html[data-perf-mode="true"] .motion-auth-mesh { animation: none !important; }
 [data-page-route="/chatbot"] [data-ai-orb] { animation: route-float 3.6s ease-in-out infinite; }
 [data-page-route="/academy/notifications"] svg[data-bell] { transform-origin: top center; animation: bell-swing 2.8s ease-in-out infinite; }
 @keyframes bell-swing { 0%,80%,100% { transform: rotate(0); } 84% { transform: rotate(12deg); } 90% { transform: rotate(-9deg); } 96% { transform: rotate(4deg); } }
+
+/* Public page signature details. */
+[data-page-route="/"] main h1, [data-page-route="/home"] main h1 { animation: route-hero-rise 520ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/"] main h1 span, [data-page-route="/home"] main h1 span { display: inline-block; animation: route-hero-rise 600ms 100ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/about"] main .grid > :first-child { animation: route-about-left 380ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/about"] main .grid > :last-child { animation: route-about-right 420ms 70ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes route-about-left { from { opacity: 0; transform: translateX(-18px); } to { opacity: 1; transform: translateX(0); } }
+@keyframes route-about-right { from { opacity: 0; transform: translateX(18px); } to { opacity: 1; transform: translateX(0); } }
+[data-page-route="/courses"] main .grid > * { transform-origin: center bottom; }
+[data-page-route="/courses"] main .grid > *:hover { transform: perspective(800px) rotateX(2deg) translateY(-4px); }
+[data-page-route="/contact"] main form > *, [data-page-route="/contact"] main section > * { animation: route-item-in 360ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/contact"] main form > *:nth-child(2) { animation-delay: 55ms; }
+[data-page-route="/contact"] main form > *:nth-child(3) { animation-delay: 110ms; }
+[data-page-route="/contact"] main form > *:nth-child(4) { animation-delay: 165ms; }
+[data-page-route^="/academy"] main .grid > * { transform-origin: center; }
+[data-page-route="/learning"] main details > summary { transition: transform 220ms cubic-bezier(.2,1.4,.4,1); }
+[data-page-route="/learning"] main details[open] > summary { transform: translateX(3px); }
+[data-page-route="/portfolio"] main .grid > * { animation: route-item-in 360ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/shortcuts"] main kbd { transition: transform 140ms cubic-bezier(.2,1.4,.4,1); }
+[data-page-route="/shortcuts"] main button:active kbd { transform: translateY(2px) rotateX(16deg); }
+[data-page-route="/games/memory"] main .grid > * { transform-style: preserve-3d; }
+[data-page-route="/games/quiz"] main [role="progressbar"] { transition: transform 300ms ease; }
+[data-page-route="/games/shooter"] main .animate-ping { will-change: transform, opacity; }
+[data-page-route="/games/bubble"] main button.rounded-full { transition: transform 240ms cubic-bezier(.22,1,.36,1), opacity 240ms ease; }
+[data-page-route="/games/bubble"] main button.rounded-full:active { transform: scale(.72); opacity: .4; }
+[data-page-route^="/admin"] .motion-route-reveal { opacity: 1; transform: none; }

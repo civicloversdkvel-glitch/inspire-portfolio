@@ -1,6 +1,6 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import { InspireLogo } from '../InspireLogo';
+import { AnimatedLogo } from '../AnimatedLogo';
 import {
   MapPin,
   Phone,
@@ -45,9 +45,7 @@ export const PublicFooter: React.FC = () => {
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-white rounded-2xl p-1.5 shadow-md border-2 border-yellow-400 flex items-center justify-center shrink-0">
-                <InspireLogo alt="The Inspire Business Academy Logo" className="w-full h-full object-contain" />
-              </div>
+              <AnimatedLogo size="md" className="w-14 h-14 shrink-0" />
               <div>
                 <h4 className="text-base font-extrabold text-white leading-tight">
                   THE INSPIRE <span className="text-amber-400">BUSINESS ACADEMY</span>

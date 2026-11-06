@@ -188,7 +188,7 @@ export function AdminLogin() {
           </div>
 
           <div className="flex flex-col sm:flex-row items-center gap-4 text-center sm:text-left">
-            <AnimatedLogo size="hero" className="w-28 h-28 shrink-0" />
+            <AnimatedLogo size="hero" className="shrink-0" />
             <div>
               <h1 className="text-lg sm:text-xl font-extrabold text-white leading-tight">
                 THE INSPIRE BUSINESS ACADEMY

@@ -28,7 +28,8 @@ export function AcademyLogin() {
     authError,
     signInWithEmail,
     registerStudent,
-    resetPassword
+    resetPassword,
+    signOut
   } = useAcademyAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -44,7 +45,7 @@ export function AcademyLogin() {
   const [localError, setLocalError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
-  if (!loading && user && profile) {
+  if (!loading && user && profile && location.pathname !== '/academy/register') {
     const fromState = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
     const requestedPath = fromState?.pathname
       ? `${fromState.pathname}${fromState.search || ''}`
@@ -64,6 +65,10 @@ export function AcademyLogin() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (mode === 'register' && user && profile) {
+      setLocalError('Please sign out of the currently active account before creating a new student registration.');
+      return;
+    }
     setLocalError(null);
     setSuccessMessage(null);
     setSubmitting(true);
@@ -172,6 +177,19 @@ export function AcademyLogin() {
             <span>Student Registration</span>
           </button>
         </div>
+
+        {location.pathname === '/academy/register' && user && profile && (
+          <div className="rounded-2xl border border-amber-200 bg-amber-50 p-4 space-y-3">
+            <div className="flex items-start gap-2 text-amber-950">
+              <AlertCircle size={17} className="mt-0.5 shrink-0" />
+              <div>
+                <p className="text-xs font-extrabold">An account is already signed in</p>
+                <p className="mt-1 text-xs leading-relaxed">To keep the principal/admin account separate, sign out first. You will stay on this student registration page.</p>
+              </div>
+            </div>
+            <button type="button" onClick={() => void signOut()} className="w-full rounded-xl bg-blue-900 px-4 py-2.5 text-xs font-extrabold text-white hover:bg-blue-800">Sign out and continue registration</button>
+          </div>
+        )}
 
         {displayError && (
           <div className="p-3.5 rounded-xl bg-red-50 border border-red-200 flex items-start gap-2.5 text-red-800 text-xs">
@@ -302,7 +320,7 @@ export function AcademyLogin() {
 
           <button
             type="submit"
-            disabled={submitting}
+            disabled={submitting || loading || Boolean(user && profile)}
             className="w-full py-3 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm transition-colors disabled:opacity-60"
           >
             {submitting ? (

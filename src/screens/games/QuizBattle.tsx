@@ -15,6 +15,7 @@ export function QuizBattle() {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(false);
   const [message, setMessage] = useState('');
+  const [answerFeedback, setAnswerFeedback] = useState<{ option: string; correct: boolean } | null>(null);
 
   const question = quizQuestions[qIndex];
 
@@ -27,6 +28,7 @@ export function QuizBattle() {
   const handleAnswer = (ans: string) => {
     if (gameOver) return;
 
+    setAnswerFeedback({ option: ans, correct: ans === question.a });
     let nextScore = score;
     if (ans === question.a) {
       setEnemyHP(prev => Math.max(0, prev - 25));
@@ -101,7 +103,8 @@ export function QuizBattle() {
               <button
                 key={i}
                 onClick={() => handleAnswer(opt)}
-                className="bg-white/5 hover:bg-white/20 border border-white/10 p-4 rounded-xl text-left font-medium transition-colors active:scale-95"
+                disabled={Boolean(answerFeedback)}
+                className={`bg-white/5 hover:bg-white/20 border border-white/10 p-4 rounded-xl text-left font-medium transition-colors active:scale-95 ${answerFeedback?.option === opt ? (answerFeedback.correct ? 'motion-game-correct border-green-400 bg-green-500/20' : 'motion-game-wrong border-red-400 bg-red-500/20') : ''}`}
               >
                 {opt}
               </button>

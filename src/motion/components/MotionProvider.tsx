@@ -12,7 +12,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
       root.dataset.perfMode = (nav.hardwareConcurrency <= 4 || (nav.deviceMemory ?? 99) <= 2 || nav.connection?.saveData === true) ? 'true' : 'false';
     };
     const onPointerDown = (event: PointerEvent) => {
-      const target = event.target instanceof Element ? event.target.closest<HTMLElement>('button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"]') : null;
+      const target = event.target instanceof Element ? event.target.closest<HTMLElement>('button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"], [class*="cursor-pointer"]') : null;
       if (!target || root.dataset.motionReduce === 'true' || target.matches(':disabled,[aria-disabled="true"]')) return;
       const rect = target.getBoundingClientRect();
       target.style.setProperty('--ripple-x', `${event.clientX - rect.left}px`);

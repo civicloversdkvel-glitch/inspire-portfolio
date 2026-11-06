@@ -45,7 +45,7 @@ export const PublicFooter: React.FC = () => {
           {/* Brand Column */}
           <div className="lg:col-span-2 space-y-4">
             <div className="flex items-center gap-3">
-              <AnimatedLogo size="md" className="w-14 h-14 shrink-0" />
+              <AnimatedLogo size="md" className="shrink-0" />
               <div>
                 <h4 className="text-base font-extrabold text-white leading-tight">
                   THE INSPIRE <span className="text-amber-400">BUSINESS ACADEMY</span>

@@ -103,7 +103,7 @@
 }
 button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"] {
   position: relative;
-  transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease, box-shadow var(--motion-base) ease, filter var(--motion-base) ease;
+  transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;
   -webkit-tap-highlight-color: transparent;
 }
 button:not(:disabled):active, a[href]:active, [role="button"]:not([aria-disabled="true"]):active, [data-clickable="true"]:active {
@@ -154,15 +154,15 @@ button[class*="rounded-full"]:not(:disabled):hover { transform: translateY(-1px)
 [role="tab"] { transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, transform var(--motion-fast) var(--motion-ease); }
 [role="switch"] > span, [role="switch"]::before { transition: transform var(--motion-fast) var(--motion-ease); }
 input:not([type="checkbox"]):not([type="radio"]), select, textarea {
-  transition: box-shadow var(--motion-fast) ease, border-color var(--motion-fast) ease;
+  transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;
 }
 input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
   box-shadow: 0 0 0 3px rgb(59 130 246 / .13);
 }
 input[type="checkbox"], input[type="radio"] { accent-color: #1d4ed8; transition: transform var(--motion-fast) var(--motion-ease); }
 input[type="checkbox"]:active, input[type="radio"]:active { transform: scale(.9); }
-.motion-tilt-3d { transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); transition: transform 240ms var(--motion-ease), box-shadow 240ms ease; transform-style: preserve-3d; }
-.motion-glow-card { transition: transform var(--motion-base) var(--motion-ease), box-shadow var(--motion-base) ease; }
+.motion-tilt-3d { transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); transition: transform 240ms var(--motion-ease); transform-style: preserve-3d; }
+.motion-glow-card { transition: transform var(--motion-base) var(--motion-ease); }
 .motion-glow-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgb(15 23 42 / .10); }
 .motion-flip-card { perspective: 900px; width: 100%; background: transparent; border: 0; padding: 0; }
 .motion-flip-inner { display: grid; transform-style: preserve-3d; transition: transform var(--motion-slow) var(--motion-ease); }
@@ -181,7 +181,7 @@ input[type="checkbox"]:active, input[type="radio"]:active { transform: scale(.9)
 html[data-motion-reduce="true"] *, html[data-motion-reduce="true"] *::before, html[data-motion-reduce="true"] *::after {
   animation-duration: 150ms !important;
   animation-iteration-count: 1 !important;
-  transition-duration: 150ms !important;
+  transition-property: transform, opacity !important;\n  transition-duration: 150ms !important;
   scroll-behavior: auto !important;
 }
 html[data-motion-reduce="true"] .motion-tilt-3d { transform: none !important; }
@@ -193,3 +193,8 @@ html[data-motion-reduce="true"] .motion-glow-card:hover { transform: none !impor
 @media (hover: none) {
   .motion-tilt-3d { transform: none !important; }
 }
+
+html[data-perf-mode="true"] .motion-tilt-3d { transform: none !important; }
+html[data-perf-mode="true"] .motion-particle { display: none !important; }
+[role="tab"][aria-selected="true"] { box-shadow: inset 0 -2px 0 currentColor; }
+[role="switch"] { cursor: pointer; }

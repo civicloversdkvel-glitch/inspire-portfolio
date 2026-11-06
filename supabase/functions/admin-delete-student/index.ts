@@ -137,7 +137,7 @@ Deno.serve(async (req: Request) => {
     if (blockError) throw blockError;
 
     // Remove student-owned files, but leave academy assignment resources untouched.
-    for (const bucket of ["academy-submissions", "public-portfolios"]) {
+    for (const bucket of ["academy-submissions", "assignment-files", "public-portfolios"]) {
       const paths = await collectFiles(admin, bucket, studentId);
       for (let i = 0; i < paths.length; i += 100) {
         const { error } = await admin.storage.from(bucket).remove(paths.slice(i, i + 100));

@@ -23,15 +23,37 @@ export function MotionProvider({ children }: { children: ReactNode }) {
       window.setTimeout(() => target.classList.remove('motion-ripple-active'), 550);
     };
     sync();
+    const onPointerMove = (event: PointerEvent) => {
+      if (root.dataset.motionReduce === 'true' || root.dataset.perfMode === 'true' || event.pointerType === 'touch') return;
+      const target = event.target instanceof Element ? event.target.closest<HTMLElement>('[class*="cursor-pointer"], [data-clickable="true"]') : null;
+      if (!target) return;
+      const rect = target.getBoundingClientRect();
+      const x = (event.clientX - rect.left) / rect.width - 0.5;
+      const y = (event.clientY - rect.top) / rect.height - 0.5;
+      target.style.setProperty('--card-tilt-x', `${-y * 3}deg`);
+      target.style.setProperty('--card-tilt-y', `${x * 3}deg`);
+      target.classList.add('motion-card-tilt');
+    };
+    const onPointerLeave = (event: PointerEvent) => {
+      const target = event.target instanceof Element ? event.target.closest<HTMLElement>('.motion-card-tilt') : null;
+      if (!target) return;
+      target.style.setProperty('--card-tilt-x', '0deg');
+      target.style.setProperty('--card-tilt-y', '0deg');
+      target.classList.remove('motion-card-tilt');
+    };
     window.addEventListener('storage', sync);
     window.addEventListener('inspire-motion-preference', sync);
     const media = window.matchMedia('(prefers-reduced-motion: reduce)');
     media.addEventListener?.('change', sync);
     document.addEventListener('pointerdown', onPointerDown, true);
+    document.addEventListener('pointermove', onPointerMove, true);
+    document.addEventListener('pointerout', onPointerLeave, true);
     return () => {
       window.removeEventListener('storage', sync);
       window.removeEventListener('inspire-motion-preference', sync);
       document.removeEventListener('pointerdown', onPointerDown, true);
+      document.removeEventListener('pointermove', onPointerMove, true);
+      document.removeEventListener('pointerout', onPointerLeave, true);
       media.removeEventListener?.('change', sync);
     };
   }, []);

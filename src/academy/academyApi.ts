@@ -1464,13 +1464,7 @@ export async function fetchPublicApprovedStudents(): Promise<Array<{
   if (!isSupabaseConfigured) return [];
   try {
     const { data, error } = await publicSupabase
-      .from('profiles')
-      .select('id, full_name, roll_no, skill, created_at')
-      .eq('role', 'student')
-      .eq('is_active', true)
-      .eq('is_approved', true)
-      .eq('approval_status', 'approved')
-      .order('created_at', { ascending: false });
+      .rpc('get_public_approved_students');
 
     if (error) throw error;
     return (data || [])

@@ -220,6 +220,8 @@ function AppContainer() {
         !('IntersectionObserver' in window)) return;
     const root = document.querySelector('.motion-route-frame');
     if (!root) return;
+    const grids = Array.from(root.querySelectorAll<HTMLElement>('main .grid'));
+    grids.forEach((grid) => grid.setAttribute('data-motion-stagger', 'true'));
     const targets = Array.from(root.querySelectorAll<HTMLElement>(
       'main > section, main > div > section, main .grid > *, [data-motion-reveal]'
     ));

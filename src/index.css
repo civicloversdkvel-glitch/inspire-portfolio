@@ -92,3 +92,104 @@
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 }
+
+
+/* Lightweight interaction motion layer: compositor-friendly transforms and opacity only. */
+:root {
+  --motion-fast: 180ms;
+  --motion-base: 300ms;
+  --motion-slow: 500ms;
+  --motion-ease: cubic-bezier(.22, 1, .36, 1);
+}
+button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"] {
+  position: relative;
+  transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease, box-shadow var(--motion-base) ease, filter var(--motion-base) ease;
+  -webkit-tap-highlight-color: transparent;
+}
+button:not(:disabled):active, a[href]:active, [role="button"]:not([aria-disabled="true"]):active, [data-clickable="true"]:active {
+  transform: scale(.975);
+}
+button:disabled, [aria-disabled="true"] { animation: none !important; transition: none !important; }
+button:focus-visible, a[href]:focus-visible, [role="button"]:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
+  outline: 3px solid #f59e0b;
+  outline-offset: 3px;
+}
+button:not(:disabled):hover, a[href]:hover, [role="button"]:not([aria-disabled="true"]):hover, [data-clickable="true"]:hover {
+  filter: brightness(1.025);
+}
+button:not(:disabled):hover svg, a[href]:hover svg, [role="button"]:not([aria-disabled="true"]):hover svg {
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+button:not(:disabled):hover svg, a[href]:hover svg { transform: translateY(-1px); }
+button.motion-ripple-active::after, a.motion-ripple-active::after, [role="button"].motion-ripple-active::after, [data-clickable="true"].motion-ripple-active::after {
+  content: "";
+  position: absolute;
+  pointer-events: none;
+  z-index: 2;
+  left: var(--ripple-x, 50%);
+  top: var(--ripple-y, 50%);
+  width: 12px;
+  height: 12px;
+  border-radius: 999px;
+  background: currentColor;
+  opacity: .16;
+  transform: translate(-50%, -50%) scale(0);
+  animation: motion-ripple 480ms ease-out forwards;
+}
+@keyframes motion-ripple { to { transform: translate(-50%, -50%) scale(18); opacity: 0; } }
+
+/* Variant cues inferred from existing utility classes; no component API changes. */
+button[class*="bg-blue-"]:not(:disabled):hover, a[class*="bg-blue-"]:hover {
+  box-shadow: 0 8px 22px rgb(30 64 175 / .18);
+}
+button[class*="bg-yellow-"]:not(:disabled):hover, a[class*="from-amber-"]:hover {
+  box-shadow: 0 8px 24px rgb(245 158 11 / .22);
+}
+button[class*="bg-red-"]:not(:disabled):hover { box-shadow: 0 7px 20px rgb(220 38 38 / .16); }
+button[class*="bg-transparent"]:not(:disabled):hover, button[class*="text-slate-"]:not(:disabled):hover {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+button[class*="rounded-full"]:not(:disabled):hover { transform: translateY(-1px) scale(1.035); }
+[role="tab"] { transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, transform var(--motion-fast) var(--motion-ease); }
+[role="switch"] > span, [role="switch"]::before { transition: transform var(--motion-fast) var(--motion-ease); }
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+  transition: box-shadow var(--motion-fast) ease, border-color var(--motion-fast) ease;
+}
+input:not([type="checkbox"]):not([type="radio"]):focus, select:focus, textarea:focus {
+  box-shadow: 0 0 0 3px rgb(59 130 246 / .13);
+}
+input[type="checkbox"], input[type="radio"] { accent-color: #1d4ed8; transition: transform var(--motion-fast) var(--motion-ease); }
+input[type="checkbox"]:active, input[type="radio"]:active { transform: scale(.9); }
+.motion-tilt-3d { transform: perspective(900px) rotateX(var(--tilt-x, 0deg)) rotateY(var(--tilt-y, 0deg)); transition: transform 240ms var(--motion-ease), box-shadow 240ms ease; transform-style: preserve-3d; }
+.motion-glow-card { transition: transform var(--motion-base) var(--motion-ease), box-shadow var(--motion-base) ease; }
+.motion-glow-card:hover { transform: translateY(-2px); box-shadow: 0 12px 32px rgb(15 23 42 / .10); }
+.motion-flip-card { perspective: 900px; width: 100%; background: transparent; border: 0; padding: 0; }
+.motion-flip-inner { display: grid; transform-style: preserve-3d; transition: transform var(--motion-slow) var(--motion-ease); }
+.motion-flip-card.is-flipped .motion-flip-inner { transform: rotateY(180deg); }
+.motion-flip-face { grid-area: 1 / 1; backface-visibility: hidden; }
+.motion-flip-back { transform: rotateY(180deg); }
+.motion-toast { animation: motion-toast-in var(--motion-base) var(--motion-ease) both; }
+@keyframes motion-toast-in { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: translateY(0); } }
+.motion-countdown { transform-origin: left; animation: motion-countdown linear forwards; }
+@keyframes motion-countdown { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+.motion-game-correct { animation: motion-correct 480ms ease-out; }
+.motion-game-wrong { animation: motion-wrong 280ms ease-in-out; }
+@keyframes motion-correct { 0% { transform: scale(1); } 35% { transform: scale(1.035); } 100% { transform: scale(1); } }
+@keyframes motion-wrong { 0%,100% { transform: translateX(0); } 25% { transform: translateX(-4px); } 75% { transform: translateX(4px); } }
+.motion-tilt-3d, .motion-glow-card { will-change: transform; }
+html[data-motion-reduce="true"] *, html[data-motion-reduce="true"] *::before, html[data-motion-reduce="true"] *::after {
+  animation-duration: 150ms !important;
+  animation-iteration-count: 1 !important;
+  transition-duration: 150ms !important;
+  scroll-behavior: auto !important;
+}
+html[data-motion-reduce="true"] .motion-tilt-3d { transform: none !important; }
+html[data-motion-reduce="true"] .motion-glow-card:hover { transform: none !important; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 150ms !important; animation-iteration-count: 1 !important; scroll-behavior: auto !important; }
+  .motion-tilt-3d { transform: none !important; }
+}
+@media (hover: none) {
+  .motion-tilt-3d { transform: none !important; }
+}

@@ -97,13 +97,15 @@ export function MemoryGame() {
                   className={`aspect-square rounded-2xl flex items-center justify-center p-4 text-center cursor-pointer shadow-sm border transition-all duration-300 ${
                     isFlipped ? 'bg-white border-purple-200' : 'bg-purple-500 border-purple-600 hover:bg-purple-400'
                   }`}
-                  style={{ perspective: 1000 }}
+                  animate={{ rotateY: isFlipped ? 180 : 0 }}
+                  transition={{ duration: 0.42, ease: [0.22, 1, 0.36, 1] }}
+                  style={{ perspective: 1000, transformStyle: 'preserve-3d' }}
                 >
                   <AnimatePresence>
                     {isFlipped && (
                       <motion.div
                         initial={{ rotateY: 90, opacity: 0 }}
-                        animate={{ rotateY: 0, opacity: 1 }}
+                        animate={{ rotateY: 180, opacity: 1 }}
                         transition={{ duration: 0.2 }}
                         className="font-bold text-purple-900 text-sm"
                       >

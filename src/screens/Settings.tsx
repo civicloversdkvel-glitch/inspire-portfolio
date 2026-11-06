@@ -1,4 +1,6 @@
 import React, { useRef, useState } from 'react';
+import { MOTION_REDUCE_KEY } from '../motion/tokens';
+import { useReducedMotion } from '../motion/hooks/useReducedMotion';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { useSafeBack } from '../lib/utils';
 import { useBackupViewModel } from '../store/useBackupViewModel';
@@ -12,7 +14,8 @@ import {
   FileJson,
   Clock,
   Archive,
-  HardDrive
+  HardDrive,
+  Accessibility
 } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { ConfirmModal } from '../components/ConfirmModal';
@@ -32,6 +35,13 @@ export function Settings() {
   } = useBackupViewModel();
 
   const [pendingRestoreFile, setPendingRestoreFile] = useState<File | null>(null);
+  const systemReducedMotion = useReducedMotion();
+  const [reduceAnimations, setReduceAnimations] = useState(() => typeof window !== 'undefined' && window.localStorage.getItem(MOTION_REDUCE_KEY) === 'true');
+  const toggleReducedMotion = (enabled: boolean) => {
+    setReduceAnimations(enabled);
+    window.localStorage.setItem(MOTION_REDUCE_KEY, String(enabled));
+    window.dispatchEvent(new Event('inspire-motion-preference'));
+  };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -79,6 +89,37 @@ export function Settings() {
             </motion.div>
           )}
         </AnimatePresence>
+
+        {/* Accessibility & Motion Preferences */}
+        <section className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-3">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-full bg-indigo-50 flex items-center justify-center text-indigo-600">
+              <Accessibility size={20} />
+            </div>
+            <div>
+              <h2 className="font-bold text-gray-800">Motion & Accessibility</h2>
+              <p className="text-xs text-gray-500 mt-0.5">Choose a calmer interface experience</p>
+            </div>
+          </div>
+          <label className="flex items-center justify-between gap-4 cursor-pointer rounded-xl bg-gray-50 p-3">
+            <span>
+              <span className="block text-sm font-semibold text-gray-800">Reduce animations</span>
+              <span className="block text-xs text-gray-500 mt-0.5">Turn off tilt and looping effects; use quick fades.</span>
+            </span>
+            <input
+              type="checkbox"
+              role="switch"
+              aria-label="Reduce animations"
+              checked={reduceAnimations}
+              onChange={event => toggleReducedMotion(event.target.checked)}
+              className="h-5 w-5 shrink-0"
+            />
+          </label>
+          {systemReducedMotion && !reduceAnimations && (
+            <p className="text-[11px] text-blue-700">Your device also requests reduced motion, so that preference is respected automatically.</p>
+          )}
+          <p className="text-[11px] text-gray-400">Saved on this browser only. Performance mode also disables 3D effects on low-power devices.</p>
+        </section>
 
         {/* Local Storage Architecture Notice */}
         <div className="bg-white rounded-2xl shadow-sm border border-gray-100 p-5 space-y-2">

@@ -14,15 +14,10 @@ import {
   AlertCircle,
   CheckCircle2,
   Loader2,
-  KeyRound,
   LogIn,
   LogOut,
-  Database,
-  Copy,
-  Check,
   ArrowLeft
 } from 'lucide-react';
-import adminSetupSql from '../../supabase/admin_setup.sql?raw';
 
 export function AdminLogin() {
   const {
@@ -32,7 +27,6 @@ export function AdminLogin() {
     authError,
     signInWithEmail,
     resetPassword,
-    signInWithGoogle,
     signOut
   } = useAcademyAuth();
   const location = useLocation();
@@ -44,19 +38,6 @@ export function AdminLogin() {
   const [submitting, setSubmitting] = useState(false);
   const [localError, setLocalError] = useState<string | null>(null);
   const [resetSuccess, setResetSuccess] = useState<string | null>(null);
-  const [showSqlBox, setShowSqlBox] = useState(false);
-  const [sqlCopied, setSqlCopied] = useState(false);
-
-  const handleCopySql = async () => {
-    try {
-      await navigator.clipboard.writeText(adminSetupSql);
-      setSqlCopied(true);
-      setTimeout(() => setSqlCopied(false), 2500);
-    } catch {
-      // ignore clipboard errors
-    }
-  };
-
   if (loading) {
     return (
       <div className="min-h-[100dvh] w-full bg-slate-950 text-white flex flex-col items-center justify-center gap-3 p-6">
@@ -151,18 +132,7 @@ export function AdminLogin() {
     }
   };
 
-  const handleGoogleAdminSignIn = async () => {
-    setLocalError(null);
-    setResetSuccess(null);
-    setSubmitting(true);
-    try {
-      await signInWithGoogle();
-    } catch (err: any) {
-      setLocalError(err?.message || 'Google sign-in failed.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
+
 
   const configError = !isSupabaseConfigured ? getSupabaseConfigError() : null;
   const displayError = localError || authError || configError;
@@ -321,64 +291,9 @@ export function AdminLogin() {
             </button>
           )}
 
-          <div className="relative flex py-1 items-center">
-            <div className="flex-grow border-t border-slate-800"></div>
-            <span className="flex-shrink mx-3 text-[10px] font-bold uppercase text-slate-500">
-              Or
-            </span>
-            <div className="flex-grow border-t border-slate-800"></div>
-          </div>
-
-          <button
-            type="button"
-            onClick={handleGoogleAdminSignIn}
-            disabled={submitting}
-            className="w-full py-3 bg-slate-950 hover:bg-slate-800 text-slate-200 font-semibold rounded-xl text-xs border border-slate-700 flex items-center justify-center gap-2 transition-colors"
-          >
-            <KeyRound size={15} className="text-yellow-400" />
-            <span>Continue with Authorized Google Account</span>
-          </button>
         </form>
 
-        {/* Admin SQL Setup Helper (preserved for Admin convenience) */}
-        <div className="bg-slate-900 border border-slate-800 rounded-2xl p-4 space-y-3">
-          <div className="flex items-center justify-between gap-2">
-            <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-xl bg-blue-950 text-yellow-400 border border-blue-800 flex items-center justify-center shrink-0">
-                <Database size={15} />
-              </div>
-              <div>
-                <p className="text-xs font-bold text-white">Supabase Admin SQL Setup</p>
-                <p className="text-[10px] text-slate-400">
-                  File: <code className="text-yellow-400 font-semibold">supabase/admin_setup.sql</code>
-                </p>
-              </div>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <button
-                type="button"
-                onClick={handleCopySql}
-                className="px-2.5 py-1.5 rounded-lg bg-blue-900 hover:bg-blue-800 text-white text-[11px] font-bold flex items-center gap-1 transition-colors"
-              >
-                {sqlCopied ? <Check size={13} /> : <Copy size={13} />}
-                <span>{sqlCopied ? 'Copied!' : 'Copy SQL'}</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => setShowSqlBox(v => !v)}
-                className="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 text-[11px] font-bold transition-colors"
-              >
-                {showSqlBox ? 'Hide' : 'View SQL'}
-              </button>
-            </div>
-          </div>
 
-          {showSqlBox && (
-            <pre className="p-3 rounded-xl bg-slate-950 text-emerald-300 text-[10px] overflow-x-auto max-h-60 leading-relaxed font-mono border border-slate-800">
-              {adminSetupSql}
-            </pre>
-          )}
-        </div>
       </div>
     </div>
   );

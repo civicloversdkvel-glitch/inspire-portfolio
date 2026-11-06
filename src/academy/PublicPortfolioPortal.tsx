@@ -121,26 +121,12 @@ export function PublicPortfolioPortal() {
     for (const item of items) {
       const existing = map.get(item.student_id);
       if (!existing) continue;
-      if (!existing) {
-        map.set(item.student_id, {
-          student_id: item.student_id,
-          student_name: item.student_name,
-          roll_no: item.roll_no,
-          skill: item.skill,
-          approved_count: 1,
-          featured_count: item.is_featured ? 1 : 0,
-          avg_rating: item.rating,
-          latest_date: item.created_at,
-          works: [item]
-        });
-      } else {
-        existing.approved_count += 1;
-        if (item.is_featured) existing.featured_count += 1;
-        existing.works.push(item);
-        const totalRating = existing.works.reduce((acc, w) => acc + w.rating, 0);
-        existing.avg_rating = Number((totalRating / existing.works.length).toFixed(1));
-        if (!existing.roll_no && item.roll_no) existing.roll_no = item.roll_no;
-      }
+      existing.approved_count += 1;
+      if (item.is_featured) existing.featured_count += 1;
+      existing.works.push(item);
+      const totalRating = existing.works.reduce((acc, w) => acc + w.rating, 0);
+      existing.avg_rating = Number((totalRating / existing.works.length).toFixed(1));
+      if (!existing.roll_no && item.roll_no) existing.roll_no = item.roll_no;
     }
 
     return Array.from(map.values()).sort((a, b) => b.approved_count - a.approved_count);

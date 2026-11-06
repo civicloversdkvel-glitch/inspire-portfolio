@@ -199,3 +199,42 @@ html[data-perf-mode="true"] .motion-tilt-3d { transform: none !important; }
 html[data-perf-mode="true"] .motion-particle { display: none !important; }
 [role="tab"][aria-selected="true"] { box-shadow: inset 0 -2px 0 currentColor; }
 [role="switch"] { cursor: pointer; }
+
+
+/* Shared semantic variants for the reusable Button component. */
+.motion-button-primary:hover:not(:disabled) { box-shadow: 0 8px 24px rgb(37 99 235 / .22); }
+.motion-button-accent { overflow: hidden; isolation: isolate; }
+.motion-button-accent::before {
+  content: ""; position: absolute; inset: 0; z-index: -1; pointer-events: none;
+  background: linear-gradient(105deg, transparent 28%, rgb(255 255 255 / .38) 48%, transparent 68%);
+  transform: translateX(-120%);
+}
+.motion-button-accent:hover::before { transform: translateX(120%); transition: transform 650ms cubic-bezier(.22,1,.36,1); }
+.motion-button-accent:hover:not(:disabled) { box-shadow: 0 8px 24px rgb(245 158 11 / .28); }
+.motion-button-ghost::before {
+  content: ""; position: absolute; left: 10%; right: 10%; bottom: 4px; height: 1px;
+  background: currentColor; transform: scaleX(0); transform-origin: left;
+  transition: transform var(--motion-fast) var(--motion-ease);
+}
+.motion-button-ghost:hover::before { transform: scaleX(1); }
+.motion-button-danger:hover:not(:disabled) { box-shadow: 0 8px 22px rgb(220 38 38 / .2); }
+.motion-button-fab { animation: motion-fab-bob 3.2s ease-in-out infinite; }
+@keyframes motion-fab-bob { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
+[role="tab"]::after {
+  content: ""; display: block; height: 2px; width: 100%; background: currentColor;
+  transform: scaleX(0); transform-origin: center; transition: transform var(--motion-base) var(--motion-ease);
+}
+[role="tab"][aria-selected="true"]::after { transform: scaleX(1); }
+[role="switch"][aria-checked="true"]::before { transform: translateX(100%); }
+input:invalid:not(:placeholder-shown) { animation: motion-input-nudge 220ms ease-in-out; }
+@keyframes motion-input-nudge { 0%,100% { transform: translateX(0); } 30% { transform: translateX(-2px); } 70% { transform: translateX(2px); } }
+select:focus { transform: scale(1.005); }
+[role="progressbar"] > span, .motion-progress-fill { transform-origin: left; transition: transform var(--motion-slow) var(--motion-ease); }
+.motion-complete { animation: motion-complete 520ms ease-out; }
+@keyframes motion-complete { 0% { opacity: .75; transform: scale(.985); } 55% { opacity: 1; transform: scale(1.015); } 100% { opacity: 1; transform: scale(1); } }
+html[data-motion-reduce="true"] .motion-button-fab { animation: none !important; }
+html[data-motion-reduce="true"] .motion-button-accent::before { display: none; }
+
+.motion-card-tilt { transform: perspective(900px) rotateX(var(--card-tilt-x, 0deg)) rotateY(var(--card-tilt-y, 0deg)); transform-style: preserve-3d; transition: transform 220ms var(--motion-ease); }
+html[data-perf-mode="true"] .motion-card-tilt { transform: none !important; }
+html[data-motion-reduce="true"] .motion-card-tilt { transform: none !important; }

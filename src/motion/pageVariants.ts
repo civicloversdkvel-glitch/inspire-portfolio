@@ -24,9 +24,9 @@ const signatures: Record<RouteSignature, Variants> = {
     exit: { opacity: 0, x: -20, transition: { duration: 0.2 } },
   },
   auth: {
-    initial: { opacity: 0, x: 18, filter: 'blur(5px)' },
-    animate: { opacity: 1, x: 0, filter: 'blur(0px)', transition: { duration: 0.38 } },
-    exit: { opacity: 0, x: -12, filter: 'blur(3px)', transition: { duration: 0.18 } },
+    initial: { opacity: 0, x: 18, scale: 0.99 },
+    animate: { opacity: 1, x: 0, scale: 1, transition: { duration: 0.38 } },
+    exit: { opacity: 0, x: -12, transition: { duration: 0.18 } },
   },
   wizard: {
     initial: { opacity: 0, x: 18, rotateY: -15, transformPerspective: 900 },
@@ -70,7 +70,7 @@ export function routeSignature(path: string): RouteSignature {
   if (path.startsWith('/games')) return 'game';
   if (path === '/404' || path === '/403') return 'error';
   if (path.startsWith('/academy') || path.startsWith('/reports') || path.startsWith('/tasks') || path.startsWith('/targets') || path.startsWith('/learning') || path.startsWith('/portfolio') || path.startsWith('/profile') || path.startsWith('/settings') || path.startsWith('/shortcuts') || path.startsWith('/chatbot') || path.startsWith('/search') || path.startsWith('/courses/')) return 'student';
-  return 'simple';
+  return 'error';
 }
 
 export function pageVariantsForPath(path: string): Variants {

@@ -43,7 +43,7 @@ async function collectFiles(
     const entries = data || [];
     for (const entry of entries) {
       const path = `${folder}/${entry.name}`;
-      if (entry.id == null && entry.metadata == null) {
+      if (entry.id == null) {
         paths.push(...await collectFiles(admin, bucket, path));
       } else {
         paths.push(path);

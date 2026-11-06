@@ -126,7 +126,7 @@ export function AcademyLogin() {
         </div>
 
         <div className="flex flex-col sm:flex-row items-center gap-3.5 text-center sm:text-left">
-          <AnimatedLogo size="hero" className="w-24 h-24 shrink-0" />
+          <AnimatedLogo size="hero" className="shrink-0" />
           <div>
             <p className="text-[10px] font-bold uppercase tracking-widest text-yellow-400">
               Academy Student Workspace

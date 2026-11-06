@@ -1,5 +1,6 @@
 import {
   supabase,
+  publicSupabase,
   isSupabaseConfigured,
   assertSupabaseConfigured,
   createIsolatedAuthClient,
@@ -1462,7 +1463,7 @@ export async function fetchPublicApprovedStudents(): Promise<Array<{
 }>> {
   if (!isSupabaseConfigured) return [];
   try {
-    const { data, error } = await supabase
+    const { data, error } = await publicSupabase
       .from('profiles')
       .select('id, full_name, roll_no, skill, created_at')
       .eq('role', 'student')

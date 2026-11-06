@@ -158,7 +158,7 @@ export function AcademyLogin() {
             }`}
           >
             <LogIn size={15} />
-            <span>Sign In</span>
+            <span>Log In</span>
           </button>
           <button
             type="button"
@@ -330,7 +330,7 @@ export function AcademyLogin() {
                   {mode === 'reset'
                     ? 'Sending Reset Link...'
                     : mode === 'login'
-                    ? 'Signing In...'
+                    ? 'Logging In...'
                     : 'Creating Account...'}
                 </span>
               </>
@@ -342,7 +342,7 @@ export function AcademyLogin() {
             ) : mode === 'login' ? (
               <>
                 <LogIn size={16} />
-                <span>Sign In to Portal</span>
+                <span>Log In to Student Portal</span>
               </>
             ) : (
               <>
@@ -362,7 +362,7 @@ export function AcademyLogin() {
               }}
               className="w-full py-2 text-xs font-bold text-gray-600 hover:text-gray-900"
             >
-              ← Back to Sign In
+              ← Back to Log In
             </button>
           )}
 

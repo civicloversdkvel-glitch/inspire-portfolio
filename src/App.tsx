@@ -220,6 +220,36 @@ function AppContainer() {
         !('IntersectionObserver' in window)) return;
     const root = document.querySelector('.motion-route-frame');
     if (!root) return;
+    let removeParallax = () => {};
+    if ((location.pathname === '/' || location.pathname === '/home') &&
+        document.documentElement.dataset.perfMode !== 'true' &&
+        window.matchMedia('(pointer: fine)').matches) {
+      const hero = root.querySelector<HTMLElement>('main section');
+      if (hero) {
+        const layers = Array.from(hero.querySelectorAll<HTMLElement>(':scope > div.absolute'));
+        layers.forEach((layer, index) => layer.classList.add('motion-hero-parallax', index === 0 ? 'motion-hero-parallax-near' : 'motion-hero-parallax-far'));
+        const onPointerMove = (event: PointerEvent) => {
+          const rect = hero.getBoundingClientRect();
+          const x = (event.clientX - rect.left) / Math.max(rect.width, 1) - 0.5;
+          const y = (event.clientY - rect.top) / Math.max(rect.height, 1) - 0.5;
+          layers.forEach((layer, index) => {
+            const depth = index === 0 ? 7 : 3;
+            layer.style.setProperty('--hero-x', `${x * depth}px`);
+            layer.style.setProperty('--hero-y', `${y * depth}px`);
+          });
+        };
+        const onPointerLeave = () => layers.forEach((layer) => {
+          layer.style.setProperty('--hero-x', '0px');
+          layer.style.setProperty('--hero-y', '0px');
+        });
+        hero.addEventListener('pointermove', onPointerMove);
+        hero.addEventListener('pointerleave', onPointerLeave);
+        removeParallax = () => {
+          hero.removeEventListener('pointermove', onPointerMove);
+          hero.removeEventListener('pointerleave', onPointerLeave);
+        };
+      }
+    }
     const grids = Array.from(root.querySelectorAll<HTMLElement>('main .grid'));
     grids.forEach((grid) => grid.setAttribute('data-motion-stagger', 'true'));
     const targets = Array.from(root.querySelectorAll<HTMLElement>(
@@ -237,7 +267,7 @@ function AppContainer() {
       target.classList.add('motion-route-reveal');
       observer.observe(target);
     });
-    return () => observer.disconnect();
+    return () => { observer.disconnect(); removeParallax(); };
   }, [location.pathname, isAdminRoute]);
 
   return (

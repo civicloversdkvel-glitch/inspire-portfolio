@@ -366,3 +366,72 @@ html[data-perf-mode="true"] .motion-auth-mesh { animation: none !important; }
 @media (prefers-reduced-motion: reduce) { .motion-hero-parallax, .motion-hero-parallax-near { transform: none !important; } }
 html[data-motion-reduce="true"] .motion-hero-parallax, html[data-motion-reduce="true"] .motion-hero-parallax-near,
 html[data-perf-mode="true"] .motion-hero-parallax, html[data-perf-mode="true"] .motion-hero-parallax-near { transform: none !important; }
+
+/* Student route signatures: dashboard, tasks, analytics, targets and workspace. */
+[data-page-route="/academy"] main .grid > *,
+[data-page-route="/tasks"] main .grid > *,
+[data-page-route="/reports"] main .grid > *,
+[data-page-route="/targets"] main .grid > *,
+[data-page-route="/portfolio"] main .grid > * {
+  transform-origin: center bottom;
+}
+[data-page-route="/academy"] main .grid > *:hover,
+[data-page-route="/reports"] main .grid > *:hover,
+[data-page-route="/targets"] main .grid > *:hover { transform: translateY(-3px) scale(1.01); }
+[data-page-route="/tasks"] main li,
+[data-page-route="/tasks"] main tbody tr { animation: route-item-in 320ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/tasks"] main li:nth-child(2),
+[data-page-route="/tasks"] main tbody tr:nth-child(2) { animation-delay: 45ms; }
+[data-page-route="/tasks"] main li:nth-child(3),
+[data-page-route="/tasks"] main tbody tr:nth-child(3) { animation-delay: 90ms; }
+[data-page-route="/reports"] main svg circle,
+[data-page-route="/targets"] main svg circle { transition: transform 500ms cubic-bezier(.22,1,.36,1); transform-origin: center; }
+[data-page-route="/reports"] main .recharts-bar-rectangle,
+[data-page-route="/reports"] main [data-chart-bar] { transform-origin: bottom; animation: route-chart-grow 520ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes route-chart-grow { from { opacity: .3; transform: scaleY(.04); } to { opacity: 1; transform: scaleY(1); } }
+[data-page-route="/targets"] main svg.lucide-trophy,
+[data-page-route="/targets"] main svg[class*="trophy"] { animation: route-trophy-pop 480ms cubic-bezier(.2,1.4,.4,1) both; }
+@keyframes route-trophy-pop { from { opacity: 0; transform: scale(.65) rotate(-12deg); } to { opacity: 1; transform: scale(1) rotate(0); } }
+[data-page-route="/learning"] main details { transition: transform 260ms cubic-bezier(.2,1.4,.4,1), opacity 260ms ease; }
+[data-page-route^="/courses/"] main article,
+[data-page-route^="/courses/"] main section { animation: route-item-in 360ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/portfolio"] main [type="file"] { transition: transform 180ms ease, opacity 180ms ease; }
+[data-page-route="/portfolio"] main [role="progressbar"] > span { transform-origin: left; transition: transform 500ms cubic-bezier(.22,1,.36,1); }
+[data-page-route="/academy/submissions"] main li,
+[data-page-route="/academy/submissions"] main [data-status-node] { animation: route-item-in 320ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/academy/submissions"] main li:nth-child(2) { animation-delay: 70ms; }
+[data-page-route="/academy/submissions"] main li:nth-child(3) { animation-delay: 140ms; }
+[data-page-route="/shortcuts"] main kbd { box-shadow: 0 2px 0 rgb(15 23 42 / .16); transition: transform 140ms cubic-bezier(.2,1.4,.4,1), box-shadow 140ms ease; }
+[data-page-route="/shortcuts"] main button:active kbd { transform: translateY(2px) rotateX(16deg); box-shadow: none; }
+[data-page-route="/search"] main [role="dialog"],
+[data-page-route="/search"] main [cmdk-dialog] { animation: search-palette-in 220ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/chatbot"] main [data-ai-orb],
+[data-page-route="/chatbot"] main .ai-orb { animation: route-orb-breathe 3.2s ease-in-out infinite; }
+@keyframes route-orb-breathe { 0%,100% { opacity: .82; transform: scale(1); } 50% { opacity: 1; transform: scale(1.045); } }
+[data-page-route="/profile"] main .grid > *,
+[data-page-route="/settings"] main > * { animation: route-item-in 340ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/academy/notifications"] main svg.lucide-bell { transform-origin: top center; animation: bell-swing 3s ease-in-out infinite; }
+
+/* Game route feedback stays lightweight and compositor-only. */
+[data-page-route="/games"] main [class*="w-24"] > div { transform-origin: left; animation: xp-fill-in 700ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/games/quiz"] main [data-hp],
+[data-page-route="/games/quiz"] main [aria-label*="health"] { transition: transform 260ms ease, opacity 260ms ease; }
+[data-page-route="/games/puzzle"] main button,
+[data-page-route="/games/puzzle"] main [draggable="true"] { transition: transform 240ms cubic-bezier(.2,1.4,.4,1), opacity 180ms ease; }
+[data-page-route="/games/puzzle"] main button:active,
+[data-page-route="/games/puzzle"] main [draggable="true"]:active { transform: scale(.97) translateY(-2px); }
+[data-page-route="/games/shooter"] main .animate-ping { will-change: transform, opacity; }
+[data-page-route="/games/shooter"] main button:active { transform: scale(.94); }
+[data-page-route^="/games/"] main [data-result-score],
+[data-page-route^="/games/"] main .text-5xl.font-black { animation: route-trophy-pop 480ms cubic-bezier(.2,1.4,.4,1) both; }
+
+/* Admin console deliberately avoids 3D, parallax and long transitions. */
+[data-page-route^="/admin"] .motion-route-frame,
+[data-page-route^="/admin"] main,
+[data-page-route^="/admin"] section,
+[data-page-route^="/admin"] article { transform: none !important; }
+[data-page-route^="/admin"] button,
+[data-page-route^="/admin"] a { transition-duration: 180ms !important; }
+
+/* Not-found and forbidden fallbacks. */
+[data-page-route]:not([data-page-route="/"]):not([data-page-route="/home"]):not([data-page-route="/about"]):not([data-page-route="/courses"]):not([data-page-route="/contact"]) .motion-route-error { animation: route-glitch 380ms steps(2,end) both; }

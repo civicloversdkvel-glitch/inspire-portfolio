@@ -203,6 +203,22 @@ primarySupabaseClient = createClient(
 
 export const supabase: SupabaseClient = primarySupabaseClient;
 
+// Public directory reads must always use the anon role, even when an admin or
+// student is signed in to the primary client. This keeps public column grants
+// and the public-directory RLS policy effective for every visitor.
+export const publicSupabase: SupabaseClient = createClient(
+  effectiveSupabaseUrl,
+  effectiveSupabaseAnonKey,
+  {
+    auth: {
+      persistSession: false,
+      autoRefreshToken: false,
+      detectSessionInUrl: false,
+      storageKey: 'inspire_academy_public_directory'
+    }
+  }
+);
+
 /**
  * Creates a non-persisted Supabase client for Admin account provisioning
  * so creating a student account does not overwrite the Admin's active session.

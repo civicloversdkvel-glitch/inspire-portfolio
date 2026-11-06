@@ -359,7 +359,7 @@ html[data-perf-mode="true"] .motion-auth-mesh { animation: none !important; }
 [data-page-route="/games/shooter"] main .animate-ping { will-change: transform, opacity; }
 [data-page-route="/games/bubble"] main button.rounded-full { transition: transform 240ms cubic-bezier(.22,1,.36,1), opacity 240ms ease; }
 [data-page-route="/games/bubble"] main button.rounded-full:active { transform: scale(.72); opacity: .4; }
-[data-page-route^="/admin"] .motion-route-reveal { opacity: 1; transform: none; }
+[data-page-route^="/admin"] .motion-route-reveal.is-visible { opacity: 1; transform: translateY(0); }
 
 .motion-hero-parallax { transform: translate3d(var(--hero-x, 0px), var(--hero-y, 0px), 0); transition: transform 260ms cubic-bezier(.22,1,.36,1); }
 .motion-hero-parallax-near { transform: translate3d(var(--hero-x, 0px), var(--hero-y, 0px), 0) rotateX(calc(var(--hero-y, 0px) * -.12)) rotateY(calc(var(--hero-x, 0px) * .12)); }
@@ -432,6 +432,68 @@ html[data-perf-mode="true"] .motion-hero-parallax, html[data-perf-mode="true"] .
 [data-page-route^="/admin"] article { transform: none !important; }
 [data-page-route^="/admin"] button,
 [data-page-route^="/admin"] a { transition-duration: 180ms !important; }
+
+/* Premium futuristic motion layer: restrained ambient depth, scroll reveals and tactile cards. */
+body::before {
+  content: "";
+  position: fixed;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  opacity: .32;
+  background:
+    radial-gradient(ellipse at 12% 8%, rgb(59 130 246 / .11), transparent 38%),
+    radial-gradient(ellipse at 88% 26%, rgb(250 204 21 / .08), transparent 34%),
+    linear-gradient(90deg, transparent 49.8%, rgb(37 99 235 / .025) 50%, transparent 50.2%);
+  background-size: 100% 100%, 100% 100%, 44px 44px;
+  animation: ambient-drift 24s ease-in-out infinite alternate;
+}
+@keyframes ambient-drift {
+  from { background-position: 0 0, 0 0, 0 0; }
+  to { background-position: 2% 3%, -2% 4%, 22px 22px; }
+}
+.motion-route-frame { animation: route-frame-enter 420ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes route-frame-enter {
+  from { opacity: .72; filter: blur(2px); }
+  to { opacity: 1; filter: blur(0); }
+}
+.motion-route-frame main .grid > *,
+.motion-route-frame main [data-motion-card],
+.motion-route-frame main article {
+  transition: transform 320ms cubic-bezier(.22,1,.36,1), box-shadow 320ms ease, border-color 320ms ease;
+}
+@media (hover: hover) and (pointer: fine) {
+  .motion-route-frame main .grid > *:hover,
+  .motion-route-frame main [data-motion-card]:hover,
+  .motion-route-frame main article:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 18px 42px rgb(15 23 42 / .12), 0 0 0 1px rgb(59 130 246 / .10);
+  }
+}
+.motion-route-frame main h1,
+.motion-route-frame main h2 { text-wrap: balance; }
+.motion-route-frame main button:not(:disabled),
+.motion-route-frame main a[href] { transition: transform 220ms cubic-bezier(.22,1,.36,1), box-shadow 220ms ease, background-color 220ms ease; }
+.motion-route-frame main button:not(:disabled):hover,
+.motion-route-frame main a[href]:hover { transform: translateY(-2px); }
+.motion-route-frame main input:focus,
+.motion-route-frame main textarea:focus,
+.motion-route-frame main select:focus {
+  box-shadow: 0 0 0 4px rgb(59 130 246 / .13), 0 8px 24px rgb(15 23 42 / .06);
+}
+[data-page-route^="/admin"] .motion-route-reveal.is-visible { animation: admin-panel-enter 360ms cubic-bezier(.22,1,.36,1) both; }
+@keyframes admin-panel-enter {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  body::before { animation: none !important; }
+  .motion-route-frame { animation: none !important; filter: none !important; }
+  .motion-route-frame main .grid > *, .motion-route-frame main article { transition: none !important; }
+}
+html[data-motion-reduce="true"] body::before,
+html[data-motion-reduce="true"] .motion-route-frame { animation: none !important; }
+html[data-perf-mode="true"] body::before { animation: none !important; }
 
 /* Not-found and forbidden fallbacks. */
 [data-page-route]:not([data-page-route="/"]):not([data-page-route="/home"]):not([data-page-route="/about"]):not([data-page-route="/courses"]):not([data-page-route="/contact"]) .motion-route-error { animation: route-glitch 380ms steps(2,end) both; }

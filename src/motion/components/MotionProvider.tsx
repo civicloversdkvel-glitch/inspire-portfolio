@@ -9,7 +9,7 @@ export function MotionProvider({ children }: { children: ReactNode }) {
         || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       root.dataset.motionReduce = reduced ? 'true' : 'false';
       const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
-      root.dataset.perfMode = ((typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 2) || (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 1) || nav.connection?.saveData === true) ? 'true' : 'false';
+      root.dataset.perfMode = ((typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 1) || (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 0.5) || nav.connection?.saveData === true) ? 'true' : 'false';
     };
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target instanceof Element ? event.target.closest<HTMLElement>('button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"], [class*="cursor-pointer"]') : null;

@@ -376,21 +376,25 @@ export function AcademyLogin() {
             </button>
           )}
 
-          <div className="relative flex py-1 items-center">
-            <div className="flex-grow border-t border-gray-200"></div>
-            <span className="flex-shrink mx-3 text-[10px] font-bold uppercase text-gray-400">Or</span>
-            <div className="flex-grow border-t border-gray-200"></div>
-          </div>
+          {mode !== 'register' && (
+            <>
+              <div className="relative flex py-1 items-center">
+                <div className="flex-grow border-t border-gray-200"></div>
+                <span className="flex-shrink mx-3 text-[10px] font-bold uppercase text-gray-400">Or</span>
+                <div className="flex-grow border-t border-gray-200"></div>
+              </div>
 
-          <button
-            type="button"
-            onClick={handleGoogleSignIn}
-            disabled={submitting}
-            className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl text-xs border border-gray-200 flex items-center justify-center gap-2 transition-colors"
-          >
-            <KeyRound size={15} className="text-blue-600" />
-            <span>Continue with Google Account</span>
-          </button>
+              <button
+                type="button"
+                onClick={handleGoogleSignIn}
+                disabled={submitting}
+                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl text-xs border border-gray-200 flex items-center justify-center gap-2 transition-colors"
+              >
+                <KeyRound size={15} className="text-blue-600" />
+                <span>Continue with Google Account</span>
+              </button>
+            </>
+          )}
         </form>
       </div>
     </ScreenWrapper>

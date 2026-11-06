@@ -42,6 +42,7 @@ export function QuizBattle() {
 
     setTimeout(() => {
       setMessage('');
+      setAnswerFeedback(null);
       if (enemyHP <= 25 && ans === question.a) {
         // Enemy defeated
         setEnemyHP(100);

@@ -118,7 +118,7 @@ export function Settings() {
           {systemReducedMotion && !reduceAnimations && (
             <p className="text-[11px] text-blue-700">Your device also requests reduced motion, so that preference is respected automatically.</p>
           )}
-          <p className="text-[11px] text-gray-400">Saved on this browser only. Performance mode also disables 3D effects on low-power devices.</p>
+          <p className="text-[11px] text-gray-400">Saved on this browser only. Only very low-power devices or Data Saver mode disable heavier 3D effects; ordinary laptops keep animations enabled.</p>
         </section>
 
         {/* Local Storage Architecture Notice */}

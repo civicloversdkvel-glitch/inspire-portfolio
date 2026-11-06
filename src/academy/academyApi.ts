@@ -1312,6 +1312,25 @@ export async function adminUpdateStudentProfile(
   }
 }
 
+export async function deleteStudentAccountAsAdmin(studentId: string): Promise<{ studentName: string }> {
+  await assertAdminAuthorized();
+  if (!studentId) throw new Error('Student ID is required.');
+
+  const { data, error } = await supabase.functions.invoke('admin-delete-student', {
+    body: { studentId }
+  });
+  if (error) throw new Error(error.message || 'Student delete request failed. Please try again.');
+  if (data?.error) throw new Error(String(data.error));
+  if (!data?.success) throw new Error('Student deletion could not be confirmed by the server.');
+
+  try {
+    localStorage.removeItem(`inspire_academy_roll_${studentId}`);
+  } catch {
+    // Ignore local storage cleanup errors.
+  }
+  return { studentName: String(data.studentName || 'Student') };
+}
+
 export async function adminCreateStudentAccount(params: {
   email: string;
   password: string;

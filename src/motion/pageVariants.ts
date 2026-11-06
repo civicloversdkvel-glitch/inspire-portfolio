@@ -68,6 +68,7 @@ export function routeSignature(path: string): RouteSignature {
   if (path === '/academy/login' || path === '/academy/register' || path === '/login') return 'auth';
   if (path.includes('/submit') || path.includes('/reports/daily') || path.includes('/reports/weekly') || path.includes('/reports/monthly')) return 'wizard';
   if (path.startsWith('/games')) return 'game';
+  if (path.startsWith('/courses/')) return 'detail';
   if (path === '/404' || path === '/403') return 'error';
   if (path.startsWith('/academy') || path.startsWith('/reports') || path.startsWith('/tasks') || path.startsWith('/targets') || path.startsWith('/learning') || path.startsWith('/portfolio') || path.startsWith('/profile') || path.startsWith('/settings') || path.startsWith('/shortcuts') || path.startsWith('/chatbot') || path.startsWith('/search') || path.startsWith('/courses/')) return 'student';
   return 'error';

@@ -320,7 +320,7 @@ export function AcademyLogin() {
 
           <button
             type="submit"
-            disabled={submitting || loading || Boolean(user && profile)}
+            disabled={submitting || loading || (mode === 'register' && Boolean(user && profile))}
             className="w-full py-3 bg-blue-900 hover:bg-blue-800 text-white font-bold rounded-xl text-sm flex items-center justify-center gap-2 shadow-sm transition-colors disabled:opacity-60"
           >
             {submitting ? (

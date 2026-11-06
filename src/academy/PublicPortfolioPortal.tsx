@@ -2,7 +2,7 @@ import { useEffect, useState, useMemo } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { ScreenWrapper } from '../components/ScreenWrapper';
 import { InspireLogo } from '../components/InspireLogo';
-import { fetchPublicPortfolios } from './academyApi';
+import { fetchPublicApprovedStudents, fetchPublicPortfolios } from './academyApi';
 import { ACADEMY_SKILLS, PublicPortfolioRecord } from './types';
 import { formatPKTDate } from './supabase';
 import { useSafeBack } from '../lib/utils';
@@ -32,6 +32,7 @@ export function PublicPortfolioPortal() {
 
   const [activeTab, setActiveTab] = useState<'showcase' | 'verify'>(initialTab);
   const [items, setItems] = useState<PublicPortfolioRecord[]>([]);
+  const [approvedStudents, setApprovedStudents] = useState<Array<{ id: string; full_name: string; roll_no: string; skill: string; created_at: string }>>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
@@ -49,8 +50,15 @@ export function PublicPortfolioPortal() {
       setLoading(true);
       setError(null);
       try {
-        const list = await fetchPublicPortfolios();
-        if (active) setItems(list);
+        const [list, students] = await Promise.all([
+          fetchPublicPortfolios(),
+          fetchPublicApprovedStudents()
+        ]);
+        if (active) {
+          const approvedIds = new Set(students.map(student => student.id));
+          setItems(list.filter(item => approvedIds.has(item.student_id)));
+          setApprovedStudents(students);
+        }
       } catch (err: any) {
         if (active) setError(err?.message || 'Could not load public portfolio showcase.');
       } finally {
@@ -96,12 +104,23 @@ export function PublicPortfolioPortal() {
       }
     >();
 
-    for (const item of items) {
-      // The academy principal is an administrator, never a student directory entry.
-      const normalizedStudentName = item.student_name.toLowerCase().replace(/[^a-z0-9]/g, '');
-      if (normalizedStudentName.includes('adeelbhatti')) continue;
+    for (const student of approvedStudents) {
+      map.set(student.id, {
+        student_id: student.id,
+        student_name: student.full_name,
+        roll_no: student.roll_no,
+        skill: student.skill,
+        approved_count: 0,
+        featured_count: 0,
+        avg_rating: 0,
+        latest_date: student.created_at,
+        works: []
+      });
+    }
 
+    for (const item of items) {
       const existing = map.get(item.student_id);
+      if (!existing) continue;
       if (!existing) {
         map.set(item.student_id, {
           student_id: item.student_id,
@@ -125,7 +144,7 @@ export function PublicPortfolioPortal() {
     }
 
     return Array.from(map.values()).sort((a, b) => b.approved_count - a.approved_count);
-  }, [items]);
+  }, [items, approvedStudents]);
 
   const matchingVerifiedStudents = useMemo(() => {
     if (!verifyQuery.trim()) return verifiedStudents;
@@ -407,7 +426,7 @@ export function PublicPortfolioPortal() {
 
             {matchingVerifiedStudents.length === 0 ? (
               <div className="bg-white rounded-2xl p-6 text-center border border-gray-100 text-xs text-gray-500">
-                No matching public student record found. Only students with at least one Admin-approved public portfolio item appear in the public directory.
+                No matching approved student record found. Only active students approved by the Academy Admin appear in this directory.
               </div>
             ) : (
               matchingVerifiedStudents.map(st => (
@@ -449,16 +468,20 @@ export function PublicPortfolioPortal() {
                     </div>
                   </div>
 
-                  <button
-                    type="button"
-                    onClick={() => {
-                      setSearchQuery(st.student_name);
-                      setActiveTab('showcase');
-                    }}
-                    className="w-full py-2 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold transition-colors"
-                  >
-                    View All Approved Works ({st.approved_count})
-                  </button>
+                  {st.approved_count > 0 ? (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setSearchQuery(st.student_name);
+                        setActiveTab('showcase');
+                      }}
+                      className="w-full py-2 rounded-xl bg-blue-900 hover:bg-blue-800 text-white text-xs font-bold transition-colors"
+                    >
+                      View All Approved Works ({st.approved_count})
+                    </button>
+                  ) : (
+                    <p className="text-center text-[11px] text-gray-400 py-1">No public projects yet</p>
+                  )}
                 </div>
               ))
             )}

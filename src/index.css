@@ -276,3 +276,47 @@ textarea[required]:valid {
 html[data-motion-reduce="true"] .motion-button-fab,
 html[data-motion-reduce="true"] .motion-particle { animation: none !important; }
 html[data-motion-reduce="true"] .motion-particle { display: none !important; }
+
+
+/* Route-level signature motion. All page transitions use compositor-friendly properties. */
+.motion-route-frame { width: 100%; min-width: 0; transform-origin: 50% 50%; }
+.motion-route-frame [data-motion-stagger] > * { animation: route-item-in 420ms cubic-bezier(.22,1,.36,1) both; }
+.motion-route-frame [data-motion-stagger] > *:nth-child(2) { animation-delay: 55ms; }
+.motion-route-frame [data-motion-stagger] > *:nth-child(3) { animation-delay: 110ms; }
+.motion-route-frame [data-motion-stagger] > *:nth-child(4) { animation-delay: 165ms; }
+.motion-route-frame [data-motion-stagger] > *:nth-child(5) { animation-delay: 220ms; }
+@keyframes route-item-in { from { opacity: 0; transform: translate3d(0, 14px, 0) scale(.985); } to { opacity: 1; transform: translate3d(0, 0, 0) scale(1); } }
+[data-page-route="/"] .motion-hero-word, [data-page-route="/home"] .motion-hero-word { animation: route-hero-rise 560ms cubic-bezier(.22,1,.36,1) both; }
+[data-page-route="/"] .motion-hero-word:nth-child(2), [data-page-route="/home"] .motion-hero-word:nth-child(2) { animation-delay: 90ms; }
+[data-page-route="/"] .motion-hero-word:nth-child(3), [data-page-route="/home"] .motion-hero-word:nth-child(3) { animation-delay: 180ms; }
+@keyframes route-hero-rise { from { opacity: 0; transform: translateY(22px); } to { opacity: 1; transform: translateY(0); } }
+.motion-route-reveal { opacity: 0; transform: translateY(16px); transition: opacity 420ms ease, transform 420ms cubic-bezier(.22,1,.36,1); }
+.motion-route-reveal.is-visible { opacity: 1; transform: translateY(0); }
+.motion-auth-mesh { background-size: 180% 180%; animation: auth-mesh-drift 12s ease-in-out infinite alternate; }
+@keyframes auth-mesh-drift { from { background-position: 0% 50%; } to { background-position: 100% 50%; } }
+.motion-game-memory { perspective: 900px; transform-style: preserve-3d; transition: transform 500ms cubic-bezier(.2,.8,.2,1); }
+.motion-game-memory.is-flipped { transform: rotateY(180deg); }
+.motion-game-projectile { will-change: transform, opacity; animation: projectile-travel 360ms linear both; }
+@keyframes projectile-travel { from { opacity: 0; transform: translate3d(0,0,0) scale(.6); } to { opacity: 1; transform: translate3d(var(--projectile-x, 40px), var(--projectile-y, -40px), 0) scale(1); } }
+.motion-admin-page, [data-admin-motion="true"] * { transition-duration: 180ms !important; }
+.motion-admin-page { transform: none !important; }
+.motion-route-error { animation: route-glitch 380ms steps(2,end) both; }
+@keyframes route-glitch { 0% { opacity: 0; transform: translateX(-3px); } 35% { opacity: 1; transform: translateX(3px); } 70% { transform: translateX(-1px); } 100% { opacity: 1; transform: translateX(0); } }
+.motion-route-float { animation: route-float 4s ease-in-out infinite; }
+@keyframes route-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-7px); } }
+html[data-motion-reduce="true"] .motion-route-frame *,
+html[data-motion-reduce="true"] .motion-route-frame *::before,
+html[data-motion-reduce="true"] .motion-route-frame *::after,
+@media (prefers-reduced-motion: reduce) {
+  .motion-route-frame *, .motion-route-frame *::before, .motion-route-frame *::after {
+    animation-duration: 150ms !important; animation-iteration-count: 1 !important;
+    transition-duration: 150ms !important;
+  }
+  .motion-auth-mesh, .motion-route-float { animation: none !important; }
+  .motion-route-frame { transform: none !important; }
+}
+html[data-perf-mode="true"] .motion-route-float,
+html[data-perf-mode="true"] .motion-auth-mesh { animation: none !important; }
+@media (max-width: 640px) {
+  .motion-route-frame { transform-origin: top center; }
+}

@@ -1223,6 +1223,32 @@ export async function updateOwnStudentProfile(
   }
 }
 
+export async function adminApproveStudentRegistration(studentId: string): Promise<void> {
+  await assertAdminAuthorized();
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({
+        is_approved: true,
+        approval_status: 'approved',
+        is_active: true,
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', studentId)
+      .eq('role', 'student')
+      .eq('is_approved', false)
+      .select('id')
+      .maybeSingle();
+
+    if (error) throw error;
+    if (!data) {
+      throw new Error('Registration approve nahi hui: request pending nahi hai ya admin permission available nahi.');
+    }
+  } catch (err) {
+    handleSupabaseError(err, OperationType.UPDATE, `profiles/${studentId}/approval`);
+  }
+}
+
 export async function adminUpdateStudentProfile(
   studentId: string,
   updates: {
@@ -1425,6 +1451,41 @@ function mapPublicPortfolioRow(raw: Record<string, any>): PublicPortfolioRecord 
     created_at: toIso(raw.created_at),
     updated_at: toIso(raw.updated_at)
   };
+}
+
+export async function fetchPublicApprovedStudents(): Promise<Array<{
+  id: string;
+  full_name: string;
+  roll_no: string;
+  skill: string;
+  created_at: string;
+}>> {
+  if (!isSupabaseConfigured) return [];
+  try {
+    const { data, error } = await supabase
+      .from('profiles')
+      .select('id, full_name, roll_no, skill, created_at')
+      .eq('role', 'student')
+      .eq('is_active', true)
+      .eq('is_approved', true)
+      .eq('approval_status', 'approved')
+      .order('created_at', { ascending: false });
+
+    if (error) throw error;
+    return (data || [])
+      .map(row => ({
+        id: String(row.id),
+        full_name: String(row.full_name || 'Student'),
+        roll_no: String(row.roll_no || ''),
+        skill: String(row.skill || 'Graphic Designing'),
+        created_at: toIso(row.created_at)
+      }))
+      .filter(student =>
+        !student.full_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes('adeelbhatti')
+      );
+  } catch (err) {
+    handleSupabaseError(err, OperationType.LIST, 'profiles');
+  }
 }
 
 export async function fetchPublicPortfolios(): Promise<PublicPortfolioRecord[]> {

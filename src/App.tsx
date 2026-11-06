@@ -106,7 +106,7 @@ function StudentPortalShell({ children, title, subtitle }: { children: React.Rea
             <ArrowLeft size={16} />
             <span className="hidden sm:inline">Student Portal</span>
           </button>
-          <AnimatedLogo size="sm" className="w-9 h-9 shrink-0" />
+          <AnimatedLogo size="sm" className="shrink-0" />
           <div>
             <h1 className="text-sm sm:text-base font-extrabold leading-tight">
               {title || 'Inspire Business Academy Student Workspace'}

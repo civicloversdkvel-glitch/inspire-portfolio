@@ -1442,7 +1442,7 @@ export async function fetchPublicPortfolios(): Promise<PublicPortfolioRecord[]> 
     const principalName = 'adeel bhatti';
     return (data || [])
       .map(row => mapPublicPortfolioRow(row))
-      .filter(item => item.student_name.trim().toLowerCase().replace(/\\s+/g, ' ') !== principalName)
+      .filter(item => item.student_name.trim().toLowerCase().replace(/\s+/g, ' ') !== principalName)
       .sort((a, b) => {
         if (a.is_featured !== b.is_featured) return a.is_featured ? -1 : 1;
         return b.created_at.localeCompare(a.created_at);

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Navigate, useLocation, useNavigate } from 'react-router-dom';
 import { useAcademyAuth } from '../academy/AcademyAuthContext';
-import { InspireLogo } from '../components/InspireLogo';
+import { AnimatedLogo } from '../components/AnimatedLogo';
 import { getTodayPKT, formatPKTDate, BOOTSTRAPPED_ADMIN_EMAILS } from '../academy/supabase';
 import {
   LayoutDashboard,
@@ -132,12 +132,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
       {/* Desktop Sidebar */}
       <aside className="hidden lg:flex lg:w-64 lg:flex-col bg-blue-950 text-white border-r border-blue-900 shrink-0">
         <div className="p-5 border-b border-blue-900 flex items-center gap-3">
-          <div className="w-11 h-11 bg-white rounded-xl p-1 shadow-md border border-yellow-400/70 shrink-0 flex items-center justify-center overflow-hidden">
-            <InspireLogo
-              alt="The Inspire Business Academy Logo"
-              className="w-full h-full object-contain"
-            />
-          </div>
+          <AnimatedLogo size="md" className="w-11 h-11 shrink-0" />
           <div>
             <p className="text-[10px] font-extrabold uppercase tracking-widest text-yellow-400">
               Admin Console
@@ -217,12 +212,7 @@ export function AdminLayout({ children }: { children: React.ReactNode }) {
           <div className="relative w-64 max-w-[80vw] bg-blue-950 text-white h-full flex flex-col z-10">
             <div className="p-4 border-b border-blue-900 flex items-center justify-between">
               <div className="flex items-center gap-2.5">
-                <div className="w-8 h-8 bg-white rounded-lg p-0.5 shrink-0 flex items-center justify-center overflow-hidden">
-                  <InspireLogo
-                    alt="The Inspire Business Academy Logo"
-                    className="w-full h-full object-contain"
-                  />
-                </div>
+                <AnimatedLogo size="sm" className="w-8 h-8 shrink-0" />
                 <span className="text-xs font-extrabold text-yellow-400 uppercase tracking-wider">
                   Inspire Admin
                 </span>

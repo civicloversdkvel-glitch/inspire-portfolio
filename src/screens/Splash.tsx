@@ -41,7 +41,7 @@ export function Splash() {
         transition={{ duration: 1, ease: [0.25, 1, 0.5, 1] }}
         className="z-10 flex flex-col items-center"
       >
-        <AnimatedLogo size="hero" className="z-10 w-32 h-32 mb-8" />
+        <AnimatedLogo size="hero" className="z-10" />
 
         <motion.h1
           initial={{ y: 20, opacity: 0 }}

@@ -190,12 +190,6 @@ export const PublicFooter: React.FC = () => {
                   Campus Location & Visits
                 </Link>
               </li>
-              <li>
-                <Link to="/admin" className="hover:text-white transition-colors flex items-center gap-1.5 text-slate-300">
-                  <ShieldCheck size={13} className="text-yellow-400" />
-                  <span>Admin Management</span>
-                </Link>
-              </li>
             </ul>
           </div>
         </div>

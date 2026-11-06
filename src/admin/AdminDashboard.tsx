@@ -4,6 +4,7 @@ import { ScreenWrapper } from '../components/ScreenWrapper';
 import { useAcademyAuth } from '../academy/AcademyAuthContext';
 import {
   approveDeleteRequestAsAdmin,
+  adminApproveStudentRegistration,
   approveSubmissionForPublicPortfolio,
   archiveSubmissionAsAdmin,
   createAnnouncementAsAdmin,
@@ -53,7 +54,8 @@ import {
   Award,
   Sparkles,
   CalendarCheck2,
-  Megaphone
+  Megaphone,
+  UserCheck
 } from 'lucide-react';
 
 export function AdminDashboard() {
@@ -61,6 +63,7 @@ export function AdminDashboard() {
   const { profile } = useAcademyAuth();
 
   const [activeTab, setActiveTab] = useState<
+    | 'registrations'
     | 'submissions'
     | 'delete_requests'
     | 'assignments'
@@ -127,6 +130,7 @@ export function AdminDashboard() {
   const [annPriority, setAnnPriority] = useState<AnnouncementPriority>('normal');
   const [creatingAnn, setCreatingAnn] = useState(false);
   const [approvingSubId, setApprovingSubId] = useState<string | null>(null);
+  const [approvingStudentId, setApprovingStudentId] = useState<string | null>(null);
 
   const todayPKT = getTodayPKT();
 
@@ -187,6 +191,11 @@ export function AdminDashboard() {
     [submissions]
   );
 
+  const pendingRegistrations = useMemo(
+    () => students.filter(student => !student.is_approved && student.is_active),
+    [students]
+  );
+
   const pendingReviewsCount = useMemo(
     () => activeSubmissionsList.filter(s => s.status === 'submitted').length,
     [activeSubmissionsList]
@@ -201,6 +210,20 @@ export function AdminDashboard() {
     () => activeSubmissionsList.filter(s => s.submission_date === todayPKT).length,
     [activeSubmissionsList, todayPKT]
   );
+
+  const handleApproveStudentRegistration = async (student: StudentProgressSummary) => {
+    setError(null);
+    setApprovingStudentId(student.student_id);
+    try {
+      await adminApproveStudentRegistration(student.student_id);
+      setFeedbackBanner(`Approved registration for ${student.full_name}. Student can now sign in and appears in Verified Students.`);
+      await loadAll();
+    } catch (err: any) {
+      setError(err?.message || 'Failed to approve student registration.');
+    } finally {
+      setApprovingStudentId(null);
+    }
+  };
 
   const handleArchiveSubmission = async (sub: SubmissionRecord) => {
     setError(null);
@@ -524,6 +547,23 @@ export function AdminDashboard() {
       <div className="flex flex-wrap gap-2 border-b border-slate-200 pb-3">
         <button
           type="button"
+          onClick={() => setActiveTab('registrations')}
+          className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors flex items-center gap-1.5 ${
+            activeTab === 'registrations'
+              ? 'bg-blue-900 text-white'
+              : 'bg-white text-slate-600 border border-slate-200 hover:bg-slate-100'
+          }`}
+        >
+          <UserCheck size={14} />
+          <span>Registration Requests</span>
+          {pendingRegistrations.length > 0 && (
+            <span className="px-1.5 py-0.5 rounded-full bg-amber-400 text-blue-950 text-[10px]">
+              {pendingRegistrations.length}
+            </span>
+          )}
+        </button>
+        <button
+          type="button"
           onClick={() => setActiveTab('submissions')}
           className={`px-4 py-2 rounded-xl text-xs font-bold transition-colors ${
             activeTab === 'submissions'
@@ -601,6 +641,66 @@ export function AdminDashboard() {
       {loading ? (
         <div className="py-12 flex justify-center">
           <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+        </div>
+      ) : activeTab === 'registrations' ? (
+        <div className="space-y-4">
+          <div className="bg-white rounded-2xl border border-slate-200 p-4">
+            <h2 className="text-sm font-extrabold text-slate-900">New Student Registration Requests</h2>
+            <p className="text-xs text-slate-500 mt-1">
+              Review student details below. Approval enables student sign-in and adds the student to the public Verified Students directory.
+            </p>
+          </div>
+
+          {pendingRegistrations.length === 0 ? (
+            <div className="bg-white rounded-2xl p-8 text-center border border-slate-200">
+              <CheckCircle2 className="w-8 h-8 text-emerald-500 mx-auto mb-2" />
+              <p className="text-sm font-bold text-slate-700">No Pending Registrations</p>
+              <p className="text-xs text-slate-500 mt-1">All student registration requests have been reviewed.</p>
+            </div>
+          ) : (
+            <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
+              {pendingRegistrations.map(student => (
+                <div key={student.student_id} className="bg-white rounded-2xl border border-amber-200 p-5 shadow-sm space-y-3">
+                  <div className="flex items-start justify-between gap-3">
+                    <div className="min-w-0">
+                      <span className="inline-flex px-2 py-1 rounded-full bg-amber-100 text-amber-800 text-[10px] font-extrabold uppercase">
+                        Pending Approval
+                      </span>
+                      <h3 className="text-sm font-extrabold text-slate-900 mt-2">{student.full_name}</h3>
+                      <p className="text-xs text-slate-600 break-all">{student.email}</p>
+                    </div>
+                    <UserCheck size={20} className="text-amber-600 shrink-0" />
+                  </div>
+                  <div className="grid grid-cols-2 gap-2 text-xs">
+                    <div className="bg-slate-50 rounded-xl p-3">
+                      <p className="text-slate-400 font-bold uppercase text-[10px]">Phone</p>
+                      <p className="text-slate-800 font-semibold mt-1">{student.phone || 'Not provided'}</p>
+                    </div>
+                    <div className="bg-slate-50 rounded-xl p-3">
+                      <p className="text-slate-400 font-bold uppercase text-[10px]">Skill Track</p>
+                      <p className="text-slate-800 font-semibold mt-1">{student.skill}</p>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between gap-3">
+                    <p className="text-[11px] text-slate-400">Registered: {formatPKTDate(student.admission_date)}</p>
+                    <button
+                      type="button"
+                      disabled={approvingStudentId === student.student_id}
+                      onClick={() => handleApproveStudentRegistration(student)}
+                      className="px-4 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 disabled:opacity-60 text-white text-xs font-bold flex items-center gap-1.5"
+                    >
+                      {approvingStudentId === student.student_id ? (
+                        <Loader2 size={14} className="animate-spin" />
+                      ) : (
+                        <CheckCircle2 size={14} />
+                      )}
+                      {approvingStudentId === student.student_id ? 'Approving...' : 'Approve Student'}
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
       ) : activeTab === 'submissions' ? (
         <div className="space-y-4">

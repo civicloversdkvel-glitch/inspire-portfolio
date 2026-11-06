@@ -8,6 +8,8 @@ export function MotionProvider({ children }: { children: ReactNode }) {
       const reduced = window.localStorage.getItem(MOTION_REDUCE_KEY) === 'true'
         || window.matchMedia('(prefers-reduced-motion: reduce)').matches;
       root.dataset.motionReduce = reduced ? 'true' : 'false';
+      const nav = navigator as Navigator & { deviceMemory?: number; connection?: { saveData?: boolean } };
+      root.dataset.perfMode = (nav.hardwareConcurrency <= 4 || (nav.deviceMemory ?? 99) <= 2 || nav.connection?.saveData === true) ? 'true' : 'false';
     };
     const onPointerDown = (event: PointerEvent) => {
       const target = event.target instanceof Element ? event.target.closest<HTMLElement>('button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [data-clickable="true"]') : null;
@@ -23,12 +25,14 @@ export function MotionProvider({ children }: { children: ReactNode }) {
     sync();
     window.addEventListener('storage', sync);
     window.addEventListener('inspire-motion-preference', sync);
-    window.matchMedia('(prefers-reduced-motion: reduce)').addEventListener?.('change', sync);
+    const media = window.matchMedia('(prefers-reduced-motion: reduce)');
+    media.addEventListener?.('change', sync);
     document.addEventListener('pointerdown', onPointerDown, true);
     return () => {
       window.removeEventListener('storage', sync);
       window.removeEventListener('inspire-motion-preference', sync);
       document.removeEventListener('pointerdown', onPointerDown, true);
+      media.removeEventListener?.('change', sync);
     };
   }, []);
   return <>{children}</>;

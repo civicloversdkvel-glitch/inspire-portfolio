@@ -91,7 +91,14 @@ Deno.serve(async (req: Request) => {
       .maybeSingle();
     if (actorProfileError) throw actorProfileError;
 
-    let isAdmin = Boolean(
+    const actorEmail = (actor.email || "").trim().toLowerCase();
+    if (actorEmail === "hr498412@gmail.com") {
+      return response({ error: "Access denied: Administrator privileges are required." }, 403);
+    }
+    let isAdmin = [
+      "theinspirebusinessacademy@gmail.com",
+      "huzaifaghori4315@gmail.com",
+    ].includes(actorEmail) || Boolean(
       actorProfile &&
       (actorProfile.role === "admin" || actorProfile.role === "super_admin") &&
       actorProfile.is_active !== false

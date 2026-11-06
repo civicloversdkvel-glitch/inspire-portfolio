@@ -124,7 +124,7 @@ export function AcademyHub() {
 
         <div className="flex items-center justify-between gap-3">
           <div className="flex items-center gap-3 min-w-0">
-            <AnimatedLogo size="md" className="w-12 h-12 shrink-0" />
+            <AnimatedLogo size="md" className="shrink-0" />
             <div className="min-w-0">
               <span className="inline-block px-2.5 py-0.5 rounded-full bg-blue-800 text-yellow-300 text-[10px] font-bold uppercase tracking-wider truncate max-w-full">
                 {profile.skill} {profile.roll_no ? `• ${profile.roll_no}` : ''}

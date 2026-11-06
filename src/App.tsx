@@ -1,4 +1,6 @@
 import { useEffect, useState } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
+import { pageVariantsForPath } from './motion/pageVariants';
 import { HashRouter, Routes, Route, Navigate, useLocation, useNavigate, Link } from 'react-router-dom';
 
 // Public Website Screens
@@ -213,7 +215,18 @@ function AppContainer() {
       (window.location.hash === '#/admin' || window.location.hash.startsWith('#/admin/')));
 
   return (
-    <Routes>
+    <AnimatePresence mode="wait" initial={false}>
+      <motion.div
+        key={location.pathname}
+        custom={location.pathname}
+        variants={pageVariantsForPath(location.pathname)}
+        initial="initial"
+        animate="animate"
+        exit="exit"
+        data-page-route={location.pathname}
+        className="motion-route-frame"
+      >
+    <Routes location={location}>
       {/* 1. PUBLIC WEBSITE ROUTES */}
       <Route
         path="/"
@@ -564,6 +577,8 @@ function AppContainer() {
         }
       />
     </Routes>
+      </motion.div>
+    </AnimatePresence>
   );
 }
 

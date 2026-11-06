@@ -17,7 +17,7 @@
 
   html,
   body {
-    overflow-x: clip;
+    overflow-x: hidden;
   }
 
   body {
@@ -25,7 +25,8 @@
   }
 
   #root {
-    overflow-x: clip;
+    width: 100%;
+    overflow: visible;
   }
 
   img,
@@ -35,28 +36,24 @@
     max-width: 100%;
   }
 
-  @supports not (overflow: clip) {
-    html,
-    body,
-    #root {
-      overflow-x: hidden;
-    }
-  }
-
   @media (max-width: 640px) {
     #root,
-    #root main,
-    #root section,
-    #root header,
-    #root footer {
+    #root main {
       min-width: 0;
-      max-width: 100%;
+      width: 100%;
     }
 
-    input,
-    select,
-    textarea,
-    button {
+    #root img,
+    #root video,
+    #root iframe {
+      max-width: 100%;
+      height: auto;
+    }
+
+    #root input,
+    #root select,
+    #root textarea {
+      min-width: 0;
       max-width: 100%;
     }
   }

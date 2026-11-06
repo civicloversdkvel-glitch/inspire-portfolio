@@ -106,10 +106,10 @@ button:not(:disabled), a[href], [role="button"]:not([aria-disabled="true"]), [da
   transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;
   -webkit-tap-highlight-color: transparent;
 }
-button:not(:disabled):active, a[href]:active, [role="button"]:not([aria-disabled="true"]):active, [data-clickable="true"]:active, [class*="cursor-pointer"]:active {
+button:not(:disabled):not([aria-disabled="true"]):active, a[href]:not([aria-disabled="true"]):active, [role="button"]:not([aria-disabled="true"]):active, [data-clickable="true"]:not([aria-disabled="true"]):active, [class*="cursor-pointer"]:not([aria-disabled="true"]):active {
   transform: scale(.975);
 }
-button:disabled, [aria-disabled="true"] { animation: none !important; transition: none !important; }
+button:disabled, button[aria-disabled="true"], a[aria-disabled="true"], [aria-disabled="true"] { animation: none !important; transition: none !important; transform: none !important; }
 button:focus-visible, a[href]:focus-visible, [role="button"]:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible {
   outline: 3px solid #f59e0b;
   outline-offset: 3px;

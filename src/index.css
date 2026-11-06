@@ -151,7 +151,7 @@ button[class*="bg-transparent"]:not(:disabled):hover, button[class*="text-slate-
   text-underline-offset: 4px;
 }
 button[class*="rounded-full"]:not(:disabled):hover { transform: translateY(-1px) scale(1.035); }
-[role="tab"] { transition: color var(--motion-fast) ease, background-color var(--motion-fast) ease, transform var(--motion-fast) var(--motion-ease); }
+[role="tab"] { transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease; }
 [role="switch"] > span, [role="switch"]::before { transition: transform var(--motion-fast) var(--motion-ease); }
 input:not([type="checkbox"]):not([type="radio"]), select, textarea {
   transition: transform var(--motion-fast) var(--motion-ease), opacity var(--motion-fast) ease;

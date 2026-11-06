@@ -214,6 +214,30 @@ function AppContainer() {
     (typeof window !== 'undefined' &&
       (window.location.hash === '#/admin' || window.location.hash.startsWith('#/admin/')));
 
+  useEffect(() => {
+    if (isAdminRoute || document.documentElement.dataset.motionReduce === 'true' ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches ||
+        !('IntersectionObserver' in window)) return;
+    const root = document.querySelector('.motion-route-frame');
+    if (!root) return;
+    const targets = Array.from(root.querySelectorAll<HTMLElement>(
+      'main > section, main > div > section, main .grid > *, [data-motion-reveal]'
+    ));
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          observer.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.08, rootMargin: '0px 0px -24px 0px' });
+    targets.forEach((target) => {
+      target.classList.add('motion-route-reveal');
+      observer.observe(target);
+    });
+    return () => observer.disconnect();
+  }, [location.pathname, isAdminRoute]);
+
   return (
     <AnimatePresence mode="wait" initial={false}>
       <motion.div

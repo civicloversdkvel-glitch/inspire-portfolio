@@ -16,7 +16,6 @@ import {
   AlertCircle,
   CheckCircle2,
   Loader2,
-  KeyRound,
   UserPlus,
   LogIn
 } from 'lucide-react';
@@ -29,8 +28,7 @@ export function AcademyLogin() {
     authError,
     signInWithEmail,
     registerStudent,
-    resetPassword,
-    signInWithGoogle
+    resetPassword
   } = useAcademyAuth();
   const location = useLocation();
   const navigate = useNavigate();
@@ -98,27 +96,6 @@ export function AcademyLogin() {
       }
     } catch (err: any) {
       setLocalError(err?.message || 'Authentication failed.');
-    } finally {
-      setSubmitting(false);
-    }
-  };
-
-  const handleGoogleSignIn = async () => {
-    if (mode === 'register' && fullName.trim().length < 2) {
-      setLocalError('Enter your full name before registering.');
-      return;
-    }
-    setLocalError(null);
-    setSuccessMessage(null);
-    setSubmitting(true);
-    try {
-      await signInWithGoogle(
-        mode === 'register'
-          ? { fullName, phone, skill }
-          : undefined
-      );
-    } catch (err: any) {
-      setLocalError(err?.message || 'Google sign-in failed.');
     } finally {
       setSubmitting(false);
     }
@@ -376,25 +353,7 @@ export function AcademyLogin() {
             </button>
           )}
 
-          {mode !== 'register' && (
-            <>
-              <div className="relative flex py-1 items-center">
-                <div className="flex-grow border-t border-gray-200"></div>
-                <span className="flex-shrink mx-3 text-[10px] font-bold uppercase text-gray-400">Or</span>
-                <div className="flex-grow border-t border-gray-200"></div>
-              </div>
 
-              <button
-                type="button"
-                onClick={handleGoogleSignIn}
-                disabled={submitting}
-                className="w-full py-2.5 bg-white hover:bg-gray-50 text-gray-700 font-semibold rounded-xl text-xs border border-gray-200 flex items-center justify-center gap-2 transition-colors"
-              >
-                <KeyRound size={15} className="text-blue-600" />
-                <span>Continue with Google Account</span>
-              </button>
-            </>
-          )}
         </form>
       </div>
     </ScreenWrapper>

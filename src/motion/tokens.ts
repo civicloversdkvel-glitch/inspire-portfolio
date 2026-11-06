@@ -1,4 +1,5 @@
 export const motionTokens = {
+  durationMs: { fast: 180, base: 300, slow: 500 },
   duration: { fast: 0.18, base: 0.3, slow: 0.5, reduced: 0.15 },
   easing: {
     standard: [0.22, 1, 0.36, 1] as const,

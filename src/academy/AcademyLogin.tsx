@@ -45,6 +45,10 @@ export function AcademyLogin() {
   const [localError, setLocalError] = useState<string | null>(null);
   const [successMessage, setSuccessMessage] = useState<string | null>(null);
 
+  if (!loading && user && profile && profile.role === 'admin') {
+    return <Navigate to="/admin" replace />;
+  }
+
   if (!loading && user && profile && location.pathname !== '/academy/register') {
     const fromState = (location.state as { from?: { pathname?: string; search?: string } } | null)?.from;
     const requestedPath = fromState?.pathname

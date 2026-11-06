@@ -6,8 +6,8 @@ export function usePerfMode() {
   return useMemo(() => {
     if (typeof navigator === 'undefined') return true;
     const nav = navigator as NavigatorWithHints;
-    return (typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 4)
-      || (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 2)
+    return (typeof nav.hardwareConcurrency === 'number' && nav.hardwareConcurrency <= 2)
+      || (typeof nav.deviceMemory === 'number' && nav.deviceMemory <= 1)
       || nav.connection?.saveData === true;
   }, []);
 }

@@ -64,7 +64,7 @@ export const PublicNavbar: React.FC = () => {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
         {/* Brand Logo & Title */}
         <Link to="/" className="flex min-w-0 flex-1 sm:flex-initial items-center gap-2 sm:gap-3 group">
-          <AnimatedLogo size="md" className="w-11 h-11 sm:w-14 sm:h-14 shrink-0 group-hover:scale-105" />
+          <AnimatedLogo size="md" className="shrink-0 group-hover:scale-105" />
           <div className="min-w-0">
             <div className="hidden sm:flex items-center gap-1.5">
               <span className="text-[10px] sm:text-[11px] font-extrabold uppercase tracking-widest text-blue-900 bg-blue-50 px-2 py-0.5 rounded-md border border-blue-100">

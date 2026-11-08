@@ -6,7 +6,7 @@ import { DrawCheck } from '../../motion/components/DrawCheck';
 import { useReducedMotion } from '../../motion/hooks/useReducedMotion';
 
 export type ButtonVariant = 'primary' | 'accent' | 'secondary' | 'ghost' | 'danger' | 'icon' | 'fab';
-type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className'> & {
+type Props = Omit<ButtonHTMLAttributes<HTMLButtonElement>, 'className' | 'onAnimationStart'> & {
   variant?: ButtonVariant;
   className?: string;
   loading?: boolean;

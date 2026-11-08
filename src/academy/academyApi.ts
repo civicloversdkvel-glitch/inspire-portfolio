@@ -1487,14 +1487,14 @@ export async function fetchPublicApprovedStudents(): Promise<Array<{
 
     if (error) throw error;
     return (data || [])
-      .map(row => ({
+      .map((row: { id: string; full_name?: string | null; roll_no?: string | null; skill?: string | null; created_at?: string | null }) => ({
         id: String(row.id),
         full_name: String(row.full_name || 'Student'),
         roll_no: String(row.roll_no || ''),
         skill: String(row.skill || 'Graphic Designing'),
         created_at: toIso(row.created_at)
       }))
-      .filter(student =>
+      .filter((student: { full_name: string }) =>
         !student.full_name.toLowerCase().replace(/[^a-z0-9]/g, '').includes('adeelbhatti')
       );
   } catch (err) {

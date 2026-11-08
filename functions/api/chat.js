@@ -8,6 +8,7 @@ function json(body, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: responseHeaders });
 }
 
+// Lightweight per-isolate abuse protection. Workers AI binding is the only model provider.
 const requestCounts = new Map();
 function isRateLimited(ip) {
   const now = Date.now();
@@ -26,7 +27,7 @@ function isRateLimited(ip) {
   return false;
 }
 
-const SYSTEM_INSTRUCTION = `You are the academic assistant for The Inspire Business Academy in Sadiqabad, Punjab, Pakistan. Help students with course topics, assignments, study habits, digital skills, freelancing basics, and safe professional client communication. Be accurate, practical, respectful, and concise. Do not invent fees, schedules, admissions dates, grades, or academy policies; recommend contacting the academy to confirm details. Do not ask for passwords, authentication codes, or sensitive personal information. If a question is outside the available context, clearly say so.`;
+const SYSTEM_INSTRUCTION = `You are the academic assistant for The Inspire Business Academy in Sadiqabad, Punjab, Pakistan. Help students with course topics, assignments, study habits, digital skills, freelancing basics, and safe professional client communication. Be accurate, practical, respectful, and concise. Do not invent fees, schedules, admissions dates, grades, or academy policies; recommend contacting the academy to confirm details. Do not ask for passwords, authentication codes, or sensitive personal information. If a question is outside the available context, clearly say so. Use the student's supplied academy learning context when relevant, and do not claim that unsupported information came from academy records.`;
 
 function localAnswer(query, offlineContext = '') {
   const q = query.toLowerCase();
@@ -80,75 +81,63 @@ export async function onRequestPost({ request, env }) {
   const message = typeof body?.message === 'string' ? body.message.trim().slice(0, 6000) : '';
   if (!message) return json({ error: 'Message is required.' }, 400);
 
+  const offlineContext = typeof body?.offlineContext === 'string' ? body.offlineContext.slice(0, 4000) : '';
   const ip = request.headers.get('CF-Connecting-IP') || 'unknown';
   if (isRateLimited(ip)) {
-    return json({
-      reply: localAnswer(message, String(body?.offlineContext || '').slice(0, 4000)),
-      mode: 'offline_knowledge',
-      model: 'inspire-academy-kb',
-      thinkingEnabled: false,
-      note: 'Please try the AI assistant again later.',
-    }, 200);
-  }
-
-  const offlineContext = typeof body?.offlineContext === 'string' ? body.offlineContext.slice(0, 4000) : '';
-  const apiKey = String(env.GEMINI_API_KEY || '').trim();
-  if (!apiKey) {
     return json({
       reply: localAnswer(message, offlineContext),
       mode: 'offline_knowledge',
       model: 'inspire-academy-kb',
       thinkingEnabled: false,
-      note: 'Academy knowledge-base mode is active. Configure GEMINI_API_KEY as an encrypted Cloudflare secret to enable Gemini.',
+      note: 'Please try the AI assistant again later.',
+    });
+  }
+
+  if (!env.AI || typeof env.AI.run !== 'function') {
+    return json({
+      reply: localAnswer(message, offlineContext),
+      mode: 'offline_knowledge',
+      model: 'inspire-academy-kb',
+      thinkingEnabled: false,
+      note: 'Cloudflare Workers AI binding is not configured yet; academy knowledge-base mode is active.',
     });
   }
 
   const history = Array.isArray(body?.history)
     ? body.history.slice(-8).map((item) => ({
-        role: item?.sender === 'user' ? 'user' : 'model',
-        parts: [{ text: String(item?.text || '').slice(0, 6000) }],
-      })).filter((item) => item.parts[0].text.length > 0)
+        role: item?.sender === 'user' ? 'user' : 'assistant',
+        content: String(item?.text || '').slice(0, 3000),
+      })).filter((item) => item.content.length > 0)
     : [];
-  history.push({ role: 'user', parts: [{ text: `${offlineContext ? `Relevant academy material:\n${offlineContext}\n\n` : ''}${message}` }] });
 
-  const model = String(env.GEMINI_MODEL || 'gemini-3.8-flash').trim().replace(/^models\//, '');
+  const userContent = offlineContext
+    ? `Relevant academy learning material (use only when relevant):
+${offlineContext}
+
+Student question:
+${message}`
+    : message;
+  history.push({ role: 'user', content: userContent });
+
+  const model = String(env.AI_MODEL || '@cf/zai-org/glm-4.7-flash').trim();
   try {
-    const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${encodeURIComponent(model)}:generateContent`, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'x-goog-api-key': apiKey,
-      },
-      body: JSON.stringify({
-        systemInstruction: { parts: [{ text: SYSTEM_INSTRUCTION }] },
-        contents: history,
-        generationConfig: {
-          temperature: 0.4,
-          thinkingConfig: { thinkingLevel: body?.useThinking === false ? 'LOW' : 'HIGH' },
-        },
-      }),
+    const result = await env.AI.run(model, {
+      messages: [
+        { role: 'system', content: SYSTEM_INSTRUCTION },
+        ...history,
+      ],
+      max_tokens: body?.useThinking === false ? 768 : 1536,
+      temperature: 0.4,
     });
 
-    if (!response.ok) {
-      console.error('[Academy Chat] Gemini API returned HTTP', response.status);
-      return json({
-        reply: localAnswer(message, offlineContext),
-        mode: 'offline_knowledge',
-        model: 'inspire-academy-kb',
-        thinkingEnabled: false,
-        note: 'AI is temporarily unavailable; the academy knowledge base is active.',
-      });
-    }
+    const reply = typeof result?.response === 'string'
+      ? result.response.trim()
+      : typeof result?.choices?.[0]?.message?.content === 'string'
+        ? result.choices[0].message.content.trim()
+        : '';
 
-    const data = await response.json();
-    const parts = data?.candidates?.[0]?.content?.parts || [];
-    const reply = parts
-      .filter((part) => typeof part?.text === 'string' && part.thought !== true)
-      .map((part) => part.text)
-      .join('\n')
-      .trim();
+    if (!reply) throw new Error('Workers AI returned an empty response.');
 
-    if (!reply) throw new Error('Gemini returned an empty response.');
     return json({
       reply,
       mode: 'ai',
@@ -156,13 +145,13 @@ export async function onRequestPost({ request, env }) {
       thinkingEnabled: body?.useThinking !== false,
     });
   } catch (error) {
-    console.error('[Academy Chat] Request failed:', error instanceof Error ? error.message : 'unknown_error');
+    console.error('[Academy Chat] Workers AI request failed:', error instanceof Error ? error.message : 'unknown_error');
     return json({
       reply: localAnswer(message, offlineContext),
       mode: 'offline_knowledge',
       model: 'inspire-academy-kb',
       thinkingEnabled: false,
-      note: 'AI is temporarily unavailable; the academy knowledge base is active.',
+      note: 'Cloudflare AI is temporarily unavailable; academy knowledge-base mode is active.',
     });
   }
 }

@@ -613,7 +613,7 @@ export function Portfolio() {
       <button
         onClick={() => setIsUploading(true)}
         aria-label="Upload File"
-        className="fixed bottom-20 right-6 w-14 h-14 bg-yellow-500 text-blue-900 rounded-full shadow-lg shadow-yellow-500/30 flex items-center justify-center active:scale-90 transition-transform z-40"
+        className="fixed bottom-20 right-6 md:left-1/2 md:right-auto md:-translate-x-1/2 w-14 h-14 bg-yellow-500 text-blue-900 rounded-full shadow-lg shadow-yellow-500/30 flex items-center justify-center active:scale-90 transition-transform z-40"
       >
         <Plus size={28} strokeWidth={2.5} />
       </button>

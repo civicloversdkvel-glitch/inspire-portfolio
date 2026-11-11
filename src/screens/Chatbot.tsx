@@ -148,11 +148,10 @@ export function Chatbot() {
     setTimeout(() => {
       const fallbackMsg: Message = {
         id: (Date.now() + 1).toString(),
-        text: `### Inspire Business Academy Knowledge Response
-Regarding **"${userMsg.text}"**:
-${offlineCtx ? `\n${offlineCtx}\n` : ''}
-- For personal guidance from Director Adeel Bhatti, WhatsApp directly at **03093534289**.
-- Remember the core rule: **Roz Kaam = Roz Paisa!** Consistency in outreach brings steady income.`,
+        text: `### Filhaal AI service connect nahi ho rahi
+Aapka sawal: **"${userMsg.text}"**
+${offlineCtx ? `\nMujhe yeh related learning material mila hai:\n${offlineCtx}\n` : ''}
+Thori dair baad dobara try karein. Main aapko Roman Urdu mein jawab dene ke liye ready hoon.`,
         sender: 'bot',
         timestamp: new Date(),
         modelUsed: 'offline-grounded-kb',

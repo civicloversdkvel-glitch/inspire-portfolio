@@ -8,7 +8,6 @@ function json(body, status = 200) {
   return new Response(JSON.stringify(body), { status, headers: responseHeaders });
 }
 
-// Lightweight per-isolate abuse protection. Workers AI binding is the only model provider.
 const requestCounts = new Map();
 function isRateLimited(ip) {
   const now = Date.now();
@@ -27,44 +26,28 @@ function isRateLimited(ip) {
   return false;
 }
 
-const SYSTEM_INSTRUCTION = `You are the academic assistant for The Inspire Business Academy in Sadiqabad, Punjab, Pakistan. Help students with course topics, assignments, study habits, digital skills, freelancing basics, and safe professional client communication. Be accurate, practical, respectful, and concise. Do not invent fees, schedules, admissions dates, grades, or academy policies; recommend contacting the academy to confirm details. Do not ask for passwords, authentication codes, or sensitive personal information. If a question is outside the available context, clearly say so. Use the student's supplied academy learning context when relevant, and do not claim that unsupported information came from academy records.`;
+const SYSTEM_INSTRUCTION = `Tum Inspire Business Academy ke friendly, helpful aur intelligent AI Advisor ho. Tumhara default jawab Roman Urdu mein hona chahiye: Urdu ko English/Roman letters mein likho, Urdu script ya Hindi mein nahi. Lehja natural, warm, respectful aur conversational rakho—jaise ek helpful dost ya mentor samjhata hai. User agar English ya kisi aur language mein jawab specifically maange to usi language mein jawab do.
+
+SIRF academy ke sawalon tak mehdood mat raho. User kisi bhi reasonable topic par sawal kare—general knowledge, science, technology, computers, AI, education, maths, writing, business, freelancing, career, creativity, daily life, ya kisi random topic par—to apni best knowledge ke mutabiq seedha, useful aur relevant jawab do. Be-wajah yeh mat kaho ke sawal academy se related nahi. Agar sawal broad ho to useful jawab do aur zarurat par ek chhota follow-up sawal poochho. Mushkil cheez ko simple alfaaz aur examples se samjhao.
+
+Jawab user ke sawal ke mutabiq rakho: simple sawal ka concise jawab, aur detail maangi jaye to step-by-step tafseel. Roman Urdu ko natural rakho; technical terms, product names, code aur zaroori English terms ko original form mein rehne do. Baghair zarurat headings ya lambi lists mat banao.
+
+Academy ke hawale se madad karte waqt course topics, assignments, study habits, digital skills, freelancing aur safe client communication mein guide karo. Academy ki fees, timings, admission dates, grades, ya official policies khud se invent mat karo. Agar verified academy context available na ho to saaf batao ke is detail ko academy se confirm karna hoga. User ke diye hue course material ko tabhi use karo jab woh sawal se relevant ho; irrelevant context ko jawab mein zabardasti shamil mat karo.
+
+Current events ya aisi information jisme latest updates zaroori hon, us mein apni limitation clear rakho aur guess ko fact bana kar pesh mat karo. Ghalti ya uncertainty ho to honestly batao. Passwords, OTPs, authentication codes ya sensitive personal information kabhi mat maango. Safe aur responsible guidance do.`;
 
 function localAnswer(query, offlineContext = '') {
-  const q = query.toLowerCase();
-  if (q.includes('fee') || q.includes('admission') || q.includes('timing') || q.includes('dakhla') || q.includes('register')) {
-    return `### Student Portal & Academy Support
-
-This website is a workspace for currently enrolled Inspire Business Academy students. To create an account, use the student registration page with the roll number issued by your academy. New accounts remain locked until academy staff verify and approve the student record.
-
-- **Campus:** Near Shimla Point, beside NGS School Mehrabad, Sadiqabad, Punjab, Pakistan
-- **Student support:** [WhatsApp 0309 3534289](https://wa.me/923093534289)
-
-There is no online admission inquiry form on this website. Contact the academy directly if you need help with your existing student account.`;
-  }
-  if (q.includes('payment') || q.includes('advance') || q.includes('easypaisa') || q.includes('jazzcash')) {
-    return `### Safe Freelancing Payments
-
-1. Agree on the scope, delivery date, and price in writing before beginning.
-2. Use a reasonable advance payment for new clients and confirm the payment has actually arrived.
-3. Share previews or watermarked drafts when appropriate; do not share passwords or sensitive account details.
-4. Keep receipts and use a trusted payment provider. Never send money to unlock a promised payment.`;
-  }
   if (offlineContext && offlineContext.length > 20) {
-    return `### Academy Learning Support
-
-Based on the available course material:
+    return `Aapke sawal se related academy learning material yeh mila hai:
 
 ${offlineContext}
 
-For details that are not covered here, contact the academy at [WhatsApp 0309 3534289](https://wa.me/923093534289).`;
+Agar aap chaho to apna exact sawal ya jis point mein confusion hai woh bhej do—main Roman Urdu mein asaan alfaaz mein samjha dunga.`;
   }
-  return `### Inspire Business Academy Learning Support
 
-I can help you understand course concepts, plan assignments, practise digital skills, improve your portfolio, and learn safe freelancing habits.
+  return `Maazrat, is waqt AI Advisor ka main model temporarily available nahi hai, is liye main aapke sawal ka reliable jawab generate nahi kar pa raha.
 
-**A useful next step:** tell me your course, the assignment instructions, and the part you find difficult. I will break it into manageable steps.
-
-For academy-specific fees or schedules, contact [WhatsApp 0309 3534289](https://wa.me/923093534289).`;
+Aap thori dair baad dobara try karein. Main koshish karunga ke aapko Roman Urdu mein friendly aur useful jawab doon.`;
 }
 
 export async function onRequestPost({ request, env }) {
@@ -99,7 +82,7 @@ export async function onRequestPost({ request, env }) {
       mode: 'offline_knowledge',
       model: 'inspire-academy-kb',
       thinkingEnabled: false,
-      note: 'Cloudflare Workers AI binding is not configured yet; academy knowledge-base mode is active.',
+      note: 'Cloudflare Workers AI binding is not configured yet.',
     });
   }
 
@@ -111,10 +94,10 @@ export async function onRequestPost({ request, env }) {
     : [];
 
   const userContent = offlineContext
-    ? `Relevant academy learning material (use only when relevant):
+    ? `Optional academy learning context (sirf tab use karo jab student ke sawal se relevant ho; unrelated ho to ignore karo):
 ${offlineContext}
 
-Student question:
+Student ka sawal:
 ${message}`
     : message;
   history.push({ role: 'user', content: userContent });
@@ -126,8 +109,8 @@ ${message}`
         { role: 'system', content: SYSTEM_INSTRUCTION },
         ...history,
       ],
-      max_tokens: body?.useThinking === false ? 768 : 1536,
-      temperature: 0.4,
+      max_tokens: body?.useThinking === false ? 1024 : 2048,
+      temperature: 0.65,
     });
 
     const reply = typeof result?.response === 'string'
@@ -151,7 +134,7 @@ ${message}`
       mode: 'offline_knowledge',
       model: 'inspire-academy-kb',
       thinkingEnabled: false,
-      note: 'Cloudflare AI is temporarily unavailable; academy knowledge-base mode is active.',
+      note: 'Cloudflare AI is temporarily unavailable.',
     });
   }
 }

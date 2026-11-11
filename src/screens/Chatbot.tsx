@@ -33,7 +33,7 @@ export function Chatbot() {
   const [messages, setMessages] = useState<Message[]>([
     {
       id: '1',
-      text: "Assalam-o-Alaikum! I am your AI Academic Advisor for The Inspire Business Academy. I can assist you with your course topics, freelancing client communication pitches, payment safety rules, and software shortcuts. How can I help you excel today?",
+      text: "Assalam-o-Alaikum! Main Inspire Business Academy ka AI Advisor hoon. Aap mujh se kisi bhi topic par sawal kar sakte hain—parhai, technology, freelancing, career, general knowledge ya daily life. Main aapko friendly Roman Urdu mein samjhane ki koshish karunga. Batayein, aaj kis cheez mein madad chahiye?",
       sender: 'bot',
       timestamp: new Date(),
       modelUsed: 'academy-knowledge-base',
@@ -188,10 +188,10 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
   };
 
   const samplePrompts = [
-    'How should I approach a client on Facebook for logo design?',
-    'What are the payment protection rules for freelancing?',
-    'What are the top 5 shortcuts for Photoshop?',
-    'Explain the YouTube monetization requirements.',
+    'Facebook par logo design client se baat kaise shuru karun?',
+    'Freelancing mein payment safe kaise rakhoon?',
+    'Photoshop ke 5 useful shortcuts batao',
+    'YouTube monetization ke rules samjhao',
   ];
 
   return (
@@ -218,7 +218,7 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
                 </span>
               </div>
               <p className="text-xs text-blue-200">
-                Academic guidance for courses, assignments & digital skills
+                Har topic par friendly AI madad — Roman Urdu mein
               </p>
             </div>
           </div>
@@ -226,7 +226,7 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
           {/* Thinking Mode Switch */}
           <div className="flex items-center gap-2 bg-white/10 px-3 py-1.5 rounded-2xl border border-white/20 self-start sm:self-auto">
             <Brain size={16} className={useThinking ? 'text-amber-400 animate-pulse' : 'text-slate-400'} />
-            <span className="text-xs font-semibold text-slate-200">High Thinking Mode:</span>
+            <span className="text-xs font-semibold text-slate-200">Detailed jawab:</span>
             <button
               type="button"
               onClick={() => setUseThinking(!useThinking)}
@@ -293,8 +293,8 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
                 <Loader2 size={15} className="animate-spin text-blue-700" />
                 <span>
                   {useThinking
-                    ? 'Preparing a detailed academic answer...'
-                    : 'Consulting Inspire Academy knowledge base...'}
+                    ? 'Aapke sawal ka tafseeli jawab tayyar kar raha hoon...'
+                    : 'Aapke sawal ka jawab tayyar kar raha hoon...'}
                 </span>
               </div>
             </div>
@@ -306,7 +306,7 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
 
       {/* Quick Prompts Bar */}
       <div className="px-4 py-2 border-t border-slate-200 bg-white/70 overflow-x-auto no-scrollbar flex items-center gap-2">
-        <span className="text-[10px] font-extrabold uppercase text-slate-400 shrink-0">Suggestions:</span>
+        <span className="text-[10px] font-extrabold uppercase text-slate-400 shrink-0">Kuch sawal:</span>
         {samplePrompts.map((p, idx) => (
           <button
             key={idx}
@@ -327,7 +327,7 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
             value={input}
             onChange={(e) => setInput(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleSend()}
-            placeholder="Ask about freelancing, client pitches, course lessons, or shortcuts..."
+            placeholder="Apna koi bhi sawal yahan likhein..."
             className="flex-1 bg-slate-100 border-none rounded-xl py-3 px-4 text-xs sm:text-sm focus:outline-none focus:ring-2 focus:ring-blue-600 transition-all"
             disabled={isTyping}
           />
@@ -338,7 +338,7 @@ ${offlineCtx ? `\n${offlineCtx}\n` : ''}
             className="px-4 py-3 bg-blue-900 hover:bg-blue-800 text-white rounded-xl text-xs font-bold transition-colors disabled:opacity-50 flex items-center gap-1.5 shrink-0"
           >
             <Send size={15} />
-            <span className="hidden sm:inline">Send</span>
+            <span className="hidden sm:inline">Bhejo</span>
           </button>
         </div>
       </div>
